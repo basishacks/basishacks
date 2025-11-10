@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+@theme {
+  --font-mono: Monaspace Neon;
+  --font-mono--font-variation-settings: "wdth" 100;
+
+  --font-sans: var(--font-mono);
+  --font-sans--font-variation-settings: "wdth" 100;
+
+  --font-mono-bold: var(--font-mono);
+  --font-mono-bold--font-variation-settings: "wdth" 100, "wght" var(--font-weight-bold);
+}
