@@ -1,4 +1,4 @@
-- [ ] Home page
+- [x] Home page
 - [ ] Registration
   - [ ] Email & name
 - [ ] Team management
