@@ -77,7 +77,7 @@ async function onLoginSubmit(event: FormSubmitEvent<LoginRequest>) {
       v-if="isSendingCode"
       :state="state"
       :schema="SendCodeRequest"
-      class="max-w-96 space-y-4"
+      class="max-w-[600px] space-y-4"
       @submit="onSendCodeSubmit"
     >
       <UFormField name="email" label="Email">
