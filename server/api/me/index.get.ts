@@ -19,6 +19,7 @@ export default defineEventHandler(async (event) => {
     name: user.name,
     team: team && {
       id: team.id,
+      name: team.name,
       project_name: team.project_name,
       project_description: team.project_description,
       project_demo_url: team.project_demo_url,

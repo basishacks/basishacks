@@ -4,6 +4,7 @@ interface GetUserResponse {
   name: string | null
   team: {
     id: number
+    name: string
     project_name: string
     project_description: string
     project_demo_url: string | null

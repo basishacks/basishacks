@@ -19,6 +19,7 @@ interface Hackathon {
 
 interface Team {
   id: number
+  name: string
   project_name: string
   project_description: string
   project_demo_url: string | null
