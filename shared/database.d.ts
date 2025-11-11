@@ -13,10 +13,20 @@ interface Hackathon {
   voting_start_timestamp: number
   voting_end_timestamp: number
   results_open_timestamp: number
-  theme?: HackathonTheme
+  theme_name: string | null
+  theme_description: string | null
 }
 
-interface HackathonTheme {
-  name: string
-  description: string
+interface Team {
+  id: number
+  project_name: string
+  project_description: string
+  project_demo_url: string | null
+  project_repo_url: string | null
+}
+
+interface User {
+  id: number
+  email: string
+  team_id: number
 }

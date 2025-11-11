@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS hackathon (
     voting_start_timestamp INTEGER NOT NULL,
     voting_end_timestamp INTEGER NOT NULL,
     results_open_timestamp INTEGER NOT NULL,
-    theme TEXT
+    theme_name TEXT,
+    theme_description TEXT
 );
 
 CREATE TABLE IF NOT EXISTS teams (
@@ -20,7 +21,7 @@ CREATE TABLE IF NOT EXISTS teams (
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL UNIQUE,
-    team_id INTEGER,
+    team_id INTEGER NOT NULL,
     FOREIGN KEY (team_id) REFERENCES teams(id)
 );
 CREATE INDEX idx_users_email ON users (email);
