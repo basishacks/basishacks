@@ -36,17 +36,21 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="border-4 border-primary px-10 py-5 border-dashed text-center">
-    <p class="text-lg mb-5 bold">{{ label }}</p>
-    <div class="flex flex-col sm:flex-row justify-around text-6xl items-center gap-y-4 bold">
+  <div
+    class="border-4 border-primary px-5 sm:px-10 py-5 border-dashed text-center flex flex-col gap-5 items-center"
+  >
+    <p class="bold">{{ label }}</p>
+    <div
+      class="flex flex-row justify-around text-5xl sm:text-6xl items-center bold gap-1"
+    >
       <span class="text-primary">{{ formatSegment(days) }}</span>
-      <span class="text-3xl hidden sm:inline">:</span>
+      <span class="text-2xl sm:text-3xl">:</span>
       <span class="text-primary">{{ formatSegment(hours) }}</span>
-      <span class="text-3xl hidden sm:inline">:</span>
+      <span class="text-2xl sm:text-3xl">:</span>
       <span class="text-primary">{{ formatSegment(minutes) }}</span>
-      <span class="text-3xl hidden sm:inline">:</span>
+      <span class="text-2xl sm:text-3xl">:</span>
       <span class="text-primary">{{ formatSegment(seconds) }}</span>
     </div>
-    <p class="text-lg mt-5 bold"><DateTime :date="date" /></p>
+    <p class="bold"><DateTime :date="date" /></p>
   </div>
 </template>
