@@ -21,7 +21,10 @@ CREATE TABLE IF NOT EXISTS teams (
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL UNIQUE,
-    team_id INTEGER NOT NULL,
+    name TEXT,
+    team_id INTEGER,
+    login_code TEXT,
+    login_expiry INTEGER,
     FOREIGN KEY (team_id) REFERENCES teams(id)
 );
 CREATE INDEX idx_users_email ON users (email);

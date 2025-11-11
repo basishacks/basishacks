@@ -11,19 +11,13 @@ export default defineEventHandler(async (event) => {
       message: 'The user was deleted',
     })
   }
-  const team = await getTeamByID(event, user.team_id)
-  if (!team) {
-    await clearUserSession(event)
-    throw createError({
-      status: 403,
-      message: 'The team was deleted',
-    })
-  }
+  const team = user.team_id ? await getTeamByID(event, user.team_id) : null
 
   return {
     id: user.id,
     email: user.email,
-    team: {
+    name: user.name,
+    team: team && {
       id: team.id,
       project_name: team.project_name,
       project_description: team.project_description,

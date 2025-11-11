@@ -9,6 +9,9 @@ export default defineNuxtConfig({
     'nuxt-auth-utils',
   ],
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    sendCodeURL: '',
+  },
   experimental: {
     asyncContext: true,
   },

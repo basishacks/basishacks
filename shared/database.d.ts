@@ -28,5 +28,8 @@ interface Team {
 interface User {
   id: number
   email: string
-  team_id: number
+  name: string | null
+  team_id: number | null
+  login_code: string | null
+  login_expiry: number | null
 }
