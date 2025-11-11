@@ -3,7 +3,7 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 import { LoginRequest, SendCodeRequest } from '~~/shared/schemas'
 
 useHead({
-  title: 'Login | basishacks_2026',
+  title: `Login | ${WEBSITE_NAME}`,
 })
 
 const toast = useToast()

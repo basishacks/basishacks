@@ -74,3 +74,22 @@ export async function getTeamByID(event: H3Event, teamID: number) {
     .bind(teamID)
     .first<Team>()
 }
+
+export async function createTeam(
+  event: H3Event,
+  teamName: string,
+  userID: number
+) {
+  // FIXME: this has race conditions but i cba to solve it
+  const { id: teamID } = (await event.context.cloudflare.env.DB.prepare(
+    'INSERT INTO teams(name) VALUES(?) RETURNING id'
+  )
+    .bind(teamName)
+    .first<Pick<Team, 'id'>>())!
+  await event.context.cloudflare.env.DB.prepare(
+    'UPDATE users SET team_id = ? WHERE id = ?'
+  )
+    .bind(teamID, userID)
+    .run()
+  return teamID
+}

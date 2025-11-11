@@ -3,7 +3,7 @@ definePageMeta({
   middleware: 'auth',
 })
 useHead({
-  title: 'Dashboard | basishacks_2026',
+  title: `Dashboard | ${WEBSITE_NAME}`,
 })
 
 const { data: hackathon, error: hackathonError } = await useFetch(

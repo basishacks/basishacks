@@ -10,3 +10,8 @@ interface GetUserResponse {
     project_repo_url: string | null
   } | null
 }
+
+interface CreateTeamResponse {
+  message: string
+  id: number
+}

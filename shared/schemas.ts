@@ -17,3 +17,8 @@ export const LoginRequest = z.object({
   code: z.string(),
 })
 export type LoginRequest = z.infer<typeof LoginRequest>
+
+export const CreateTeamRequest = z.object({
+  name: z.string().min(2, 'Team name must be at least 2 characters'),
+})
+export type CreateTeamRequest = z.infer<typeof CreateTeamRequest>

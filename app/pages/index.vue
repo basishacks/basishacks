@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-  title: 'basishacks_2026',
+  title: `${WEBSITE_NAME}`,
 })
 
 const { data, error } = await useFetch('/api/hackathon')
@@ -26,7 +26,8 @@ const resultsOpenDate = computed(
 <template>
   <div>
     <h1 class="text-4xl bold mb-4 glow">
-      Welcome to <span class="text-primary">basishacks_2026</span>!
+      Welcome to <span class="text-primary">{{ WEBSITE_NAME }}</span
+      >!
     </h1>
     <p class="mb-4">
       This is the official website of Lorem ipsum dolor sit amet consectetur
