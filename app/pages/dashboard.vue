@@ -33,14 +33,16 @@ async function refreshData() {
     <h1 class="text-4xl text-primary bold glow mb-4">Dashboard</h1>
 
     <p v-if="!data?.team" class="mb-4">
-      You don't have a team yet. You can
+      Welcome <span class="bold">{{ data!.name || data!.email }}</span
+      >! You don't have a team yet. You can
       <ULink href="/teams/new">create a team</ULink> or ask a member from
       another team to add you!
     </p>
 
     <div v-else-if="hackathon?.status === 'in_progress'">
       <p class="mb-4">
-        The hackathon is in progress! <span class="glow">HACK AWAY!</span>
+        Welcome <span class="bold">{{ data.name || data.email }}</span
+        >! The hackathon is in progress - <span class="glow">HACK AWAY!</span>
       </p>
       <h2 class="text-3xl bold mb-4">Team &amp; project</h2>
 
