@@ -4,4 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['nitro-cloudflare-dev', '@nuxt/eslint', '@nuxt/ui'],
   css: ['~/assets/css/main.css'],
+  experimental: {
+    asyncContext: true,
+  },
 })

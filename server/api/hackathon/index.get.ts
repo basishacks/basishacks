@@ -1,7 +1,5 @@
-export default defineEventHandler(async (event) => {
-  const hackathon = await event.context.cloudflare.env.DB.prepare(
-    'SELECT * FROM hackathon'
-  ).first<Hackathon>()
+export default defineEventHandler(async () => {
+  const hackathon = await getHackathon()
 
   if (!hackathon) {
     throw createError({
