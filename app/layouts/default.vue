@@ -1,18 +1,25 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 
-const navItems = computed<NavigationMenuItem[]>(() => [
-  {
-    label: 'Home',
-    to: '/',
-    icon: 'i-material-symbols-home-outline',
-  },
-  {
-    label: 'Dashboard',
-    to: '/dashboard',
-    icon: 'i-material-symbols-space-dashboard',
-  },
-])
+const { data: hackathon } = await useFetch('/api/hackathon')
+
+const navItems = computed<NavigationMenuItem[]>(() => {
+  const links = [
+    {
+      label: 'Home',
+      to: '/',
+      icon: 'i-material-symbols-home-outline',
+    },
+  ]
+  if (hackathon.value?.status !== 'not_started') {
+    links.push({
+      label: 'Dashboard',
+      to: '/dashboard',
+      icon: 'i-material-symbols-space-dashboard',
+    })
+  }
+  return links
+})
 </script>
 
 <template>

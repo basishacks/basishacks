@@ -2,12 +2,14 @@
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { LoginRequest, SendCodeRequest } from '~~/shared/schemas'
 
+useHead({
+  title: 'Login | basishacks_2026',
+})
+
 const toast = useToast()
 const { fetch: refreshAuth } = useUserSession()
 
 const isSendingCode = ref(true)
-
-// stage 1
 
 const state = reactive({
   email: '',
@@ -26,7 +28,7 @@ async function onSendCodeSubmit(event: FormSubmitEvent<SendCodeRequest>) {
       toast.add({
         color: 'success',
         title: res.message,
-        description: 'Please enter the code to login',
+        description: 'Please enter the code to log in',
       })
       isSendingCode.value = false
     })
@@ -100,7 +102,7 @@ async function onLoginSubmit(event: FormSubmitEvent<LoginRequest>) {
         <UInput v-model="state.code" class="w-full" />
       </UFormField>
 
-      <UButton type="submit">Send verification code</UButton>
+      <UButton type="submit">Log in</UButton>
     </UForm>
   </div>
 </template>

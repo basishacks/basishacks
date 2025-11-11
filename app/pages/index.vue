@@ -34,18 +34,17 @@ const resultsOpenDate = computed(
       odio earum reiciendis repellendus provident, quibusdam consectetur sint
       illo tenetur qui unde ullam!
     </p>
-    <UAlert
-      v-if="status !== 'not_started'"
-      variant="soft"
-      class="mb-4 text-default"
-    >
-      <template #title>
-        The hackathon has {{ status === 'finished' ? 'finished' : 'started' }}!
-        <ULink class="text-primary glow-sm" href="/dashboard"
-          >Check out your dashboard!</ULink
-        >
-      </template>
-    </UAlert>
+    <ULink href="/dashboard">
+      <UAlert v-if="status !== 'not_started'" variant="soft" class="mb-4">
+        <template #title>
+          <span class="bold">
+            The hackathon has
+            {{ status === 'finished' ? 'finished' : 'started' }}!
+          </span>
+          Click here to go to your dashboard!
+        </template>
+      </UAlert>
+    </ULink>
 
     <!-- schedule -->
     <h2 v-if="status !== 'finished'" class="text-3xl bold mb-4 glow-sm">
