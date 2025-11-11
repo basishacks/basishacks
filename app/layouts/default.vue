@@ -7,6 +7,11 @@ const navItems = computed<NavigationMenuItem[]>(() => [
     to: '/',
     icon: 'i-material-symbols-home-outline',
   },
+  {
+    label: 'Dashboard',
+    to: '/dashboard',
+    icon: 'i-material-symbols-space-dashboard',
+  },
 ])
 </script>
 
@@ -14,7 +19,7 @@ const navItems = computed<NavigationMenuItem[]>(() => [
   <div>
     <UHeader class="mb-4">
       <template #title>
-        <span class="text-primary">basishacks_2025</span>
+        <span class="text-primary">basishacks_2026</span>
       </template>
 
       <UNavigationMenu :items="navItems" />

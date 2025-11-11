@@ -1,4 +1,8 @@
 <script setup lang="ts">
+useHead({
+  title: 'basishacks_2026',
+})
+
 const { data, error } = await useFetch('/api/hackathon')
 if (error.value) {
   throw error.value
@@ -22,7 +26,7 @@ const resultsOpenDate = computed(
 <template>
   <div>
     <h1 class="text-4xl bold mb-4 glow">
-      Welcome to <span class="text-primary">basishacks_2025</span>!
+      Welcome to <span class="text-primary">basishacks_2026</span>!
     </h1>
     <p class="mb-4">
       This is the official website of Lorem ipsum dolor sit amet consectetur
@@ -30,7 +34,11 @@ const resultsOpenDate = computed(
       odio earum reiciendis repellendus provident, quibusdam consectetur sint
       illo tenetur qui unde ullam!
     </p>
-    <UAlert v-if="status !== 'not_started'" variant="soft" class="mb-4 text-default">
+    <UAlert
+      v-if="status !== 'not_started'"
+      variant="soft"
+      class="mb-4 text-default"
+    >
       <template #title>
         The hackathon has {{ status === 'finished' ? 'finished' : 'started' }}!
         <ULink class="text-primary glow-sm" href="/dashboard"

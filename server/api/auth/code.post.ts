@@ -31,5 +31,5 @@ export default defineEventHandler(async (event) => {
   }
   await setUserName(event, userID, data.name)
 
-  return { message: 'Successfully sent code to your Teams account.' }
+  return { message: 'Sent code to your Teams account' }
 })
