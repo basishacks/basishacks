@@ -23,9 +23,11 @@ if (error.value) {
 }
 
 async function removeUser(user: Pick<User, 'id' | 'name' | 'email'>) {
-  const message = `Are you sure you want to remove ${
-    user.id === currentUser.value?.id ? 'yourself' : user.name || user.email
-  } from your team?${
+  const message = `Are you sure you want to ${
+    user.id === currentUser.value?.id
+      ? 'leave'
+      : `remove ${user.name || user.email} from`
+  } your team?${
     users.value?.length === 1
       ? " This is the last member of your team, so you won't be able to recover it."
       : ''
