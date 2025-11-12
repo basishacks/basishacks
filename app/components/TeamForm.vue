@@ -116,7 +116,7 @@ async function onSubmit(event: FormSubmitEvent<AddTeamUserRequest>) {
     </UFormField>
 
     <UFormField>
-      <UButton variant="subtle">Add</UButton>
+      <UButton variant="subtle" type="submit">Add</UButton>
     </UFormField>
   </UForm>
 </template>
