@@ -149,7 +149,7 @@ export async function addUserToTeamWithEmail(
   userEmail: string
 ) {
   const result = await event.context.cloudflare.env.DB.prepare(
-    'UPDATE users SET team_id = ? WHERE email = ? AND team_id = NULL'
+    'UPDATE users SET team_id = ? WHERE email = ? AND team_id IS NULL'
   )
     .bind(teamID, userEmail)
     .run()
