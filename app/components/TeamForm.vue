@@ -6,6 +6,7 @@ const { team: defaultTeam } = defineProps<{
   team: Team
 }>()
 const emit = defineEmits<{
+  update: [state: typeof state]
   refresh: []
 }>()
 
@@ -18,6 +19,8 @@ const state = reactive({
   project_demo_url: '',
   project_repo_url: '',
 })
+
+watch(state, (value) => emit('update', value), { deep: true, immediate: false })
 
 function updateStateFromTeam() {
   state.name = defaultTeam.name
