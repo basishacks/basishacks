@@ -17,9 +17,9 @@
 }
 
 .glow {
-  text-shadow: 0 0 0.1em color-mix(in srgb, currentColor 75%, var(--background-color-default) 25%), 0 0 0.2em color-mix(in srgb, currentColor 75%, var(--background-color-default) 25%);
+  text-shadow: 0 0 0.05em color-mix(in srgb, currentColor 75%, var(--background-color-default) 25%), 0 0 0.1em color-mix(in srgb, currentColor 75%, var(--background-color-default) 25%);
 }
 
 .glow-sm {
-  text-shadow: 0 0 0.07em color-mix(in srgb, currentColor 75%, var(--background-color-default) 25%), 0 0 0.15em color-mix(in srgb, currentColor 75%, var(--background-color-default) 25%);
+  text-shadow: 0 0 0.03em color-mix(in srgb, currentColor 75%, var(--background-color-default) 25%), 0 0 0.07em color-mix(in srgb, currentColor 75%, var(--background-color-default) 25%);
 }
