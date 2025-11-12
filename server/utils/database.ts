@@ -114,3 +114,50 @@ export async function updateTeam(event: H3Event, team: Team) {
     })
   }
 }
+
+export async function getTeamUsers(event: H3Event, teamID: number) {
+  const result = await event.context.cloudflare.env.DB.prepare(
+    'SELECT * FROM users WHERE team_id = ?'
+  )
+    .bind(teamID)
+    .all<User>()
+  return result.results
+}
+
+export async function removeUserFromTeam(
+  event: H3Event,
+  teamID: number,
+  userID: number
+) {
+  const result = await event.context.cloudflare.env.DB.prepare(
+    'UPDATE users SET team_id = NULL WHERE id = ? AND team_id = ?'
+  )
+    .bind(userID, teamID)
+    .run()
+
+  if (!result.meta.changed_db) {
+    throw createError({
+      status: 404,
+      message: 'User not found or not in team',
+    })
+  }
+}
+
+export async function addUserToTeamWithEmail(
+  event: H3Event,
+  teamID: number,
+  userEmail: string
+) {
+  const result = await event.context.cloudflare.env.DB.prepare(
+    'UPDATE users SET team_id = ? WHERE email = ? AND team_id = NULL'
+  )
+    .bind(teamID, userEmail)
+    .run()
+
+  if (!result.meta.changed_db) {
+    throw createError({
+      status: 404,
+      message: 'User not found or already in a team',
+    })
+  }
+}

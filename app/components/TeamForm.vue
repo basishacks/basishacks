@@ -1,60 +1,83 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
-import { UpdateTeamRequest } from '~~/shared/schemas'
+import { AddTeamUserRequest } from '~~/shared/schemas'
 
-const { team: defaultTeam } = defineProps<{
-  team: Team
+const { id } = defineProps<{
+  id: number
 }>()
 const emit = defineEmits<{
-  update: [state: typeof state]
   refresh: []
 }>()
 
 const toast = useToast()
 
-const state = reactive({
-  name: '',
-  project_name: '',
-  project_description: '',
-  project_demo_url: '',
-  project_repo_url: '',
-})
+const { user: currentUser } = useUserSession()
 
-watch(state, (value) => emit('update', value), { deep: true, immediate: false })
-
-function updateStateFromTeam() {
-  state.name = defaultTeam.name
-  state.project_name = defaultTeam.project_name
-  state.project_description = defaultTeam.project_description
-  state.project_demo_url = defaultTeam.project_demo_url || ''
-  state.project_repo_url = defaultTeam.project_repo_url || ''
+const {
+  data: users,
+  error,
+  refresh,
+} = await useFetch<GetTeamUsersResponse>(`/api/teams/${id}/users`)
+if (error.value) {
+  throw error.value
 }
 
-watch(() => defaultTeam, updateStateFromTeam, { deep: true, immediate: true })
-
-async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
-  const isSubmit = event.submitter?.id === 'project-submit'
-  if (isSubmit) {
-    alert('Not implemented yet!')
-    return
+async function removeUser(user: Pick<User, 'id' | 'name' | 'email'>) {
+  const message = `Are you sure you want to remove ${
+    user.id === currentUser.value?.id ? 'yourself' : user.name || user.email
+  } from your team?${
+    users.value?.length === 1
+      ? " This is the last member of your team, so you won't be able to recover it."
+      : ''
+  }`
+  if (confirm(message)) {
+    try {
+      await withLoadingIndicator(async () => {
+        const { message } = await $fetch(`/api/teams/${id}/users/${user.id}`, {
+          method: 'DELETE',
+        })
+        toast.add({
+          color: 'success',
+          title: message,
+        })
+        if (user.id === currentUser.value?.id) {
+          emit('refresh')
+        } else {
+          await refresh()
+        }
+      })
+    } catch (e) {
+      toast.add({
+        color: 'error',
+        title: 'Failed to remove member',
+        description: String(e),
+      })
+    }
   }
+}
 
+// add user
+const state = reactive({
+  email: '',
+})
+
+async function onSubmit(event: FormSubmitEvent<AddTeamUserRequest>) {
   try {
     await withLoadingIndicator(async () => {
-      const res = await $fetch(`/api/teams/${defaultTeam.id}`, {
-        method: 'PUT',
+      const { message } = await $fetch(`/api/teams/${id}/users`, {
+        method: 'POST',
         body: event.data,
       })
       toast.add({
         color: 'success',
-        title: res.message,
+        title: message,
       })
+      await refresh()
     })
-    emit('refresh')
   } catch (e) {
     toast.add({
       color: 'error',
-      title: 'Failed to update project',
+      title: 'Failed to add member',
       description: String(e),
     })
   }
@@ -62,39 +85,36 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
 </script>
 
 <template>
+  <ul class="grid lg:grid-cols-2 gap-4 mb-4">
+    <li v-for="user in users" :key="user.id">
+      <UCard variant="subtle">
+        <h3 class="flex flex-wrap items-center gap-2">
+          <span class="bold">{{ user.name || user.email }}</span>
+          <div class="flex-1" />
+          <UButton
+            icon="i-material-symbols-delete"
+            color="warning"
+            variant="soft"
+            @click="removeUser(user)"
+          />
+        </h3>
+        <p v-if="user.name">{{ user.email }}</p>
+      </UCard>
+    </li>
+  </ul>
+
   <UForm
     :state="state"
-    :schema="UpdateTeamRequest"
-    class="max-w-[600px] space-y-4 mb-4"
+    :schema="AddTeamUserRequest"
+    class="space-y-2 max-w-[600px]"
     @submit="onSubmit"
   >
-    <UFormField name="name" label="Team name">
-      <UInput v-model="state.name" class="w-full" />
+    <UFormField name="email" label="New team member email">
+      <UInput v-model="state.email" type="email" class="w-full" />
     </UFormField>
 
-    <UFormField name="project_name" label="Project name">
-      <UInput v-model="state.project_name" class="w-full" />
+    <UFormField>
+      <UButton variant="subtle">Add</UButton>
     </UFormField>
-
-    <UFormField name="project_description" label="Project description">
-      <UTextarea
-        v-model="state.project_description"
-        :rows="10"
-        class="w-full"
-      />
-    </UFormField>
-
-    <UFormField name="project_demo_url" label="Demo URL">
-      <UInput v-model="state.project_demo_url" class="w-full" />
-    </UFormField>
-
-    <UFormField name="project_repo_url" label="Repository URL">
-      <UInput v-model="state.project_repo_url" class="w-full" />
-    </UFormField>
-
-    <div class="flex gap-4">
-      <UButton id="project-save" variant="subtle" type="submit">Save</UButton>
-      <UButton id="project-submit" type="submit">Submit</UButton>
-    </div>
   </UForm>
 </template>

@@ -56,7 +56,9 @@ async function onSubmit(event: FormSubmitEvent<CreateTeamRequest>) {
         <UInput v-model="state.name" />
       </UFormField>
 
-      <UButton type="submit">Create</UButton>
+      <UFormField>
+        <UButton type="submit">Create</UButton>
+      </UFormField>
     </UForm>
   </div>
 </template>

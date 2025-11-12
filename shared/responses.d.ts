@@ -16,3 +16,10 @@ interface CreateTeamResponse {
   message: string
   id: number
 }
+
+type GetTeamUsersResponse = {
+  id: number
+  email: string
+  name: string | null
+  team_id: number | null
+}[]

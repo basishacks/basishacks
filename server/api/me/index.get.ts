@@ -14,9 +14,7 @@ export default defineEventHandler(async (event) => {
   const team = user.team_id ? await getTeamByID(event, user.team_id) : null
 
   return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
+    ...convertUserToPublic(user),
     team: team && {
       id: team.id,
       name: team.name,

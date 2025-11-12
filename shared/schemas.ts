@@ -4,7 +4,7 @@ const BasisEmail = z
   .email()
   .refine(
     (s) => s.toLowerCase().endsWith('@basischina.com'),
-    'Please use your @basischina.com email'
+    'Please use a @basischina.com email'
   )
 
 export const SendCodeRequest = z.object({
@@ -31,3 +31,8 @@ export const UpdateTeamRequest = z.object({
   project_repo_url: z.union([z.url(), z.literal('')]),
 })
 export type UpdateTeamRequest = z.infer<typeof UpdateTeamRequest>
+
+export const AddTeamUserRequest = z.object({
+  email: BasisEmail,
+})
+export type AddTeamUserRequest = z.infer<typeof AddTeamUserRequest>
