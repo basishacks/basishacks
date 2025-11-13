@@ -1,8 +1,8 @@
 - [x] Home page
-- [ ] Registration
+- [x] Registration
   - [ ] Email & name
-- [ ] Team management
-  - [ ] Add team members
-  - [ ] Remove team members
+- [x] Team management
+  - [x] Add team members
+  - [x] Remove team members
 - [ ] Submitting projects
-  - [ ] Project name, description, repo URL, demo URL
+  - [x] Project name, description, repo URL, demo URL

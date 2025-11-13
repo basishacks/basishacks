@@ -84,14 +84,16 @@ async function onLoginSubmit(event: FormSubmitEvent<LoginRequest>) {
         <UInput v-model="state.email" type="email" class="w-full" />
       </UFormField>
 
-      <UButton type="submit">Send verification code</UButton>
+      <UFormField>
+        <UButton type="submit">Send verification code</UButton>
+      </UFormField>
     </UForm>
 
     <UForm
       v-else
       :state="state"
       :schema="LoginRequest"
-      class="max-w-96 space-y-4"
+      class="max-w-[600px] space-y-4"
       @submit="onLoginSubmit"
     >
       <UFormField name="email" label="Email">

@@ -11,6 +11,10 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
     sendCodeURL: '',
+    session: {
+      password: '',
+      maxAge: 30 * 24 * 60 * 60,
+    },
   },
   experimental: {
     asyncContext: true,
