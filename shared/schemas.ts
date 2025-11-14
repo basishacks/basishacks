@@ -9,6 +9,10 @@ const BasisEmail = z
 
 const TeamName = z.string().min(2, 'Team name must be at least 2 characters')
 
+const BooleanString = z
+  .literal(['true', 'false'])
+  .transform((s) => s === 'true')
+
 export const SendCodeRequest = z.object({
   email: BasisEmail,
 })
@@ -21,7 +25,7 @@ export const LoginRequest = z.object({
 export type LoginRequest = z.infer<typeof LoginRequest>
 
 export const CreateTeamQuery = z.object({
-  add: z.optional(z.boolean()),
+  add: BooleanString.optional(),
 })
 export type CreateTeamQuery = z.infer<typeof CreateTeamQuery>
 
