@@ -16,6 +16,9 @@ export default defineNuxtConfig({
       maxAge: 30 * 24 * 60 * 60,
     },
   },
+  colorMode: {
+    preference: 'dark',
+  },
   experimental: {
     asyncContext: true,
   },
