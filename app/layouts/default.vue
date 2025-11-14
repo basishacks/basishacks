@@ -27,6 +27,15 @@ const navItems = computed<NavigationMenuItem[]>(() => {
 
       <UNavigationMenu :items="navItems" />
 
+      <template #right>
+        <UColorModeButton />
+        <UButton
+          icon="i-material-symbols-account-circle-full"
+          variant="ghost"
+          href="/profile"
+        />
+      </template>
+
       <template #body>
         <UNavigationMenu
           :items="navItems"

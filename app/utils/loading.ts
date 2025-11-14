@@ -1,11 +1,12 @@
-export async function withLoadingIndicator(func: () => unknown) {
+export async function withLoadingIndicator<T>(func: () => T): Promise<T> {
   const loadingIndicator = useLoadingIndicator()
   loadingIndicator.start()
   try {
-    await func()
+    const res = await func()
+    loadingIndicator.finish()
+    return res
   } catch (e) {
     loadingIndicator.finish({ error: true })
     throw e
   }
-  loadingIndicator.finish()
 }

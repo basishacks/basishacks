@@ -111,8 +111,13 @@ async function onSubmit(event: FormSubmitEvent<AddTeamUserRequest>) {
     class="space-y-2 max-w-[600px]"
     @submit="onSubmit"
   >
-    <UFormField name="email" label="New team member email">
-      <UInput v-model="state.email" type="email" class="w-full" />
+    <UFormField name="email" label="Add team member">
+      <UInput
+        v-model="state.email"
+        type="email"
+        placeholder="New member email"
+        class="w-full"
+      />
     </UFormField>
 
     <UFormField>

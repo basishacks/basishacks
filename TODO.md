@@ -1,8 +1,10 @@
 - [x] Home page
 - [x] Registration
-  - [ ] Email & name
+  - [x] Email & name
 - [x] Team management
   - [x] Add team members
   - [x] Remove team members
 - [ ] Submitting projects
   - [x] Project name, description, repo URL, demo URL
+- [ ] Peer voting
+- [ ] Judges voting

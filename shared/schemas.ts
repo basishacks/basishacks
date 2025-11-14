@@ -36,3 +36,8 @@ export const AddTeamUserRequest = z.object({
   email: BasisEmail,
 })
 export type AddTeamUserRequest = z.infer<typeof AddTeamUserRequest>
+
+export const UpdateUserNameRequest = z.object({
+  name: z.string(),
+})
+export type UpdateUserNameRequest = z.infer<typeof UpdateUserNameRequest>
