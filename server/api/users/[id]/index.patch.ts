@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
   if (!user) {
     await clearUserSession(event)
     throw createError({
-      status: 403,
+      status: 401,
       message: 'Logged in user not found',
     })
   }

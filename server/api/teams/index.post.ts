@@ -5,6 +5,20 @@ export default defineEventHandler(async (event) => {
     user: { id: userID },
   } = await requireUserSession(event)
 
+  const user = await getUser(event, userID)
+  if (!user) {
+    throw createError({
+      status: 401,
+      message: 'Logged in user not found',
+    })
+  }
+  if (user?.team_id) {
+    throw createError({
+      status: 403,
+      message: 'Cannot create a team while in a team',
+    })
+  }
+
   const { add = false } = await getValidatedQuery(event, CreateTeamQuery.parse)
   const { name } = await readValidatedBody(event, CreateTeamRequest.parse)
 
