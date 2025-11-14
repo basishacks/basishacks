@@ -23,3 +23,7 @@
 .glow-sm {
   text-shadow: 0 0 0.03em color-mix(in srgb, currentColor 75%, var(--background-color-default) 25%), 0 0 0.07em color-mix(in srgb, currentColor 75%, var(--background-color-default) 25%);
 }
+
+code {
+  background: var(--background-color-accented);
+}

@@ -110,5 +110,21 @@ const resultsOpenDate = computed(
       The theme of the hackathon will be revealed on
       <DateTime class="bold" :date="startDate" />, at the opening ceremony.
     </p>
+
+    <h2 class="text-3xl bold mb-4 glow-sm">Resources</h2>
+    <p class="mb-2">Here are some resources to help you get started:</p>
+    <ul class="mb-4">
+      <li>
+        * Check out the projects made in
+        <ULink href="https://nethack.biszweb.club/showcase" target="_blank"
+          >last year's network hackathon!</ULink
+        >
+        Maybe you'll find inspiration there.
+      </li>
+      <li>
+        * Check out <ULink href="/rules">the rules for the hackathon</ULink> and
+        start planning your project accordingly.
+      </li>
+    </ul>
   </div>
 </template>

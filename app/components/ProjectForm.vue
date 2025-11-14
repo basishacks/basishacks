@@ -102,10 +102,8 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
       <UInput v-model="state.project_demo_url" class="w-full" />
 
       <template #help>
-        <p>
-          This should allow anyone can experience your project. For more
-          information, please review the hackathon rules.
-        </p>
+        This should allow anyone can experience your project. For more
+        information, please review the hackathon rules.
       </template>
     </UFormField>
 

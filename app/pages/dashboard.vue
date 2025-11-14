@@ -82,24 +82,31 @@ watch(isDirty, (value) => {
     </div>
 
     <template v-else>
-      <div v-if="hackathon?.status === 'not_started'">
-        <p class="mb-4">
-          Welcome <span class="bold">{{ data.name || data.email }}</span
-          >! The hackathon hasn't started yet - please check the timer on the
-          home page!
-        </p>
-      </div>
-
-      <div v-else-if="hackathon?.status === 'in_progress'">
-        <p class="mb-4">
-          Welcome <span class="bold">{{ data.name || data.email }}</span
-          >! The hackathon is in progress - <span class="glow">HACK AWAY!</span>
-        </p>
-        <p class="mb-4">
-          Please review the <ULink href="/rules">rules document</ULink> for the
-          most up-to-date rules.
-        </p>
-      </div>
+      <p class="mb-4">
+        Welcome <span class="bold">{{ data.name || data.email }}</span
+        >!
+        <template v-if="hackathon?.status === 'not_started'">
+          The hackathon hasn't started yet - please check the timer on the home
+          page!
+        </template>
+        <template v-else-if="hackathon?.status === 'in_progress'">
+          The hackathon is in progress - <span class="glow">HACK AWAY!</span>
+        </template>
+        <template v-else-if="hackathon?.status === 'voting'">
+          The hackathon is completed, and peer voting is underway!
+        </template>
+        <template v-else-if="hackathon?.status === 'finished'">
+          The hackathon is completed, and the scores are released!
+        </template>
+        <template v-else-if="hackathon?.status === 'paused'">
+          The hackathon is paused as the organizers figure out the secrets of
+          the universe... Please check back later!
+        </template>
+      </p>
+      <p class="mb-4">
+        Please review the <ULink href="/rules">rules page</ULink> for the most
+        up-to-date rules and requirements.
+      </p>
 
       <h2 class="text-3xl bold mb-4">Your team</h2>
       <TeamForm :id="data.team.id" @refresh="refreshData" />
