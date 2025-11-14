@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
-import { AddTeamUserRequest, RenameTeamRequest } from '~~/shared/schemas'
+import { AddTeamMemberRequest, UpdateTeamRequest } from '~~/shared/schemas'
 
 const { id, name } = defineProps<{
   id: number
@@ -18,7 +18,7 @@ const {
   data: users,
   error,
   refresh,
-} = await useFetch<GetTeamUsersResponse>(`/api/teams/${id}/users`)
+} = await useFetch<GetTeamMembersResponse>(`/api/teams/${id}/users`)
 if (error.value) {
   throw error.value
 }
@@ -64,7 +64,7 @@ const nameState = reactive({
   name: name,
 })
 
-async function onNameSubmit(event: FormSubmitEvent<RenameTeamRequest>) {
+async function onNameSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
   try {
     await withLoadingIndicator(async () => {
       const { message } = await $fetch(`/api/teams/${id}`, {
@@ -91,7 +91,7 @@ const state = reactive({
   email: '',
 })
 
-async function onSubmit(event: FormSubmitEvent<AddTeamUserRequest>) {
+async function onSubmit(event: FormSubmitEvent<AddTeamMemberRequest>) {
   try {
     await withLoadingIndicator(async () => {
       const { message } = await $fetch(`/api/teams/${id}/users`, {
@@ -135,7 +135,7 @@ async function onSubmit(event: FormSubmitEvent<AddTeamUserRequest>) {
 
   <UForm
     :state="nameState"
-    :schema="RenameTeamRequest"
+    :schema="UpdateTeamRequest"
     class="space-y-2 max-w-[600px] mb-4"
     @submit="onNameSubmit"
   >
@@ -150,7 +150,7 @@ async function onSubmit(event: FormSubmitEvent<AddTeamUserRequest>) {
 
   <UForm
     :state="state"
-    :schema="AddTeamUserRequest"
+    :schema="AddTeamMemberRequest"
     class="space-y-2 max-w-[600px]"
     @submit="onSubmit"
   >

@@ -11,14 +11,14 @@ export default defineEventHandler(async (event) => {
 
   const { email } = await readValidatedBody(event, SendCodeRequest.parse)
 
-  const { id: userID, code } = await addCodeToUserWithEmail(event, email)
+  const user = await addCodeToUser(event, email)
 
   const res = await fetch(sendCodeURL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ email, code }),
+    body: JSON.stringify({ email, code: user.login_code! }),
   })
   const data = await res.json<
     { success: true; name: string } | { success: false; error: string }
@@ -29,7 +29,8 @@ export default defineEventHandler(async (event) => {
       message: data.error,
     })
   }
-  await setUserName(event, userID, data.name)
+  user.name = data.name
+  await updateUser(event, user)
 
   return { message: 'Sent code to your Teams account' }
 })

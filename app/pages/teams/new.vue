@@ -20,13 +20,14 @@ async function onSubmit(event: FormSubmitEvent<CreateTeamRequest>) {
 
   try {
     await withLoadingIndicator(async () => {
-      const res = await $fetch<CreateTeamResponse>('/api/teams', {
+      await $fetch<CreateTeamResponse>('/api/teams', {
         method: 'POST',
         body: { name },
+        query: { add: true },
       })
       toast.add({
         color: 'success',
-        title: res.message,
+        title: 'Your team is created',
       })
     })
     await navigateTo('/dashboard')

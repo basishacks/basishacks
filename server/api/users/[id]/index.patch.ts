@@ -1,0 +1,33 @@
+import { UpdateUserRequest } from '~~/shared/schemas'
+
+export default defineEventHandler(async (event) => {
+  const id = parseInt(getRouterParam(event, 'id')!)
+
+  const {
+    user: { id: userID },
+  } = await requireUserSession(event)
+
+  if (id !== userID) {
+    throw createError({
+      status: 403,
+      message: 'Cannot update other users',
+    })
+  }
+
+  const { name } = await readValidatedBody(event, UpdateUserRequest.parse)
+
+  const user = await getUser(event, id)
+  if (!user) {
+    await clearUserSession(event)
+    throw createError({
+      status: 403,
+      message: 'Logged in user not found',
+    })
+  }
+
+  if (name !== undefined) user.name = name
+
+  await updateUser(event, user)
+
+  return { message: 'Your profile is updated' }
+})

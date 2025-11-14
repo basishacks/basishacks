@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
   const teamID = parseInt(getRouterParam(event, 'id')!)
 
-  const users = await getTeamUsers(event, teamID)
+  const users = await getTeamMembers(event, teamID)
 
-  return users.map(convertUserToPublic) satisfies GetTeamUsersResponse
+  return users.map(convertUserToPublic) satisfies GetTeamMembersResponse
 })

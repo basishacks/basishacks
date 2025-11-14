@@ -1,6 +1,6 @@
 import type { H3Event } from 'h3'
 
-export async function getUserByID(
+export async function getUser(
   event: H3Event,
   userID: number
 ): Promise<User | null> {
@@ -11,21 +11,29 @@ export async function getUserByID(
     .first<User>()
 }
 
-export async function addCodeToUserWithEmail(event: H3Event, email: string) {
+export async function getUserByEmail(event: H3Event, email: string) {
+  return await event.context.cloudflare.env.DB.prepare(
+    'SELECT * FROM users WHERE email = ?'
+  )
+    .bind(email)
+    .first<User>()
+}
+
+export async function addCodeToUser(event: H3Event, email: string) {
   const code = Math.floor(100000 + Math.random() * 900000).toString()
   const expiry = Date.now() + 10 * 60 * 1000
 
   // upsert user
-  const { id } = (await event.context.cloudflare.env.DB.prepare(
-    'INSERT INTO users(email, login_code, login_expiry) VALUES(?, ?, ?) ON CONFLICT(email) DO UPDATE SET login_code = EXCLUDED.login_code, login_expiry = EXCLUDED.login_expiry RETURNING id'
+  const user = (await event.context.cloudflare.env.DB.prepare(
+    'INSERT INTO users(email, login_code, login_expiry) VALUES(?, ?, ?) ON CONFLICT(email) DO UPDATE SET login_code = EXCLUDED.login_code, login_expiry = EXCLUDED.login_expiry RETURNING *'
   )
     .bind(email, code, expiry)
-    .first<Pick<User, 'id'>>())!
+    .first<User>())!
 
-  return { id, code }
+  return user
 }
 
-export async function getUserByEmailCode(
+export async function getUserByCode(
   event: H3Event,
   email: string,
   code: string
@@ -37,16 +45,13 @@ export async function getUserByEmailCode(
     .first<Pick<User, 'id'>>()
 }
 
-export async function setUserName(
-  event: H3Event,
-  userID: number,
-  name: string
-) {
+export async function updateUser(event: H3Event, user: User) {
   const result = await event.context.cloudflare.env.DB.prepare(
     'UPDATE users SET name = ? WHERE id = ?'
   )
-    .bind(name, userID)
+    .bind(user.name, user.id)
     .run()
+
   if (!result.meta.changed_db) {
     throw createError({
       status: 404,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
-import { UpdateUserNameRequest } from '~~/shared/schemas'
+import { UpdateUserRequest } from '~~/shared/schemas'
 
 const toast = useToast()
 
@@ -8,9 +8,12 @@ definePageMeta({
   middleware: 'auth',
 })
 
-const { clear } = useUserSession()
+const { user: userRef, clear } = useUserSession()
+const userID = computed(() => userRef.value!.id)
 
-const { data, error } = await useFetch<GetUserResponse>('/api/me')
+const { data, error } = await useFetch<GetUserResponse>(
+  () => `/api/users/${userID.value}`
+)
 if (error.value) {
   throw error.value
 }
@@ -28,10 +31,10 @@ const state = reactive({
   name: user.value.name || '',
 })
 
-async function onSubmitName(event: FormSubmitEvent<UpdateUserNameRequest>) {
+async function onSubmitName(event: FormSubmitEvent<UpdateUserRequest>) {
   try {
     const { message } = await withLoadingIndicator(async () => {
-      return $fetch('/api/me', {
+      return $fetch<UpdateUserResponse>(`/api/users/${userID.value}`, {
         method: 'PATCH',
         body: event.data,
       })
@@ -58,7 +61,7 @@ async function onSubmitName(event: FormSubmitEvent<UpdateUserNameRequest>) {
 
     <UForm
       :state="state"
-      :schema="UpdateUserNameRequest"
+      :schema="UpdateUserRequest"
       class="max-w-[600px] space-y-4"
       @submit="onSubmitName"
     >

@@ -3,7 +3,7 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 import { UpdateTeamRequest } from '~~/shared/schemas'
 
 const { team: defaultTeam, disabled = false } = defineProps<{
-  team: GetUserResponse['team'] & {}
+  team: APITeam
   disabled?: boolean
 }>()
 const emit = defineEmits<{
@@ -15,13 +15,6 @@ const formRef = useTemplateRef('formRef')
 
 const toast = useToast()
 
-const state = reactive({
-  project_name: '',
-  project_description: '',
-  project_demo_url: '',
-  project_repo_url: '',
-})
-
 watch(
   () => formRef.value?.dirty,
   (value) => {
@@ -30,14 +23,27 @@ watch(
   { deep: true }
 )
 
-function updateStateFromTeam() {
-  state.project_name = defaultTeam.project_name
-  state.project_description = defaultTeam.project_description
-  state.project_demo_url = defaultTeam.project_demo_url || ''
-  state.project_repo_url = defaultTeam.project_repo_url || ''
-}
+const state = reactive({
+  name: '',
+  project: {
+    name: '',
+    description: '',
+    repo_url: '',
+    demo_url: '',
+  },
+})
 
-watch(() => defaultTeam, updateStateFromTeam, { deep: true, immediate: true })
+watch(
+  () => defaultTeam,
+  (value) => {
+    state.name = value.name
+    state.project.name = value.project.name
+    state.project.description = value.project.description
+    state.project.repo_url = value.project.repo_url || ''
+    state.project.demo_url = value.project.demo_url || ''
+  },
+  { deep: true, immediate: true }
+)
 
 async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
   const isSubmit = event.submitter?.id === 'project-submit'
@@ -46,11 +52,20 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
     return
   }
 
+  const payload = {
+    ...event.data,
+    project: {
+      ...event.data.project,
+      demo_url: event.data.project?.demo_url || null,
+      repo_url: event.data.project?.repo_url || null,
+    },
+  }
+
   try {
     await withLoadingIndicator(async () => {
       const res = await $fetch(`/api/teams/${defaultTeam.id}`, {
-        method: 'PUT',
-        body: event.data,
+        method: 'PATCH',
+        body: payload,
       })
       toast.add({
         color: 'success',
@@ -78,19 +93,15 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
     @submit="onSubmit"
   >
     <UFormField
-      name="project_name"
+      name="project.name"
       label="Project name"
       help="Make it sound even cooler!"
     >
-      <UInput v-model="state.project_name" class="w-full" />
+      <UInput v-model="state.project.name" class="w-full" />
     </UFormField>
 
-    <UFormField name="project_description" label="Project description">
-      <UTextarea
-        v-model="state.project_description"
-        :rows="10"
-        class="w-full"
-      />
+    <UFormField name="project.description" label="Project description">
+      <UTextarea v-model="state.project.description" :rows="10" class="w-full" />
 
       <template #help>
         <p>Please include:</p>
@@ -101,8 +112,8 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
       </template>
     </UFormField>
 
-    <UFormField name="project_demo_url" label="Demo URL">
-      <UInput v-model="state.project_demo_url" class="w-full" />
+    <UFormField name="project.demo_url" label="Demo URL">
+      <UInput v-model="state.project.demo_url" class="w-full" />
 
       <template #help>
         This should allow anyone can experience your project. For more
@@ -110,8 +121,8 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
       </template>
     </UFormField>
 
-    <UFormField name="project_repo_url" label="Repository URL">
-      <UInput v-model="state.project_repo_url" class="w-full" />
+    <UFormField name="project.repo_url" label="Repository URL">
+      <UInput v-model="state.project.repo_url" class="w-full" />
 
       <template #help>
         Your project must be open source on

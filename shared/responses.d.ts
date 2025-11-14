@@ -1,26 +1,35 @@
-interface GetUserResponse {
+interface APIUser {
   id: number
   email: string
   name: string | null
-  team: {
-    id: number
-    name: string
-    project_name: string
-    project_description: string
-    project_demo_url: string | null
-    project_repo_url: string | null
-    project_submitted: boolean
-  } | null
+  team_id: number | null
 }
 
-interface CreateTeamResponse {
-  message: string
+interface APITeam {
   id: number
+  name: string
+  project: {
+    name: string
+    description: string
+    demo_url: string | null
+    repo_url: string | null
+    submitted: boolean
+  }
 }
 
-type GetTeamUsersResponse = {
+interface GetUserResponse extends APIUser {
+  team: APITeam | null
+}
+
+type CreateTeamResponse = APITeam
+
+type GetTeamMembersResponse = {
   id: number
   email: string
   name: string | null
   team_id: number | null
 }[]
+
+interface UpdateUserResponse {
+  message: string
+}
