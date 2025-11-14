@@ -3,28 +3,34 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 import { UpdateTeamRequest } from '~~/shared/schemas'
 
 const { team: defaultTeam, disabled = false } = defineProps<{
-  team: Team
+  team: GetUserResponse['team'] & {}
   disabled?: boolean
 }>()
 const emit = defineEmits<{
-  update: [state: typeof state]
+  dirty: [dirty: boolean]
   refresh: []
 }>()
+
+const formRef = useTemplateRef('formRef')
 
 const toast = useToast()
 
 const state = reactive({
-  name: '',
   project_name: '',
   project_description: '',
   project_demo_url: '',
   project_repo_url: '',
 })
 
-watch(state, (value) => emit('update', value), { deep: true, immediate: false })
+watch(
+  () => formRef.value?.dirty,
+  (value) => {
+    emit('dirty', value ?? true)
+  },
+  { deep: true }
+)
 
 function updateStateFromTeam() {
-  state.name = defaultTeam.name
   state.project_name = defaultTeam.project_name
   state.project_description = defaultTeam.project_description
   state.project_demo_url = defaultTeam.project_demo_url || ''
@@ -64,16 +70,13 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
 
 <template>
   <UForm
+    ref="formRef"
     :state="state"
     :schema="UpdateTeamRequest"
     :disabled="disabled"
     class="max-w-[600px] space-y-4 mb-4"
     @submit="onSubmit"
   >
-    <UFormField name="name" label="Team name" help="Make it sound cool!">
-      <UInput v-model="state.name" class="w-full" />
-    </UFormField>
-
     <UFormField
       name="project_name"
       label="Project name"

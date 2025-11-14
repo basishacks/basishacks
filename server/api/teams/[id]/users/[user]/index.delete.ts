@@ -6,13 +6,6 @@ export default defineEventHandler(async (event) => {
   const teamID = parseInt(getRouterParam(event, 'id')!)
   const userID = parseInt(getRouterParam(event, 'user')!)
 
-  // if (currentUserID === userID) {
-  //   throw createError({
-  //     status: 400,
-  //     message: 'Cannot remove yourself from the team',
-  //   })
-  // }
-
   const currentUser = await getUserByID(event, currentUserID)
   if (currentUser?.team_id !== teamID) {
     throw createError({

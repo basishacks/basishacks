@@ -24,6 +24,7 @@ interface Team {
   project_description: string
   project_demo_url: string | null
   project_repo_url: string | null
+  project_submitted: number
 }
 
 interface User {

@@ -27,16 +27,8 @@ async function refreshData() {
   isDirty.value = false
 }
 
-function updateData(state: Omit<Team, 'id'>) {
-  console.log(JSON.stringify(state))
-  console.log(JSON.stringify(data.value?.team))
-  isDirty.value =
-    !data.value?.team || // should never happen???
-    state.name !== data.value.team.name ||
-    state.project_name !== data.value.team.project_name ||
-    state.project_description !== data.value.team.project_description ||
-    state.project_demo_url !== (data.value.team.project_demo_url || '') ||
-    state.project_repo_url !== (data.value.team.project_repo_url || '')
+function dateUpdated(dirty: boolean) {
+  isDirty.value = dirty
 }
 
 onBeforeRouteLeave(() => {
@@ -109,14 +101,20 @@ watch(isDirty, (value) => {
       </p>
 
       <h2 class="text-3xl bold mb-4">Your team</h2>
-      <TeamForm :id="data.team.id" @refresh="refreshData" />
+      <div class="mb-4">
+        <TeamForm
+          :id="data.team.id"
+          :name="data.team.name"
+          @refresh="refreshData"
+        />
+      </div>
 
       <template v-if="hackathon?.status !== 'not_started'">
         <h2 class="text-3xl bold mb-4">Your project</h2>
         <ProjectForm
           :team="data.team"
           :disabled="hackathon?.status !== 'in_progress'"
-          @update="updateData"
+          @dirty="dateUpdated"
           @refresh="refreshData"
         />
       </template>

@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS teams (
     project_name TEXT NOT NULL DEFAULT '',
     project_description TEXT NOT NULL DEFAULT '',
     project_demo_url TEXT,
-    project_repo_url TEXT
+    project_repo_url TEXT,
+    project_submitted INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS users (

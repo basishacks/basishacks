@@ -9,6 +9,7 @@ interface GetUserResponse {
     project_description: string
     project_demo_url: string | null
     project_repo_url: string | null
+    project_submitted: boolean
   } | null
 }
 

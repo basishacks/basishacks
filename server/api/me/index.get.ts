@@ -22,6 +22,7 @@ export default defineEventHandler(async (event) => {
       project_description: team.project_description,
       project_demo_url: team.project_demo_url,
       project_repo_url: team.project_repo_url,
+      project_submitted: !!team.project_submitted,
     },
   } satisfies GetUserResponse
 })

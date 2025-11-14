@@ -94,18 +94,45 @@ export async function createTeam(
   return teamID
 }
 
-export async function updateTeam(event: H3Event, team: Team) {
+export async function updateTeamProject(
+  event: H3Event,
+  team: Pick<
+    Team,
+    | 'id'
+    | 'project_name'
+    | 'project_description'
+    | 'project_demo_url'
+    | 'project_repo_url'
+  >
+) {
   const result = await event.context.cloudflare.env.DB.prepare(
-    'UPDATE teams SET name = ?, project_name = ?, project_description = ?, project_demo_url = ?, project_repo_url = ? WHERE id = ?'
+    'UPDATE teams SET project_name = ?, project_description = ?, project_demo_url = ?, project_repo_url = ? WHERE id = ?'
   )
     .bind(
-      team.name,
       team.project_name,
       team.project_description,
       team.project_demo_url,
       team.project_repo_url,
       team.id
     )
+    .run()
+  if (!result.meta.changed_db) {
+    throw createError({
+      status: 404,
+      message: 'Team not found',
+    })
+  }
+}
+
+export async function updateTeamName(
+  event: H3Event,
+  teamID: number,
+  name: string
+) {
+  const result = await event.context.cloudflare.env.DB.prepare(
+    'UPDATE teams SET name = ? WHERE id = ?'
+  )
+    .bind(name, teamID)
     .run()
   if (!result.meta.changed_db) {
     throw createError({

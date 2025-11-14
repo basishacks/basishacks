@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
-import { AddTeamUserRequest } from '~~/shared/schemas'
+import { AddTeamUserRequest, RenameTeamRequest } from '~~/shared/schemas'
 
-const { id } = defineProps<{
+const { id, name } = defineProps<{
   id: number
+  name: string
 }>()
 const emit = defineEmits<{
   refresh: []
@@ -58,6 +59,33 @@ async function removeUser(user: Pick<User, 'id' | 'name' | 'email'>) {
   }
 }
 
+// rename
+const nameState = reactive({
+  name: name,
+})
+
+async function onNameSubmit(event: FormSubmitEvent<RenameTeamRequest>) {
+  try {
+    await withLoadingIndicator(async () => {
+      const { message } = await $fetch(`/api/teams/${id}`, {
+        method: 'PATCH',
+        body: event.data,
+      })
+      toast.add({
+        color: 'success',
+        title: message,
+      })
+      await refresh()
+    })
+  } catch (e) {
+    toast.add({
+      color: 'error',
+      title: 'Failed to rename team',
+      description: String(e),
+    })
+  }
+}
+
 // add user
 const state = reactive({
   email: '',
@@ -104,6 +132,21 @@ async function onSubmit(event: FormSubmitEvent<AddTeamUserRequest>) {
       </UCard>
     </li>
   </ul>
+
+  <UForm
+    :state="nameState"
+    :schema="RenameTeamRequest"
+    class="space-y-2 max-w-[600px] mb-4"
+    @submit="onNameSubmit"
+  >
+    <UFormField name="name" label="Rename team">
+      <UInput v-model="nameState.name" class="w-full" />
+    </UFormField>
+
+    <UFormField>
+      <UButton variant="subtle" type="submit">Rename</UButton>
+    </UFormField>
+  </UForm>
 
   <UForm
     :state="state"

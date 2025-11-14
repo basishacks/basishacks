@@ -24,13 +24,17 @@ export const CreateTeamRequest = z.object({
 export type CreateTeamRequest = z.infer<typeof CreateTeamRequest>
 
 export const UpdateTeamRequest = z.object({
-  name: z.string().min(2, 'Team name must be at least 2 characters'),
   project_name: z.string(),
   project_description: z.string(),
   project_demo_url: z.union([z.url(), z.literal('')]),
   project_repo_url: z.union([z.url(), z.literal('')]),
 })
 export type UpdateTeamRequest = z.infer<typeof UpdateTeamRequest>
+
+export const RenameTeamRequest = z.object({
+  name: z.string().min(2, 'Team name must be at least 2 characters'),
+})
+export type RenameTeamRequest = z.infer<typeof RenameTeamRequest>
 
 export const AddTeamUserRequest = z.object({
   email: BasisEmail,

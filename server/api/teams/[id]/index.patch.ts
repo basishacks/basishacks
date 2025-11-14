@@ -1,4 +1,4 @@
-import { UpdateTeamRequest } from '~~/shared/schemas'
+import { RenameTeamRequest } from '~~/shared/schemas'
 
 export default defineEventHandler(async (event) => {
   const {
@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   } = await requireUserSession(event)
 
   const id = parseInt(getRouterParam(event, 'id')!)
-  const payload = await readValidatedBody(event, UpdateTeamRequest.parse)
+  const { name } = await readValidatedBody(event, RenameTeamRequest.parse)
 
   const user = await getUserByID(event, currentUserID)
   if (user?.team_id !== id) {
@@ -16,12 +16,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  await updateTeamProject(event, {
-    id,
-    ...payload,
-    project_demo_url: payload.project_demo_url || null,
-    project_repo_url: payload.project_repo_url || null,
-  })
+  await updateTeamName(event, id, name)
 
-  return { message: 'Updated your project' }
+  return { message: 'Updated your team' }
 })
