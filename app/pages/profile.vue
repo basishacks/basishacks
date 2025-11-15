@@ -11,7 +11,7 @@ definePageMeta({
 const { user: userRef, clear } = useUserSession()
 const userID = computed(() => userRef.value?.id ?? 0)
 
-const { data, error } = await useFetch<GetUserResponse>(
+const { data, error, refresh } = await useFetch<GetUserResponse>(
   () => `/api/users/${userID.value}`
 )
 if (error.value) {
@@ -43,6 +43,7 @@ async function onSubmitName(event: FormSubmitEvent<UpdateUserRequest>) {
       color: 'success',
       title: message,
     })
+    await refresh()
   } catch (e) {
     toast.add({
       color: 'error',
