@@ -2,13 +2,14 @@
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { AddTeamMemberRequest, UpdateTeamRequest } from '~~/shared/schemas'
 
-const { id, name } = defineProps<{
-  id: number
-  name: string
+const { team } = defineProps<{
+  team: APITeam
 }>()
 const emit = defineEmits<{
   refresh: []
 }>()
+
+const { id, name } = team
 
 const toast = useToast()
 
@@ -53,7 +54,7 @@ async function removeUser(user: Pick<User, 'id' | 'name' | 'email'>) {
       toast.add({
         color: 'error',
         title: 'Failed to remove member',
-        description: String(e),
+        description: getErrorMessage(e),
       })
     }
   }
@@ -64,7 +65,10 @@ const nameState = reactive({
   name: name,
 })
 
-async function onNameSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
+async function onNameSubmit(
+  event: FormSubmitEvent<UpdateTeamRequest>,
+  close: () => void
+) {
   try {
     await withLoadingIndicator(async () => {
       const { message } = await $fetch(`/api/teams/${id}`, {
@@ -75,14 +79,17 @@ async function onNameSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
         color: 'success',
         title: message,
       })
+      emit('refresh')
       await refresh()
     })
   } catch (e) {
     toast.add({
       color: 'error',
       title: 'Failed to rename team',
-      description: String(e),
+      description: getErrorMessage(e),
     })
+  } finally {
+    close()
   }
 }
 
@@ -91,7 +98,10 @@ const state = reactive({
   email: '',
 })
 
-async function onSubmit(event: FormSubmitEvent<AddTeamMemberRequest>) {
+async function onSubmit(
+  event: FormSubmitEvent<AddTeamMemberRequest>,
+  close: () => void
+) {
   try {
     await withLoadingIndicator(async () => {
       const { message } = await $fetch(`/api/teams/${id}/users`, {
@@ -102,69 +112,90 @@ async function onSubmit(event: FormSubmitEvent<AddTeamMemberRequest>) {
         color: 'success',
         title: message,
       })
+      emit('refresh')
       await refresh()
     })
   } catch (e) {
     toast.add({
       color: 'error',
       title: 'Failed to add member',
-      description: String(e),
+      description: getErrorMessage(e),
     })
+  } finally {
+    close()
   }
 }
 </script>
 
 <template>
-  <ul class="grid lg:grid-cols-2 gap-4 mb-4">
-    <li v-for="user in users" :key="user.id">
-      <UCard variant="subtle">
-        <h3 class="flex flex-wrap items-center gap-2">
-          <span class="bold">{{ user.name || user.email }}</span>
-          <div class="flex-1" />
-          <UButton
-            icon="i-material-symbols-delete"
-            color="warning"
-            variant="soft"
-            @click="removeUser(user)"
-          />
-        </h3>
-        <p v-if="user.name">{{ user.email }}</p>
-      </UCard>
-    </li>
-  </ul>
+  <div>
+    <h2 class="text-3xl bold mb-4 flex gap-4">
+      <span>
+        Your team: <span class="glow">{{ team.name }}</span>
+      </span>
 
-  <UForm
-    :state="nameState"
-    :schema="UpdateTeamRequest"
-    class="space-y-2 max-w-[600px] mb-4"
-    @submit="onNameSubmit"
-  >
-    <UFormField name="name" label="Rename team">
-      <UInput v-model="nameState.name" class="w-full" />
-    </UFormField>
+      <UModal title="Rename team">
+        <UButton
+          variant="soft"
+          icon="i-material-symbols-drive-file-rename-outline"
+        />
 
-    <UFormField>
-      <UButton variant="subtle" type="submit">Rename</UButton>
-    </UFormField>
-  </UForm>
+        <template #body="{ close }">
+          <UForm
+            :state="nameState"
+            :schema="UpdateTeamRequest"
+            class="space-y-2 max-w-[600px]"
+            @submit="onNameSubmit($event, close)"
+          >
+            <UFormField name="name" label="New name">
+              <UInput v-model="nameState.name" class="w-full" />
+            </UFormField>
 
-  <UForm
-    :state="state"
-    :schema="AddTeamMemberRequest"
-    class="space-y-2 max-w-[600px]"
-    @submit="onSubmit"
-  >
-    <UFormField name="email" label="Add team member">
-      <UInput
-        v-model="state.email"
-        type="email"
-        placeholder="New member email"
-        class="w-full"
-      />
-    </UFormField>
+            <UFormField>
+              <UButton variant="subtle" type="submit">Rename</UButton>
+            </UFormField>
+          </UForm>
+        </template>
+      </UModal>
 
-    <UFormField>
-      <UButton variant="subtle" type="submit">Add</UButton>
-    </UFormField>
-  </UForm>
+      <UModal title="Add team member">
+        <UButton variant="soft" icon="i-material-symbols-person-add" />
+
+        <template #body="{ close }">
+          <UForm
+            :state="state"
+            :schema="AddTeamMemberRequest"
+            class="space-y-2 max-w-[600px]"
+            @submit="onSubmit($event, close)"
+          >
+            <UFormField name="email" label="New member email">
+              <UInput v-model="state.email" type="email" class="w-full" />
+            </UFormField>
+
+            <UFormField>
+              <UButton variant="subtle" type="submit">Add</UButton>
+            </UFormField>
+          </UForm>
+        </template>
+      </UModal>
+    </h2>
+
+    <ul class="grid lg:grid-cols-2 gap-4 mb-4">
+      <li v-for="user in users" :key="user.id">
+        <UCard variant="subtle">
+          <h3 class="flex flex-wrap items-center gap-2">
+            <span class="bold">{{ user.name || user.email }}</span>
+            <div class="flex-1" />
+            <UButton
+              icon="i-material-symbols-delete"
+              color="warning"
+              variant="soft"
+              @click="removeUser(user)"
+            />
+          </h3>
+          <p v-if="user.name">{{ user.email }}</p>
+        </UCard>
+      </li>
+    </ul>
+  </div>
 </template>

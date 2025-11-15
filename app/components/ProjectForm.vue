@@ -77,7 +77,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
     toast.add({
       color: 'error',
       title: 'Failed to update project',
-      description: String(e),
+      description: getErrorMessage(e),
     })
   }
 }

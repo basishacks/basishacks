@@ -35,7 +35,7 @@ async function onSubmit(event: FormSubmitEvent<CreateTeamRequest>) {
     toast.add({
       color: 'error',
       title: 'Failed to create team',
-      description: String(e),
+      description: getErrorMessage(e),
     })
   }
 }

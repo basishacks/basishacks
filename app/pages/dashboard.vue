@@ -59,6 +59,10 @@ watch(isDirty, (value) => {
     window.removeEventListener('beforeunload', beforeUnload)
   }
 })
+
+onUnmounted(() => {
+  window.removeEventListener('beforeunload', beforeUnload)
+})
 </script>
 
 <template>
@@ -105,13 +109,8 @@ watch(isDirty, (value) => {
         up-to-date rules and requirements.
       </p>
 
-      <h2 class="text-3xl bold mb-4">Your team</h2>
       <div class="mb-4">
-        <TeamForm
-          :id="data.team.id"
-          :name="data.team.name"
-          @refresh="refreshData"
-        />
+        <TeamForm :team="data.team" @refresh="refreshData" />
       </div>
 
       <template v-if="hackathon?.status !== 'not_started'">

@@ -10,6 +10,7 @@ const toast = useToast()
 const { fetch: refreshAuth } = useUserSession()
 
 const isSendingCode = ref(true)
+const isLoading = ref(false)
 
 const state = reactive({
   email: '',
@@ -18,6 +19,8 @@ const state = reactive({
 
 async function onSendCodeSubmit(event: FormSubmitEvent<SendCodeRequest>) {
   const { email } = event.data
+
+  isLoading.value = true
 
   try {
     await withLoadingIndicator(async () => {
@@ -36,13 +39,17 @@ async function onSendCodeSubmit(event: FormSubmitEvent<SendCodeRequest>) {
     toast.add({
       color: 'error',
       title: 'Failed to send verification code',
-      description: String(e),
+      description: getErrorMessage(e),
     })
+  } finally {
+    isLoading.value = false
   }
 }
 
 async function onLoginSubmit(event: FormSubmitEvent<LoginRequest>) {
   const { email, code } = event.data
+
+  isLoading.value = true
 
   try {
     await withLoadingIndicator(async () => {
@@ -61,8 +68,10 @@ async function onLoginSubmit(event: FormSubmitEvent<LoginRequest>) {
     toast.add({
       color: 'error',
       title: 'Failed to log in',
-      description: String(e),
+      description: getErrorMessage(e),
     })
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
@@ -84,9 +93,9 @@ async function onLoginSubmit(event: FormSubmitEvent<LoginRequest>) {
         <UInput v-model="state.email" type="email" class="w-full" />
       </UFormField>
 
-      <UFormField>
-        <UButton type="submit">Send verification code</UButton>
-      </UFormField>
+      <UButton :disabled="isLoading" type="submit"
+        >Send verification code</UButton
+      >
     </UForm>
 
     <UForm
@@ -104,7 +113,7 @@ async function onLoginSubmit(event: FormSubmitEvent<LoginRequest>) {
         <UInput v-model="state.code" class="w-full" />
       </UFormField>
 
-      <UButton type="submit">Log in</UButton>
+      <UButton :disabled="isLoading" type="submit">Log in</UButton>
     </UForm>
   </div>
 </template>

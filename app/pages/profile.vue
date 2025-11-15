@@ -9,7 +9,7 @@ definePageMeta({
 })
 
 const { user: userRef, clear } = useUserSession()
-const userID = computed(() => userRef.value!.id)
+const userID = computed(() => userRef.value?.id ?? 0)
 
 const { data, error } = await useFetch<GetUserResponse>(
   () => `/api/users/${userID.value}`
@@ -47,7 +47,7 @@ async function onSubmitName(event: FormSubmitEvent<UpdateUserRequest>) {
     toast.add({
       color: 'error',
       title: 'Failed to update profile',
-      description: String(e),
+      description: getErrorMessage(e),
     })
   }
 }
