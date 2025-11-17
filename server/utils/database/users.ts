@@ -20,6 +20,17 @@ export async function getUserByEmail(event: H3Event, email: string) {
 }
 
 export async function addCodeToUser(event: H3Event, email: string) {
+  const oldUser = await getUserByEmail(event, email)
+  if (
+    oldUser?.login_expiry &&
+    oldUser.login_expiry > Date.now() - 1 * 60 * 1000
+  ) {
+    throw createError({
+      status: 403,
+      message: 'Please wait 1 minute before requesting another code!',
+    })
+  }
+
   const code = Math.floor(100000 + Math.random() * 900000).toString()
   const expiry = Date.now() + 10 * 60 * 1000
 
