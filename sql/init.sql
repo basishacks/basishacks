@@ -29,5 +29,5 @@ CREATE TABLE IF NOT EXISTS users (
     login_expiry INTEGER,
     FOREIGN KEY (team_id) REFERENCES teams(id)
 );
-CREATE INDEX idx_users_email ON users (email);
-CREATE INDEX idx_users_team_id ON users (team_id);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
+CREATE INDEX IF NOT EXISTS idx_users_team_id ON users (team_id);
