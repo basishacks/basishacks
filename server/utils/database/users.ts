@@ -23,7 +23,7 @@ export async function addCodeToUser(event: H3Event, email: string) {
   const oldUser = await getUserByEmail(event, email)
   if (
     oldUser?.login_expiry &&
-    oldUser.login_expiry > Date.now() - 1 * 60 * 1000
+    oldUser.login_expiry - 9 * 60 * 1000 > Date.now()
   ) {
     throw createError({
       status: 403,
