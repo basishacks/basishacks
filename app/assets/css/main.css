@@ -1,6 +1,88 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
 
+/* Global theme variables (light by default). These will be overridden when Nuxt/UI
+   toggles a dark mode class/attribute on <html> or <body>. This ensures components
+   using CSS variables (like `.voting-page`) adapt automatically. */
+:root {
+  --bg: #f5f7fa;
+  --panel-bg: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --muted-2: #374151;
+  --input-bg: #ffffff;
+  --border: #e5e7eb;
+  --media-start: #eef2ff;
+  --media-end: #f8fafc;
+  --panel-shadow: 0 2px 8px rgba(16,24,40,0.05);
+}
+
+/* Dark theme triggers commonly applied by Nuxt UI or color mode plugins.
+   Support several selectors to be robust across implementations. */
+html.dark,
+html[data-color-mode="dark"],
+html[data-theme="dark"],
+html.nuxt-color-mode--dark,
+body.nuxt-color-mode--dark,
+html.u-color-mode--dark,
+body.u-color-mode--dark {
+  --bg: #071026;
+  --panel-bg: #071226;
+  --text: #e6eef8;
+  --muted: #9ca3af;
+  --muted-2: #cbd5e1;
+  --input-bg: #0b1522;
+  --border: rgba(255,255,255,0.06);
+  --media-start: #031022;
+  --media-end: #071520;
+  --panel-shadow: none;
+}
+
+/* Mainly exclusive for judging page. Could also be used for other Markdown rendering needs. */
+@import 'github-markdown-css/github-markdown.css';
+@import 'prismjs/themes/prism.css';
+/* Make markdown use your app variables and readable font-size */
+.markdown-body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-size: 16px;            /* adjust as needed */
+  color: var(--text);         /* tie to your site colors */
+  background: transparent;
+  line-height: 1.6;
+}
+
+/* Images responsive inside markdown */
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: .5rem 0;
+}
+
+/* Code block and inline code tweaks: remove pre-wrap and use monospace */
+.readme pre, .markdown-body pre {
+  white-space: pre;           /* important for pre/code */
+  overflow: auto;
+  padding: 1rem;
+  border-radius: 6px;
+  background: var(--input-bg); /* or use prism theme background */
+  border: 1px solid var(--border);
+}
+
+/* Inline code */
+.markdown-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  background: rgba(27,31,35,0.05);
+  padding: .15rem .3rem;
+  border-radius: 6px;
+}
+
+/* Ensure Prism styles are visible and integrate with dark mode */
+@media (prefers-color-scheme: dark) {
+  .markdown-body { color: var(--text); }
+  .markdown-body pre { background: #0b1522; border-color: rgba(255,255,255,0.06); }
+}
+
+
 /* @theme {
   --font-mono: "Monaspace Neon";
   --font-mono--font-variation-settings: "wdth" 100;
