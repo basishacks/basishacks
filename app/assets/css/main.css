@@ -1,16 +1,28 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
 
-@theme {
-  --font-mono: Monaspace Neon;
+/* @theme {
+  --font-mono: "Monaspace Neon";
   --font-mono--font-variation-settings: "wdth" 100;
-  /* disable the dot inside the "0" glyph */
   --font-mono--font-feature-settings: "cv01" 1;
 
   --font-sans: var(--font-mono);
   --font-sans--font-variation-settings: "wdth" 100;
   --font-sans--font-feature-settings: "cv01" 1;
+} */
+
+@font-face { /* Legacy Compatibility. This will not make requests to google (as my VPN is not working properly) */
+  font-family: "Monaspace Neon";
+  src: url("/fonts/monaspace-neon.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
+
+body {
+  font-family: "Monaspace Neon", monospace;
+}
+
 
 .bold {
   font-variation-settings: "wdth" 100, "wght" var(--font-weight-bold);

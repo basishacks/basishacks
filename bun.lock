@@ -9,6 +9,7 @@
         "@nuxt/ui": "4.1.0",
         "@nuxtjs/google-fonts": "3.2.0",
         "eslint": "^9.0.0",
+        "glin-profanity": "^2.3.8",
         "nitro-cloudflare-dev": "^0.2.2",
         "nuxt": "^4.2.1",
         "nuxt-auth-utils": "0.5.25",
@@ -1155,6 +1156,8 @@
     "git-up": ["git-up@8.1.1", "https://mirrors.cloud.tencent.com/npm/git-up/-/git-up-8.1.1.tgz", { "dependencies": { "is-ssh": "^1.4.0", "parse-url": "^9.2.0" } }, "sha512-FDenSF3fVqBYSaJoYy1KSc2wosx0gCvKP+c+PRBht7cAaiCeQlBtfBDX9vgnNOHmdePlSFITVcn4pFfcgNvx3g=="],
 
     "git-url-parse": ["git-url-parse@16.1.0", "https://mirrors.cloud.tencent.com/npm/git-url-parse/-/git-url-parse-16.1.0.tgz", { "dependencies": { "git-up": "^8.1.0" } }, "sha512-cPLz4HuK86wClEW7iDdeAKcCVlWXmrLpb2L+G9goW0Z1dtpNS6BXXSOckUTlJT/LDQViE1QZKstNORzHsLnobw=="],
+
+    "glin-profanity": ["glin-profanity@2.3.8", "https://mirrors.cloud.tencent.com/npm/glin-profanity/-/glin-profanity-2.3.8.tgz", {}, "sha512-AXGIPoT/z4TJtxKlCh3Uxd/NNSuPVgJCVwBgI5FS3OtFmIUiPPPYwSFnfB4FuFDLL0uS5xXCWM+/aRYIC0sp1w=="],
 
     "glob": ["glob@10.5.0", "https://mirrors.cloud.tencent.com/npm/glob/-/glob-10.5.0.tgz", { "dependencies": { "foreground-child": "^3.1.0", "jackspeak": "^3.1.2", "minimatch": "^9.0.4", "minipass": "^7.1.2", "package-json-from-dist": "^1.0.0", "path-scurry": "^1.11.1" }, "bin": { "glob": "dist/esm/bin.mjs" } }, "sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg=="],
 
