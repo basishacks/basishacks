@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     'nitro-cloudflare-dev',
     '@nuxt/eslint',
     '@nuxt/ui',
+    "@nuxtjs/google-fonts",
     'nuxt-auth-utils',
   ],
   css: ['~/assets/css/main.css'],
@@ -15,6 +16,9 @@ export default defineNuxtConfig({
       password: '',
       maxAge: 30 * 24 * 60 * 60,
     },
+    hackathon: {
+      
+    }
   },
   colorMode: {
     preference: 'dark',
@@ -30,4 +34,7 @@ export default defineNuxtConfig({
       allowedHosts: true,
     },
   },
+  ui: {
+    fonts: false
+  }
 })

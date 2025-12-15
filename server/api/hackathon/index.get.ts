@@ -1,6 +1,8 @@
 export default defineEventHandler(async (event) => {
   const hackathon = await getHackathon(event)
 
+  console.log(hackathon)
+
   if (!hackathon) {
     throw createError({
       statusCode: 404,
