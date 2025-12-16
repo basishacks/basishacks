@@ -15,7 +15,7 @@
       your project will not be valid and will be rejected.
     </p>
     <ul class="mb-4">
-      <li>
+      <li class="mb-2">
         * <span class="bold">An open-source repository.</span> Your project code
         must be open-source on
         <ULink href="https://github.com" target="_blank">GitHub</ULink>
@@ -23,31 +23,31 @@
         <ULink href="https://gitee.com" target="_blank">Gitee</ULink>. A zip
         archive or similar will NOT be accepted.
       </li>
-      <li>
+      <li class="mb-2">
         * <span class="bold">A README file</span>. This should be a file called
         <code>README.md</code> in your repository. It should contain a brief
         description of your project, instructions to use it (website link,
         download &amp; setup instructions, etc.), the technologies used, and the
         demo video (if applicable).
       </li>
-      <li>
+      <li class="mb-2">
         * <span class="bold">A public demo URL.</span> Your project must be
         experienceable by anyone on any device. For different projects, this
         means different things:
-        <ul class="indent-[2ch]">
-          <li>
+        <ul class="indent-[2ch] mt-1">
+          <li class="mb-1">
             * <span class="bold">Websites</span> must be deployed and accessible
             to the public. If it requires authentication, anyone must be able to
             register for an account (demo accounts only are not allowed). The
             demo URL should be the link to the website.
           </li>
-          <li>
+          <li class="mb-1">
             * <span class="bold">Desktop apps</span> must be built into an
             executable file for either Windows or macOS (ideally both). The demo
             URL should be a link to a page that contains the executable download
             (such as a GitHub or Gitee release).
           </li>
-          <li>
+          <li class="mb-1">
             * <span class="bold">Games</span> must either be playable in the
             browser (such as deployed on
             <ULink href="https://itch.io" target="_blank">itch.io</ULink>), or
@@ -62,11 +62,10 @@
           </li>
         </ul>
       </li>
-      <li>
-        * <span class="bold">A demo video</span>. This is only required if your
-        project needs the user to download something (i.e., not a website). This
-        should be 2-3 minutes and demonstrate the core functionality of your
-        project. It however does NOT waive the demo URL requirement.
+      <li class="mb-2">
+        * <span class="bold">A demo video</span>. This should be 1-3 minutes and
+        demonstrate the main features of your project. It however does NOT waive
+        the demo URL requirement.
       </li>
       <li>
         * The project must follow the theme. It must have at least some kind of
