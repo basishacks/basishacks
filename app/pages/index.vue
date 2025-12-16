@@ -30,10 +30,10 @@ const resultsOpenDate = computed(
       >!
     </h1>
     <p class="mb-4">
-      This is the official website of Lorem ipsum dolor sit amet consectetur
-      adipisicing elit. Ab iste, nostrum corporis ex, quos a aliquid eligendi
-      odio earum reiciendis repellendus provident, quibusdam consectetur sint
-      illo tenetur qui unde ullam!
+      This is the official website of the 2025-26 BIBS-C Network Hackathon
+      (<span class="text-primary glow">{{ WEBSITE_NAME }}</span
+      >), a week where creativity meets technology, where ideas transform into
+      prototypes, and where brilliant minds come together to build the future.
     </p>
     <ULink href="/dashboard">
       <UAlert v-if="status !== 'not_started'" variant="soft" class="mb-4">
