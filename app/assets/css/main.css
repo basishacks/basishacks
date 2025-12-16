@@ -127,6 +127,6 @@ code {
   background: var(--background-color-accented);
 }
 
-a {
+a.link-underlined {
   text-decoration: underline;
 }

@@ -8,6 +8,18 @@
             </div>
         </header>
         <aside class="left-pane">
+            
+
+            <section class="project-info">
+
+                <h3 class="readme-header">Project Info</h3>
+                <div class="meta"><strong>Team:</strong> {{ currentProject.team }}</div>
+                <div class="meta"><strong>Category:</strong> {{ currentProject.category }}</div>
+
+            </section>
+
+            <br></br>
+
             <section class="readme-only">
                 <h3 class="readme-header">README</h3>
                 <div class="readme-container">
@@ -19,7 +31,21 @@
                             v-if="readmeHtml"
                             v-html="readmeHtml"
                         ></article>
-                        <pre class="readme" v-else v-text="readmeContent || 'No README available for this project.'"></pre>
+                        <pre class="readme" v-else v-text="readmeContent || 'No README.md submitted for this project.'"></pre><br>
+                        
+                        <div class="notification" v-if="!readmeHtml">
+                            <div class="notif-icon" aria-hidden="true">
+                                <span v-if="notification.iconHtml" v-html="notification.iconHtml"></span>
+                                <span v-else class="notif-default-icon">😧</span>
+                            </div>
+                            <div class="notif-body">
+                                <div class="notif-title">Incomplete Project</div>
+                                <div class="notif-desc">
+                                    <p>There is no README file included in this project. As a result, this is subject to points deduction in the <strong>DES</strong> (Presentation & Design) criteria of the rubric.</p>
+                                    <p>You should still evaluate the project as is based on the materials provided.</p>
+                                </div>
+                            </div>
+                        </div>
                     </template>
                 </div>
             </section>
@@ -40,7 +66,7 @@
                         <p>As a public participant, your vote is counted seperately from judge votes. As a result, the project that is picked most by the public will recieve
                             an alternative recognition 🏅
                         </p>
-                        <a href="/rules">Learn more about Public Vote</a>
+                        <a href="/rules" class="link-underlined">Learn more about Public Vote</a>
                     </div>
                 </div>
             </div>
@@ -62,11 +88,12 @@
                 <div class="notif-body">
                     <div class="notif-title">Heads Up!</div>
                     <div class="notif-desc">
-                        <p>Participants should not include any form of Personally Identifiable Information (PII) in any components of their project, including
+                        <p>Participants should not include any form of Personally Identifiable Information (PII) or inappropriate materials in any components of their project, including
                         video demonstration, code, documentation, and other materials. </p>
                         <p>Examples of PII include full names, email addresses, phone numbers, their voice, and any other information 
                         that can be used to identify an individual.</p>
-                        <p>Projects are subject to disqualification by including PIIs in their content. If you located any PII, please <strong>FLAG</strong> this project by clicking the 
+                        <p>Inappropriate content includes offensive language, hate speech, discriminatory remarks, or any content that violates the event's code of conduct.</p>
+                        <p>Projects are subject to disqualification by including PIIs and inappropriate content. If you located any PII or inappropriate language, please <strong>FLAG</strong> this project by clicking the 
                             <span class="text-red-400">Flag Button</span> at the bottom of this page.</p>
                     </div>
                 </div>
@@ -84,15 +111,11 @@
             <br></br>
             <h2 class="text-3xl bold">Step 3: Grading</h2>
             <p>Judge the project based on the four main criterias below. For each criteria's description, hover over the question mark icon to see further details.</p>
-            <p>Notice that there is an extra criteria known as <strong>ADJ</strong> (Judge Adjustment). This should default to <strong>4</strong> for all projects,
-            but judges reserve the right to take off points if a project </p>
 
             <section class="rubrics">
                 <div class="score-summary" style="margin-bottom:.5rem;">
-                    <div>Total points: <strong>{{ totalPoints }}/20</strong></div>
-                    <div>Normalized: <strong>{{ normalizedPercent }}%</strong></div>
+                    <div>Total points: <strong>{{ totalPoints }}/16</strong></div>
                 </div>
-                <h3>Rubric</h3>
                 <table class="rubric-table">
                     <thead>
                         <tr>
@@ -127,7 +150,7 @@
             </section>
 
             <section class="comments">
-                <h3>Judge Comments</h3>
+                <h3>Add Commentary for Verdict</h3>
                 <textarea v-model="comments" rows="5" placeholder="Strengths, weaknesses, suggestions..."></textarea>
             </section>
 
@@ -176,7 +199,7 @@ const projects = reactive([
         category: 'Sustainability',
         abstract: 'Find routes that minimize carbon footprint using multi-modal transport.',
         members: ['Dana', 'Eve'],
-        readmeRawUrl: ''
+        readmeRawUrl: 'https://raw.githubusercontent.com/electron/electron/refs/heads/main/README.md'
     },
     {
         id: 'P-003',
@@ -208,7 +231,6 @@ const defaultRubrics = [
     { id: 'r3', abbr: 'IMP', title: 'Impact & Usefulness', description: 'Potential to solve real problems or benefit users.', weight: 20, score: 0 },
     { id: 'r4', abbr: 'DES', title: 'Presentation & Design', description: 'Clarity, polish, and design of demo.', weight: 20, score: 0 },
     // Judge adjustment: subjective override/adjustment field for judges. Default score set to 4.
-    { id: 'r5', abbr: 'ADJ', title: 'Judge Adjustment', description: 'Optional subjective adjustment or overall judgement by the judge.', weight: 20, score: 4 },
 ]
 
 const rubrics = reactive(defaultRubrics.map(r => ({ ...r })))
