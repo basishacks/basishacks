@@ -15,6 +15,13 @@
   --media-start: #eef2ff;
   --media-end: #f8fafc;
   --panel-shadow: 0 2px 8px rgba(16,24,40,0.05);
+
+  --notif-bg: var(--color-blue-300);
+
+  --para-gap: 1rem; /* Responsible for judging the gap between paragraphs */
+
+  --color-red: var(--color-red-300)
+
 }
 
 /* Dark theme triggers commonly applied by Nuxt UI or color mode plugins.
@@ -36,6 +43,11 @@ body.u-color-mode--dark {
   --media-start: #031022;
   --media-end: #071520;
   --panel-shadow: none;
+
+  --notif-bg: var(--color-blue-950);
+
+  --color-red: var(--color-red-800)
+  
 }
 
 /* Mainly exclusive for judging page. Could also be used for other Markdown rendering needs. */
@@ -70,18 +82,11 @@ body.u-color-mode--dark {
 
 /* Inline code */
 .markdown-body code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-  background: rgba(27,31,35,0.05);
+  font-family: ui-monospace , SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace !important; 
+  background: var(--background-color-default);
   padding: .15rem .3rem;
   border-radius: 6px;
 }
-
-/* Ensure Prism styles are visible and integrate with dark mode */
-@media (prefers-color-scheme: dark) {
-  .markdown-body { color: var(--text); }
-  .markdown-body pre { background: #0b1522; border-color: rgba(255,255,255,0.06); }
-}
-
 
 /* @theme {
   --font-mono: "Monaspace Neon";
@@ -120,4 +125,8 @@ body {
 
 code {
   background: var(--background-color-accented);
+}
+
+a {
+  text-decoration: underline;
 }

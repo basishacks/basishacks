@@ -1,4 +1,4 @@
-<template base="1">
+<template>
     <div class="voting-page" :class="{ 'is-dark': isDark }">
         <header class="project-nav">
             <div class="nav-center">
@@ -25,40 +25,71 @@
             </section>
         </aside>
 
+        
+
         <main class="right-pane">
-            <section class="project-info-right">
-                <h3>Team / Project</h3>
-                <p class="meta">Team: <strong>{{ currentProject.team }}</strong></p>
-                <p class="meta">Category: <strong>{{ currentProject.category }}</strong></p>
 
-                <h4>Abstract</h4>
-                <p class="abstract">{{ currentProject.abstract }}</p>
 
-                <h4>Members</h4>
-                <ul>
-                    <li v-for="m in currentProject.members" :key="m">{{ m }}</li>
-                </ul>
+            <div class="notification" v-if="publicVote">
+                <div class="notif-icon" aria-hidden="true">
+                    <span class="notif-default-icon">😊</span>
+                </div>
+                <div class="notif-body">
+                    <div class="notif-title">Public Vote</div>
+                    <div class="notif-desc">
+                        <p>As a public participant, your vote is counted seperately from judge votes. As a result, the project that is picked most by the public will recieve
+                            an alternative recognition 🏅
+                        </p>
+                        <a href="/rules">Learn more about Public Vote</a>
+                    </div>
+                </div>
+            </div>
 
-                <footer class="left-footer">
-                    <small>Project ID: {{ currentProject.id }}</small>
-                </footer>
-            </section>
+            <h2 class="text-3xl bold">Step 1: Project Description</h2>
+            <p>The team should include an insightful GitHub README.md file to describe their project and its basic functionality.
+                It is totally up to the judge to determine how well the team has communicated their project through the README. 
+                If there is an lack of clarity, judges may choose to deduct points under relevant rubric criteria.
+            </p>
 
-            <section class="instructions">
-                <details open>
-                    <summary>Instructions</summary>
-                    <ol>
-                        <li>Read the project README on the left.</li>
-                        <li>Use the rubric table below and click the cell that matches the criterion (4 = Outstanding → 0 = Missing).</li>
-                        <li>Final score is the sum of points and shown as total points and a normalized percent.</li>
-                        <li>Provide short comments for overall feedback.</li>
-                    </ol>
-                </details>
-            </section>
+
+
+            <!-- Notification container (customizable) -->
+            <div class="notification" v-if="!publicVote">
+                <div class="notif-icon" aria-hidden="true">
+                    <span v-if="notification.iconHtml" v-html="notification.iconHtml"></span>
+                    <span v-else class="notif-default-icon">ℹ️</span>
+                </div>
+                <div class="notif-body">
+                    <div class="notif-title">Heads Up!</div>
+                    <div class="notif-desc">
+                        <p>Participants should not include any form of Personally Identifiable Information (PII) in any components of their project, including
+                        video demonstration, code, documentation, and other materials. </p>
+                        <p>Examples of PII include full names, email addresses, phone numbers, their voice, and any other information 
+                        that can be used to identify an individual.</p>
+                        <p>Projects are subject to disqualification by including PIIs in their content. If you located any PII, please <strong>FLAG</strong> this project by clicking the 
+                            <span class="text-red-400">Flag Button</span> at the bottom of this page.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <br></br>
+            <h2 class="text-3xl bold">Step 2: Demonstration</h2>
+            <p>
+                The project should include any of the following demonstration materials:
+                ✅ Video demonstration link (YouTube, Vimeo, etc.). This should be automatically embedded beneath the README. <br></br>
+                ✅ Website link, if the participant chooses to create a Web Application.
+            </p>
+            <p>Feel free to enjoy the the demonstration. Keep in mind that you will score the project based on the four criterias <strong>below</strong></p>
+
+            <br></br>
+            <h2 class="text-3xl bold">Step 3: Grading</h2>
+            <p>Judge the project based on the four main criterias below. For each criteria's description, hover over the question mark icon to see further details.</p>
+            <p>Notice that there is an extra criteria known as <strong>ADJ</strong> (Judge Adjustment). This should default to <strong>4</strong> for all projects,
+            but judges reserve the right to take off points if a project </p>
 
             <section class="rubrics">
                 <div class="score-summary" style="margin-bottom:.5rem;">
-                    <div>Total points: <strong>{{ totalPoints }} pts</strong></div>
+                    <div>Total points: <strong>{{ totalPoints }}/20</strong></div>
                     <div>Normalized: <strong>{{ normalizedPercent }}%</strong></div>
                 </div>
                 <h3>Rubric</h3>
@@ -66,16 +97,9 @@
                     <thead>
                         <tr>
                             <th>Criterion</th>
-                            <th colspan="5">Score</th>
+                            <th colspan="5">Score<span> (select by clicking on an option)</span></th>
                         </tr>
-                        <tr class="subheaders">
-                            <th></th>
-                            <th class="score-col">Outstanding<br/><small>(4)</small></th>
-                            <th class="score-col">Very Good<br/><small>(3)</small></th>
-                            <th class="score-col">Satisfactory<br/><small>(2)</small></th>
-                            <th class="score-col">Needs Improvement<br/><small>(1)</small></th>
-                            <th class="score-col">Missing<br/><small>(0)</small></th>
-                        </tr>
+
                     </thead>
                     <tbody>
                         <tr v-for="(r, idx) in rubrics" :key="r.id">
@@ -114,13 +138,25 @@
                 <div class="last-saved" v-if="lastSaved">
                     <small>Last saved: {{ lastSaved }}</small>
                 </div>
+                
+            </section>
+
+            <section class="actions">
+                <button class="flag-btn" @click="reportAbuse" v-if="!publicVote">Flag Project for Inappropriate Content</button>
+                <button class="nav-prev" @click="prevProject" :disabled="currentIndex === 0">← Prev</button>
+                <button class="nav-next" @click="nextProject" :disabled="currentIndex === projects.length - 1">Next →</button>
             </section>
         </main>
     </div>
 </template>
 
 <script setup>
+
+
+
 import { ref, reactive, computed, watch } from 'vue'
+
+const publicVote = computed(() => false) // set to true to enable public vote notification
 
 const projects = reactive([
     {
@@ -167,10 +203,12 @@ function prevProject() {
 
 /* Rubric setup */
 const defaultRubrics = [
-    { id: 'r1', abbr: 'INO', title: 'Innovation & Originality', description: 'Novelty of idea and approach.', weight: 30, score: 0 },
-    { id: 'r2', abbr: 'TEC', title: 'Technical Complexity', description: 'Depth and quality of technical implementation.', weight: 30, score: 0 },
+    { id: 'r1', abbr: 'INO', title: 'Innovation & Originality', description: 'Novelty of idea and approach.', weight: 20, score: 0 },
+    { id: 'r2', abbr: 'TEC', title: 'Technical Complexity', description: 'Depth and quality of technical implementation.', weight: 20, score: 0 },
     { id: 'r3', abbr: 'IMP', title: 'Impact & Usefulness', description: 'Potential to solve real problems or benefit users.', weight: 20, score: 0 },
     { id: 'r4', abbr: 'DES', title: 'Presentation & Design', description: 'Clarity, polish, and design of demo.', weight: 20, score: 0 },
+    // Judge adjustment: subjective override/adjustment field for judges. Default score set to 4.
+    { id: 'r5', abbr: 'ADJ', title: 'Judge Adjustment', description: 'Optional subjective adjustment or overall judgement by the judge.', weight: 20, score: 4 },
 ]
 
 const rubrics = reactive(defaultRubrics.map(r => ({ ...r })))
@@ -188,6 +226,26 @@ const readmeHtml = ref('')
 
 // Rubric scoring scale (max points per criterion)
 const RUBRIC_MAX = 4
+
+
+
+/* Notification (customizable) */
+const notification = reactive({
+    visible: false,
+    kind: 'info', // info | warning | danger | custom
+    bgColor: '', // optional custom background color (hex or css color)
+    iconHtml: '', // optional HTML string for a custom icon (SVG/emoji)
+    title: 'Note',
+    message: 'Helpful information about this project or judging guidance.'
+})
+
+const kindDefaults = {
+    info: { bg: '#e6f5ff', border: '#cfe6ff', color: '#063159', icon: 'ℹ️' },
+    warning: { bg: '#fff8e6', border: '#ffe4a8', color: '#5a4200', icon: '⚠️' },
+    danger: { bg: '#ffecec', border: '#ffc6c6', color: '#6a0000', icon: '⛔' }
+}
+
+
 
 // Compute weighted score per rubric and totals
 function weighted(r) {
@@ -328,72 +386,35 @@ watch(currentIndex, () => loadForProject(currentProject.value.id), { immediate: 
 import { onMounted, onUnmounted } from 'vue'
 
 // dynamic theme support: detect global color mode changes (Nuxt UI toggles)
-const isDark = ref(false)
-
-function detectDarkFromDoc() {
-    if (typeof document === 'undefined') return false
-    const el = document.documentElement
-    // Common patterns: data-color-mode, data-theme, or a `dark` class. Check several.
-    const attrColor = el.getAttribute('data-color-mode')
-    const attrTheme = el.getAttribute('data-theme')
-    if (attrColor === 'dark' || attrTheme === 'dark') return true
-    if (el.classList.contains('dark') || el.classList.contains('nuxt-color-mode--dark')) return true
-    // fallback to prefers-color-scheme
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-}
 
 let _mo = null
 let _mq = null
 
-onMounted(() => {
-    // initialize
-    isDark.value = detectDarkFromDoc()
 
-    // observe attribute changes on html element (for data-color-mode or class toggles)
-    try {
-        _mo = new MutationObserver(() => {
-            isDark.value = detectDarkFromDoc()
-        })
-        _mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-color-mode', 'data-theme'] })
-    } catch (e) {
-        // ignore
-    }
-
-    // listen to prefers-color-scheme changes as fallback
-    try {
-        _mq = window.matchMedia('(prefers-color-scheme: dark)')
-        const onChange = () => { isDark.value = detectDarkFromDoc() }
-        if (_mq.addEventListener) _mq.addEventListener('change', onChange)
-        else if (_mq.addListener) _mq.addListener(onChange)
-    } catch (e) {
-        // ignore
-    }
-})
-
-onUnmounted(() => {
-    try { if (_mo) _mo.disconnect() } catch {}
-    try { if (_mq) { if (_mq.removeEventListener) _mq.removeEventListener('change', () => {}) } } catch {}
-})
 
 </script>
 
 <style scoped>
 .voting-page {
     /* color tokens (light defaults) */
-    --bg: #f5f7fa;
+    /* --bg: #f5f7fa;
     --panel-bg: #ffffff;
     --text: #1f2937;
     --muted: #6b7280;
     --muted-2: #374151;
     --input-bg: #ffffff;
-    --border: #e5e7eb;
+    --border: var(--border);
     --media-start: #eef2ff;
     --media-end: #f8fafc;
-    --panel-shadow: 0 2px 8px rgba(16,24,40,0.05);
+    --panel-shadow: 0 2px 8px rgba(16,24,40,0.05); */
+
+
 
     display: grid;
     /* left has a min and a capped percentage, right gets the rest (wider right pane) */
     grid-template-columns: minmax(260px, 34%) minmax(560px, 1fr);
+    /* fixed header row height so the navigation row stays constant */
+    grid-template-rows: 64px 1fr;
     min-height: 100vh;
     gap: 1rem;
     padding: 1rem;
@@ -407,7 +428,7 @@ onUnmounted(() => {
 }
 
 /* dark mode overrides */
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
     .voting-page {
         --bg: #071026;
         --panel-bg: #071226;
@@ -420,6 +441,11 @@ onUnmounted(() => {
         --media-end: #071520;
         --panel-shadow: none;
     }
+} */
+
+p {
+  margin: 0 0 var(--para-gap);
+  line-height: 1.35rem;
 }
 
 /* also support explicit toggle via `.is-dark` class on the root .voting-page */
@@ -464,7 +490,7 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: min(760px, calc(100% - 2rem));
+    width: 760px; /* fixed navigation width so center block doesn't shift when right panel changes */
     gap: 1rem;
     margin: 0 auto; /* center this block within the header */
 }
@@ -560,7 +586,7 @@ onUnmounted(() => {
 
 .score-summary { text-align: right; font-size: .95rem; color: var(--text); }
 
-.instructions summary { cursor: pointer; font-weight: 600; margin-bottom: .25rem; }
+.instructions summary { font-weight: 600; margin-bottom: .25rem; }
 .instructions ol { margin: .5rem 0 0 1.1rem; color: var(--muted-2) }
 
 .rubrics { overflow: visible; max-height: none; padding-right: .2rem; }
@@ -593,6 +619,31 @@ onUnmounted(() => {
     color: inherit;
 }
 
+/* Notification styles */
+.notification {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    padding: .6rem .8rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    box-shadow: var(--panel-shadow);
+    background: var(--notif-bg);
+}
+
+
+.yellow {
+    background: var(--color-yellow-500)
+}
+
+.notif-icon { flex: 0 0 36px; display:flex; align-items:center; justify-content:center; font-size:18px }
+.notif-body { flex: 1 1 auto; }
+.notif-title { font-weight:700; margin-bottom: .15rem }
+.notif-desc { color: var(--muted-2); font-size: .95rem }
+.notif-close { background: transparent; border: none; color: inherit; cursor: pointer; padding: .25rem .4rem; font-size: 12px }
+
+/* custom kind-specific classes can be added here if you want overrides */
+
 .actions { display: flex; gap: .6rem; align-items: center; margin-top: 10px; }
 .actions button {
     padding: .5rem .7rem;
@@ -603,6 +654,7 @@ onUnmounted(() => {
     cursor: pointer;
 }
 .btn-save { background: linear-gradient(90deg,#2563eb,#7c3aed); color: #fff; border: none; }
+.flag-btn {background-color: var(--color-red) !important;}
 .last-saved { margin-left: auto; color: var(--muted); font-size: .85rem; }
 
 /* Rubric table styles */
@@ -637,12 +689,14 @@ onUnmounted(() => {
 
 /* project-nav helpers (no duplicate root rules) */
 .project-nav .nav-left { display:flex; gap:.5rem; align-items:center }
-.proj-title { margin: 0; font-size: 1.05rem; }
+.proj-title { margin: 0; font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* responsive */
 @media (max-width: 900px) {
-    .voting-page { grid-template-columns: 1fr; grid-auto-rows: auto; height: auto; }
+    .voting-page { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
     .left-pane { order: 2; }
     .right-pane { order: 1; }
+    /* restore responsive nav-center width on narrow screens */
+    .project-nav .nav-center { width: calc(100% - 2rem); }
 }
 </style>
