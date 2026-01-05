@@ -1,7 +1,20 @@
 <template>
-    <div class="voting-page" :class="{ 'is-dark': isDark }">
+
+    <div v-if="votingOpen === null" class="loading-full" style="display:flex;align-items:center;justify-content:center;min-height:60vh;padding:2rem;">
+
+    </div>
+
+        <!-- closed state: show only closed message (no left pane or rubric) -->
+    <div v-else-if="votingOpen === false" class="closed-full" style="padding:1rem; display:flex;align-items:center;justify-content:center;min-height:60vh;">
+        <div>
+            <div style="font-weight:600;margin-bottom:.5rem">Voting is not open</div>
+            <div style="color:var(--muted-2)">Please wait while we verify contest status.</div>
+        </div>
+    </div>
+
+    <div v-else class="voting-page" :class="{ 'is-dark': isDark }">
+
         <aside class="left-pane">
-            
 
             <section class="project-info">
 
@@ -25,7 +38,7 @@
                             v-html="readmeHtml"
                         ></article>
                         <pre class="readme" v-else v-text="readmeContent || 'No README.md submitted for this project.'"></pre><br>
-                        
+
                         <div class="notification" v-if="!readmeHtml">
                             <div class="notif-icon" aria-hidden="true">
                                 <span v-if="notification.iconHtml" v-html="notification.iconHtml"></span>
@@ -44,10 +57,7 @@
             </section>
         </aside>
 
-        
-
         <main class="right-pane">
-
 
             <details class="instructions" ref="instructionsDetails">
                 <summary>Judging Instructions (Click to Expand)</summary>
@@ -162,7 +172,7 @@
                 <span class="help-icon-container" tabindex="0" aria-label="Show description">
                     <span class="help-icon" aria-hidden="true">?</span>
                     <div class="tooltip" role="tooltip">
-                        <div class="tooltip-desc"><strong>Inappropriate content include having PII (<a class="underline" href="https://en.wikipedia.org/wiki/Personal_data">Personally Identifiable Information</a>).</strong> If you believe there exists any form of inappropriate content in this project, please click this button to flag it. <strong>See Step 1 of Judging Instructions for more.</strong></div>
+                        <div class="tooltip-desc"><strong>Inappropriate content includes but is not limited to having PII (<a class="underline" href="https://en.wikipedia.org/wiki/Personal_data">Personally Identifiable Information</a>).</strong> If you believe there exists any form of inappropriate content in this project, please click this button to flag it. <strong>See Step 1 of Judging Instructions for more.</strong></div>
                     </div>
                 </span>
             </section>
@@ -171,33 +181,94 @@
                 <button class="btn-save" @click="submitVerdict">Submit Verdict <span v-if="isSubmitting" class="spinner"></span></button>
             </section>
         </main>
+
     </div>
 </template>
 
 <script setup>
 
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 
+// Auth/session stub — mirrors `profile.vue` usage of `useUserSession()`.
+// This lets you access `userRef`, `userId`, `userEmail`, and `isLoggedIn` in this page.
+let userRef = ref(null)
+try {
+    const sess = useUserSession()
+    if (sess && sess.user) userRef = sess.user
+} catch (e) {
+    // useUserSession may not be available in all contexts; leave userRef null
+}
+const userId = computed(() => userRef?.value?.id ?? null)
+const userEmail = computed(() => userRef?.value?.email ?? '')
+const isLoggedIn = computed(() => !!(userRef && userRef.value && userRef.value.id))
 
-import { ref, reactive, computed, watch } from 'vue'
+console.log("userId:", userId.value, "isLoggedIn:", isLoggedIn.value)
+try {
+    const res = await fetch(`/api/users/${userId.value}`)
+    
+    const json = await res.json()
+
+    console.log(json)
+} catch (e) {
+    console.error(e)
+}
+
 
 const publicVote = computed(() => false) // set to true to enable public vote notification
 
 const currentProject = ref(null)
+const votingOpen = ref(null) // null = loading/unknown, false = closed, true = open
+const apiMessage = ref('')
+
+
+
+async function checkVoting() {
+    try {
+        const res = await fetch('/api/voting/grade?open=true')
+        if (!res.ok) {
+            votingOpen.value = false
+            apiMessage.value = 'Unable to check voting status'
+            return
+        }
+        const json = await res.json()
+        if (json.status === 'closed') {
+            votingOpen.value = false
+            apiMessage.value = json.message || 'Voting is not open yet'
+            return
+        }
+        votingOpen.value = true
+        const proj = json.project || (json.projects && json.projects[0]) || json
+        currentProject.value = proj
+        if (currentProject.value && currentProject.value.id) loadForProject(currentProject.value.id)
+    } catch (e) {
+        votingOpen.value = false
+        apiMessage.value = 'Error checking voting status'
+        console.error(e)
+    }
+}
 
 async function nextProject() {
     try {
-        const response = await fetch('/api/voting/grade')
-        if (response.ok) {
-            const project = await response.json()
-            currentProject.value = project
-            loadForProject(project.id)
-        } else {
-            console.error('Failed to fetch next project')
+        const res = await fetch('/api/voting/grade')
+        if (!res.ok) return
+        const json = await res.json()
+        if (json.status === 'closed') {
+            votingOpen.value = false
+            apiMessage.value = json.message || 'Voting is not open yet'
+            return
         }
+        votingOpen.value = true
+        const proj = json.project || (json.projects && json.projects[0]) || json
+        currentProject.value = proj
+        if (currentProject.value && currentProject.value.id) loadForProject(currentProject.value.id)
     } catch (e) {
         console.error('Error fetching next project:', e)
     }
 }
+
+onMounted(() => {
+    checkVoting()
+})
 
 /* Rubric setup */
 const defaultRubrics = [
@@ -205,7 +276,6 @@ const defaultRubrics = [
     { id: 'r2', abbr: 'TEC', title: 'Technical Complexity', description: 'Depth and quality of technical implementation.', weight: 20, score: 0 },
     { id: 'r3', abbr: 'IMP', title: 'Impact & Usefulness', description: 'Potential to solve real problems or benefit users.', weight: 20, score: 0 },
     { id: 'r4', abbr: 'DES', title: 'Presentation & Design', description: 'Clarity, polish, and design of demo.', weight: 20, score: 0 },
-    // Judge adjustment: subjective override/adjustment field for judges. Default score set to 4.
 ]
 
 const rubrics = reactive(defaultRubrics.map(r => ({ ...r })))
@@ -372,24 +442,18 @@ async function fetchReadme(url) {
 }
 
 function loadForProject(projectId) {
-    const key = storageKeyFor(projectId)
-    const p = memoryStore.get(key)
-    if (p) {
-        try {
-            judgeName.value = p.judge || ''
-            comments.value = p.comments || ''
-            p.rubrics?.forEach(sr => {
-                const r = rubrics.find(x => x.id == sr.id)
-                if (r) r.score = sr.score
-            })
-        } catch {
-            // ignore
-        }
-    } else {
-        judgeName.value = ''
-        comments.value = ''
-        rubrics.forEach(r => (r.score = 0))
-    }
+    // Always reset rubric scores and comments when loading a new project.
+    // This ensures judges start fresh for each project.
+    comments.value = ''
+    // Reset each rubric to its default score defined in defaultRubrics (fall back to 0)
+    rubrics.forEach(r => {
+        const def = defaultRubrics.find(d => d.id === r.id)
+        r.score = def && typeof def.score !== 'undefined' ? def.score : 0
+    })
+
+    // Do not auto-restore prior saved rubrics/comments here — the UI should start fresh per project.
+    // Keep judge name cleared so judges re-enter their name for each review (optional behavior).
+    judgeName.value = ''
 
     // load README for the selected project (non-blocking)
     fetchReadme(currentProject.value.readmeRawUrl)
@@ -409,11 +473,7 @@ watch(currentProject, () => {
     if (currentProject.value) loadForProject(currentProject.value.id)
 }, { immediate: false })
 
-import { onMounted } from 'vue'
-
-onMounted(() => {
-    nextProject() // Load initial project
-})
+// initial project loading handled by checkVoting() on mount earlier
 
 // dynamic theme support: detect global color mode changes (Nuxt UI toggles)
 

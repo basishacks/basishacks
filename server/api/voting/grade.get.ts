@@ -1,6 +1,11 @@
 export default defineEventHandler(async (event) => {
-  // In a real app, this would fetch the next project to grade based on user authentication
-  // For demo, return a dummy project
+  // Prefer a non-redirecting session check for API endpoints
+  const session = await getUserSession(event)
+  if (!session?.user?.id) {
+    setResponseStatus(event, 401)
+    return { status: 'error', message: 'Not authenticated' }
+  }
+  const userID = session.user.id
 
   const dummyProjects = [
     {
@@ -32,8 +37,31 @@ export default defineEventHandler(async (event) => {
     }
   ]
 
-  // For demo, return a random project
+  // For demo, return a random project when open
   const randomProject = dummyProjects[Math.floor(Math.random() * dummyProjects.length)]
 
-  return randomProject
+
+  const isOpen = true
+
+  if (!isOpen) {
+    return {
+      status: 'closed',
+      message: 'Voting is not open yet',
+    }
+  }
+
+  // fetch the full user row and their team (if any) to return public versions
+  const user = await getUser(event, userID)
+  if (!user) {
+    throw createError({ status: 401, message: 'Logged in user not found' })
+  }
+  const team = user.team_id ? await getTeam(event, user.team_id) : null
+  
+
+  return {
+    status: 'open',
+    project: randomProject,
+    user: convertUserToPublic(user),
+    team: team && convertTeamToPublic(team),
+  }
 })

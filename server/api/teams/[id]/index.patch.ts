@@ -16,9 +16,13 @@ function updateIfTrue(init: boolean, yon: boolean) {
 export default defineEventHandler(async (event) => {
   const id = parseInt(getRouterParam(event, 'id')!)
 
-  const {
-    user: { id: userID },
-  } = await requireUserSession(event)
+  // prefer a non-redirecting session check for API endpoints
+  const session = await getUserSession(event)
+  if (!session?.user?.id) {
+    setResponseStatus(event, 401)
+    return { status: 'error', message: 'Not authenticated' }
+  }
+  const userID = session.user.id
 
   const user = await getUser(event, userID)
   if (user?.team_id !== id) {
