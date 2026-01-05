@@ -24,6 +24,15 @@
 
 }
 
+a .underline {
+  text-decoration: underline;
+  color: inherit;
+}
+
+a {
+  cursor: pointer;
+}
+
 /* Dark theme triggers commonly applied by Nuxt UI or color mode plugins.
    Support several selectors to be robust across implementations. */
 html.dark,

@@ -20,7 +20,7 @@ const navItems = computed<NavigationMenuItem[]>(() => {
 
 <template>
   <div>
-    <UHeader class="mb-4">
+    <UHeader class="mb-4 no-underline">
       <template #title>
         <span class="text-primary">basishacks_2026</span>
       </template>

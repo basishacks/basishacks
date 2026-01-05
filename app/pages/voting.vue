@@ -1,20 +1,13 @@
 <template>
     <div class="voting-page" :class="{ 'is-dark': isDark }">
-        <header class="project-nav">
-            <div class="nav-center">
-                <button class="nav-prev" @click="prevProject" :disabled="currentIndex === 0">← Prev</button>
-                <h2 class="proj-title">{{ currentProject.title }}</h2>
-                <button class="nav-next" @click="nextProject" :disabled="currentIndex === projects.length - 1">Next →</button>
-            </div>
-        </header>
         <aside class="left-pane">
             
 
             <section class="project-info">
 
                 <h3 class="readme-header">Project Info</h3>
-                <div class="meta"><strong>Team:</strong> {{ currentProject.team }}</div>
-                <div class="meta"><strong>Category:</strong> {{ currentProject.category }}</div>
+                <div class="meta"><strong>Team:</strong> {{ currentProject?.team }}</div>
+                <div class="meta"><strong>Category:</strong> {{ currentProject?.category }}</div>
 
             </section>
 
@@ -56,6 +49,8 @@
         <main class="right-pane">
 
 
+            <details class="instructions" ref="instructionsDetails">
+                <summary>Judging Instructions (Click to Expand)</summary>
             <div class="notification" v-if="publicVote">
                 <div class="notif-icon" aria-hidden="true">
                     <span class="notif-default-icon">😊</span>
@@ -112,6 +107,11 @@
             <h2 class="text-3xl bold">Step 3: Grading</h2>
             <p>Judge the project based on the four main criterias below. For each criteria's description, hover over the question mark icon to see further details.</p>
 
+                
+
+                <button @click="closeInstructions">Close Instructions</button>
+            </details>
+
             <section class="rubrics">
                 <div class="score-summary" style="margin-bottom:.5rem;">
                     <div>Total points: <strong>{{ totalPoints }}/16</strong></div>
@@ -139,11 +139,11 @@
                                     </span>
                                 </div>
                             </td>
-                            <td class="score-cell" :class="{ selected: r.score === 4 }" @click="setScore(r, 4)">4</td>
-                            <td class="score-cell" :class="{ selected: r.score === 3 }" @click="setScore(r, 3)">3</td>
-                            <td class="score-cell" :class="{ selected: r.score === 2 }" @click="setScore(r, 2)">2</td>
-                            <td class="score-cell" :class="{ selected: r.score === 1 }" @click="setScore(r, 1)">1</td>
-                            <td class="score-cell" :class="{ selected: r.score === 0 }" @click="setScore(r, 0)" @keydown.enter.prevent="setScore(r,0)" @keydown.space.prevent="setScore(r,0)" tabindex="0">0</td>
+                            <td class="score-cell" :class="{ selected: r.score == 4 }" @click="setScore(r, 4)">4</td>
+                            <td class="score-cell" :class="{ selected: r.score == 3 }" @click="setScore(r, 3)">3</td>
+                            <td class="score-cell" :class="{ selected: r.score == 2 }" @click="setScore(r, 2)">2</td>
+                            <td class="score-cell" :class="{ selected: r.score == 1 }" @click="setScore(r, 1)">1</td>
+                            <td class="score-cell" :class="{ selected: r.score == 0 }" @click="setScore(r, 0)" @keydown.enter.prevent="setScore(r,0)" @keydown.space.prevent="setScore(r,0)" tabindex="0">0</td>
                         </tr>
                     </tbody>
                 </table>
@@ -155,19 +155,20 @@
             </section>
 
             <section class="actions">
-                <button class="btn-save" @click="saveReview" :disabled="!judgeName">Save Review</button>
-                <button @click="clearScores">Clear</button>
-                <button @click="autoFillSample">Auto-fill (demo)</button>
-                <div class="last-saved" v-if="lastSaved">
-                    <small>Last saved: {{ lastSaved }}</small>
-                </div>
-                
+                <button class="flag-btn" @click="reportAbuse" v-if="!publicVote">
+                    Flag Project for Inappropriate Content
+                    
+                </button>
+                <span class="help-icon-container" tabindex="0" aria-label="Show description">
+                    <span class="help-icon" aria-hidden="true">?</span>
+                    <div class="tooltip" role="tooltip">
+                        <div class="tooltip-desc"><strong>Inappropriate content include having PII (<a class="underline" href="https://en.wikipedia.org/wiki/Personal_data">Personally Identifiable Information</a>).</strong> If you believe there exists any form of inappropriate content in this project, please click this button to flag it. <strong>See Step 1 of Judging Instructions for more.</strong></div>
+                    </div>
+                </span>
             </section>
 
             <section class="actions">
-                <button class="flag-btn" @click="reportAbuse" v-if="!publicVote">Flag Project for Inappropriate Content</button>
-                <button class="nav-prev" @click="prevProject" :disabled="currentIndex === 0">← Prev</button>
-                <button class="nav-next" @click="nextProject" :disabled="currentIndex === projects.length - 1">Next →</button>
+                <button class="btn-save" @click="submitVerdict">Submit Verdict <span v-if="isSubmitting" class="spinner"></span></button>
             </section>
         </main>
     </div>
@@ -181,47 +182,21 @@ import { ref, reactive, computed, watch } from 'vue'
 
 const publicVote = computed(() => false) // set to true to enable public vote notification
 
-const projects = reactive([
-    {
-        id: 'P-001',
-        title: 'OpenHealth',
-        team: 'Team Aces',
-        category: 'Healthcare',
-        abstract: 'An open platform for connecting patients and volunteers.',
-        members: ['Alice', 'Bob', 'Carlos'],
-        // example raw README URL (replace with the project's raw README URL)
-        readmeRawUrl: 'https://raw.githubusercontent.com/basishacks/basishacks/refs/heads/main/README.md'
-    },
-    {
-        id: 'P-002',
-        title: 'GreenRoute',
-        team: 'EcoHackers',
-        category: 'Sustainability',
-        abstract: 'Find routes that minimize carbon footprint using multi-modal transport.',
-        members: ['Dana', 'Eve'],
-        readmeRawUrl: 'https://raw.githubusercontent.com/electron/electron/refs/heads/main/README.md'
-    },
-    {
-        id: 'P-003',
-        title: 'StudyBuddy',
-        team: 'LearnersUnited',
-        category: 'Education',
-        abstract: 'A collaborative study planner with reminders and group challenges.',
-        members: ['Frank', 'Grace', 'Heidi'],
-        readmeRawUrl: ''
-    },
-])
+const currentProject = ref(null)
 
-const currentIndex = ref(0)
-const currentProject = computed(() => projects[currentIndex.value])
-
-function nextProject() {
-    if (currentIndex.value < projects.length - 1) currentIndex.value++
-    loadForProject(currentProject.value.id)
-}
-function prevProject() {
-    if (currentIndex.value > 0) currentIndex.value--
-    loadForProject(currentProject.value.id)
+async function nextProject() {
+    try {
+        const response = await fetch('/api/voting/grade')
+        if (response.ok) {
+            const project = await response.json()
+            currentProject.value = project
+            loadForProject(project.id)
+        } else {
+            console.error('Failed to fetch next project')
+        }
+    } catch (e) {
+        console.error('Error fetching next project:', e)
+    }
 }
 
 /* Rubric setup */
@@ -237,7 +212,12 @@ const rubrics = reactive(defaultRubrics.map(r => ({ ...r })))
 
 const judgeName = ref('')
 const comments = ref('')
-const lastSaved = ref('')
+
+const isSubmitting = ref(false)
+
+const toast = useToast()
+
+const instructionsDetails = ref()
 
 // README state
 const readmeContent = ref('')
@@ -291,15 +271,48 @@ function storageKeyFor(projectId) {
     return `hackathon_review_${projectId}`
 }
 
-function saveReview() {
+async function submitVerdict() {
+
+    if (!confirm("Confirm submission? You won't be able to change your verdict for this project later.")) {
+        return
+    }
+
+    isSubmitting.value = true
+
     const payload = {
         judge: judgeName.value,
         comments: comments.value,
         rubrics: rubrics.map(r => ({ id: r.id, score: r.score })),
         timestamp: new Date().toISOString(),
     }
+
+    // Dummy API call
+    try {
+        await fetch('/api/voting/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+    } catch (e) {
+        console.error('API submit failed:', e)
+    }
+
+    //alert("Verdict submitted for " + currentProject.value.title + "! Moving to next project.")
+    toast.add({
+        color: 'success',
+        title: `Verdict submitted for ${currentProject.value.title}!`,
+        description: 'Loading next project...'
+    })
+
+    
+    
+
+    
+
     memoryStore.set(storageKeyFor(currentProject.value.id), payload)
-    lastSaved.value = new Date().toLocaleString()
+    // After submitting, load the next project
+    nextProject()
+    setTimeout(() => isSubmitting.value = false, 1000)
 }
 
 async function fetchReadme(url) {
@@ -320,7 +333,7 @@ async function fetchReadme(url) {
         readmeContent.value = txt
 
         // Only attempt client-side markdown rendering in the browser (avoid SSR/runtime errors)
-        if (typeof window === 'undefined') {
+        if (typeof window == 'undefined') {
             // server-side: don't try to use browser-only libs
             return
         }
@@ -366,10 +379,9 @@ function loadForProject(projectId) {
             judgeName.value = p.judge || ''
             comments.value = p.comments || ''
             p.rubrics?.forEach(sr => {
-                const r = rubrics.find(x => x.id === sr.id)
+                const r = rubrics.find(x => x.id == sr.id)
                 if (r) r.score = sr.score
             })
-            lastSaved.value = p.timestamp ? new Date(p.timestamp).toLocaleString() : ''
         } catch {
             // ignore
         }
@@ -377,41 +389,36 @@ function loadForProject(projectId) {
         judgeName.value = ''
         comments.value = ''
         rubrics.forEach(r => (r.score = 0))
-        lastSaved.value = ''
     }
 
     // load README for the selected project (non-blocking)
     fetchReadme(currentProject.value.readmeRawUrl)
 }
 
-function clearScores() {
-    rubrics.forEach(r => (r.score = 0))
-    comments.value = ''
-}
-
 function setScore(r, v) {
     // toggle: clicking the selected value will clear it
-    r.score = r.score === v ? 0 : v
+    r.score = r.score == v ? 0 : v
 }
 
-function autoFillSample() {
-    // pick random integer scores between 0 and RUBRIC_MAX
-    rubrics.forEach((r) => {
-        r.score = Math.floor(Math.random() * (RUBRIC_MAX + 1))
-    })
-    comments.value = 'Demo scores. Replace with your real evaluation.'
+function closeInstructions() {
+    if (instructionsDetails.value) instructionsDetails.value.open = false
 }
 
 /* Watcher: when project changes, load persisted review */
-watch(currentIndex, () => loadForProject(currentProject.value.id), { immediate: true })
+watch(currentProject, () => {
+    if (currentProject.value) loadForProject(currentProject.value.id)
+}, { immediate: false })
 
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
+
+onMounted(() => {
+    nextProject() // Load initial project
+})
 
 // dynamic theme support: detect global color mode changes (Nuxt UI toggles)
 
 let _mo = null
 let _mq = null
-
 
 
 </script>
@@ -436,7 +443,7 @@ let _mq = null
     /* left has a min and a capped percentage, right gets the rest (wider right pane) */
     grid-template-columns: minmax(260px, 34%) minmax(560px, 1fr);
     /* fixed header row height so the navigation row stays constant */
-    grid-template-rows: 64px 1fr;
+    grid-template-rows: 1fr;
     min-height: 100vh;
     gap: 1rem;
     padding: 1rem;
@@ -674,9 +681,33 @@ p {
     background: var(--input-bg);
     color: inherit;
     cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
-.btn-save { background: linear-gradient(90deg,#2563eb,#7c3aed); color: #fff; border: none; }
-.flag-btn {background-color: var(--color-red) !important;}
+.actions button:hover {
+    background: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.btn-save { background: linear-gradient(90deg,#2563eb,#7c3aed); color: #fff; border: none; transition: background 0.2s ease, box-shadow 0.2s ease; }
+.btn-save:hover { background: linear-gradient(90deg,#1d4ed8,#6d28d9); box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3); }
+.flag-btn {background-color: var(--color-red) !important; transition: background-color 0.2s ease, box-shadow 0.2s ease;}
+.flag-btn:hover { background-color: #dc2626 !important; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3); }
+
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s linear infinite;
+    margin-left: 8px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 .last-saved { margin-left: auto; color: var(--muted); font-size: .85rem; }
 
 /* Rubric table styles */
@@ -688,8 +719,8 @@ p {
 
 .rubric-table .criterion-cell { width: 45%; }
 .rubric-table .score-col { text-align: center; width: 11%; font-size: .95rem; }
-.score-cell { text-align: center; cursor: pointer; user-select: none; background: transparent; }
-.score-cell:hover { background: rgba(0,0,0,0.03); }
+.score-cell { text-align: center; cursor: pointer; user-select: none; background: transparent; transition: background-color 0.2s ease; }
+.score-cell:hover { background: rgba(0,0,0,0.05); }
 .score-cell.selected { background: linear-gradient(90deg, rgba(37,99,235,0.15), rgba(124,58,237,0.12)); border-radius: 4px; }
 .score-cell[tabindex] { outline: none; }
 .score-cell:focus { box-shadow: 0 0 0 3px rgba(37,99,235,0.12); border-radius: 4px; }
