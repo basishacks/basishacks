@@ -57,11 +57,14 @@ export default defineEventHandler(async (event) => {
   }
   const team = user.team_id ? await getTeam(event, user.team_id) : null
   
+  if (team.id != -30) {
+    setResponseStatus(event, 403)
+    return { status: 'error', message: 'Forbidden' }
+  }
 
   return {
     status: 'open',
     project: randomProject,
-    user: convertUserToPublic(user),
-    team: team && convertTeamToPublic(team),
+    team: team.id
   }
 })
