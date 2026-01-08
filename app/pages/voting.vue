@@ -59,8 +59,7 @@
 
         <main class="right-pane">
 
-            <details class="instructions" ref="instructionsDetails">
-                <summary>Judging Instructions (Click to Expand)</summary>
+
             <div class="notification" v-if="publicVote">
                 <div class="notif-icon" aria-hidden="true">
                     <span class="notif-default-icon">😊</span>
@@ -76,11 +75,11 @@
                 </div>
             </div>
 
-            <h2 class="text-3xl bold">Step 1: Project Description</h2>
+            <!-- <h2 class="text-3xl bold">Step 1: Project Description</h2>
             <p>The team should include an insightful GitHub README.md file to describe their project and its basic functionality.
                 It is totally up to the judge to determine how well the team has communicated their project through the README. 
                 If there is an lack of clarity, judges may choose to deduct points under relevant rubric criteria.
-            </p>
+            </p> -->
 
 
 
@@ -104,7 +103,7 @@
                 </div>
             </div>
             
-            <br></br>
+            <!-- <br></br>
             <h2 class="text-3xl bold">Step 2: Demonstration</h2>
             <p>
                 The project should include any of the following demonstration materials:
@@ -115,12 +114,9 @@
 
             <br></br>
             <h2 class="text-3xl bold">Step 3: Grading</h2>
-            <p>Judge the project based on the four main criterias below. For each criteria's description, hover over the question mark icon to see further details.</p>
+            <p>Judge the project based on the four main criterias below. For each criteria's description, hover over the question mark icon to see further details.</p> -->
 
-                
 
-                <button @click="closeInstructions">Close Instructions</button>
-            </details>
 
             <section class="rubrics">
                 <div class="score-summary" style="margin-bottom:.5rem;">
@@ -224,7 +220,7 @@ const apiMessage = ref('')
 
 async function checkVoting() {
     try {
-        const res = await fetch('/api/voting/grade?open=true')
+        const res = await fetch('/api/voting/grade')
         if (!res.ok) {
             votingOpen.value = false
             apiMessage.value = 'Unable to check voting status'

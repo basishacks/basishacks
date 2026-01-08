@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
   }
   const team = user.team_id ? await getTeam(event, user.team_id) : null
   
-  if (team.id != -30) {
+  if (!team.name.startsWith('Hackathon Judges')) {
     setResponseStatus(event, 403)
     return { status: 'error', message: 'Forbidden' }
   }
