@@ -42,6 +42,21 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // Prevent Judges from accidently changing the name
+  if (team?.name.startsWith("Hackathon Judges") ){
+    throw createError({
+      status: 400,
+      message: 'Team name cannot be changed for this team.',
+    })
+  }
+
+  if (payload.name?.startsWith("Hackathon Judges") ){
+    throw createError({
+      status: 400,
+      message: 'Team name cannot be changed to this name.',
+    })
+  }
+
   // Judging update 1: We dont want kids uhh doing these.
   // Feel free to remove if unncessecary
   var result = false;
