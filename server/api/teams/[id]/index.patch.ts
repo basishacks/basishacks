@@ -55,14 +55,23 @@ export default defineEventHandler(async (event) => {
   var result = false;
   if (payload.name !== undefined) 
     result = updateIfTrue(result, checkProfanity(payload.name, config).containsProfanity);
-  if (payload.project?.name !== undefined) 
+  if (payload.project?.name !== undefined) {
+    if (payload.project?.name?.length > 50) {
+      throw createError({
+        status: 400,
+        message: "Project name cannot exceed 50 characters"
+      })
+    }
     result = updateIfTrue(result, checkProfanity(payload.project?.name, config).containsProfanity);
+  }
   if (payload.project?.description !== undefined) 
     result = updateIfTrue(result, checkProfanity(payload.project?.description, config).containsProfanity);
   if (payload.project?.demo_url !== undefined && payload.project?.demo_url !== null) 
     result = updateIfTrue(result, checkProfanity(payload.project?.demo_url, config).containsProfanity);
   if (payload.project?.repo_url !== undefined && payload.project?.repo_url !== null) 
     result = updateIfTrue(result, checkProfanity(payload.project?.repo_url, config).containsProfanity);
+
+  
 
   if (result) {
     throw createError({

@@ -2,7 +2,7 @@
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { UpdateTeamRequest } from '~~/shared/schemas'
 
-const { team: defaultTeam, disabled = false } = defineProps<{
+const { team: defaultTeam } = defineProps<{
   team: APITeam
   disabled?: boolean
 }>()
@@ -104,7 +104,6 @@ const isSpecialTeam = computed(() => {
     ref="formRef"
     :state="state"
     :schema="UpdateTeamRequest"
-    :disabled="disabled"
     class="max-w-[600px] space-y-4 mb-4"
     @submit="onSubmit"
   >
@@ -113,7 +112,7 @@ const isSpecialTeam = computed(() => {
       label="Project name"
       help="Make it sound even cooler!"
     >
-      <UInput v-model="state.project.name" class="w-full" :disabled="isSpecialTeam" />
+      <LimitedInput v-model="state.project.name" class="w-full" :disabled="isSpecialTeam" :maxlength="50"/>
     </UFormField>
 
     <UFormField name="project.description" label="Project description">
