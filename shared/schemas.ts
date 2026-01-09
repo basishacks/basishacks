@@ -36,6 +36,7 @@ export type CreateTeamRequest = z.infer<typeof CreateTeamRequest>
 
 export const UpdateTeamRequest = z.object({
   name: z.optional(TeamName),
+  final: z.optional(z.boolean()),
   project: z.optional(
     z.object({
       name: z.optional(z.string()),

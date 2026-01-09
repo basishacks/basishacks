@@ -34,6 +34,8 @@ export default defineEventHandler(async (event) => {
 
   const payload = await readValidatedBody(event, UpdateTeamRequest.parse)
 
+  const isFinal = payload.final
+
   const team = await getTeam(event, id)
   if (!team) {
     throw createError({
@@ -47,6 +49,13 @@ export default defineEventHandler(async (event) => {
     throw createError({
       status: 403,
       message: 'No permission to edit team name',
+    })
+  }
+
+  if (team?.flags.includes("project.disable.editProject")) {
+    throw createError({
+      status: 403,
+      message: 'No permission to edit project',
     })
   }
 
@@ -91,7 +100,21 @@ export default defineEventHandler(async (event) => {
   if (payload.project?.repo_url !== undefined)
     team.project_repo_url = payload.project.repo_url
 
+  if (isFinal) {
+    team.flags.push('project.submitted')
+    team.flags.push('team.disable.editTeamName')
+    team.flags.push('project.disable.editProject')
+    team.flags.push('team.disable.addTeammate')
+  }
+
   await updateTeam(event, team)
 
-  return { message: 'Updated your team & project' }
+  if (isFinal) {
+
+
+
+    return { status: 200, message: 'Submitted your team & project. Thank you for your participation!' }
+  } else {
+    return { status: 200, message: 'Updated your team & project' }
+  }
 })

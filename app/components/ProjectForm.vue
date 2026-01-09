@@ -58,9 +58,11 @@ watch(
 async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
   const isSubmit = event.submitter?.id === 'project-submit'
   if (isSubmit) {
-    alert('Not implemented yet!')
-    return
+    if (!confirm("Are you sure you want to submit this project? You will not be able to edit it after submission.")) {
+      return
+    }
   }
+  
 
   const payload = {
     ...event.data,
@@ -69,6 +71,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
       demo_url: event.data.project?.demo_url || null,
       repo_url: event.data.project?.repo_url || null,
     },
+    final: isSubmit
   }
 
   try {
@@ -95,6 +98,11 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
 const isSpecialTeam = computed(() => {
   return defaultTeam.flags.includes("project.disable.editProject")
 })
+
+const isSubmittedTeam = computed(() => {
+  return defaultTeam.flags.includes("project.submitted")
+})
+
 
 
 </script>
@@ -149,16 +157,25 @@ const isSpecialTeam = computed(() => {
       </template>
     </UFormField>
 
-    <div class="flex gap-4" v-if=!isSpecialTeam>
+    <div class="flex gap-4" v-if="!isSpecialTeam && !isSubmittedTeam">
       <UButton id="project-save" variant="subtle" type="submit">Save</UButton>
       <UButton id="project-submit" type="submit">Submit</UButton>
     </div>
-    <NotificationBanner v-if="isSpecialTeam">
+    <NotificationBanner v-if="isSpecialTeam && !isSubmittedTeam">
       <template #icon>
           <Icon name="i-material-symbols-edit-off"/>
       </template>
       <template #body>
           Unable to edit, save, or submit this project
+      </template>
+  </NotificationBanner>
+
+  <NotificationBanner v-if="isSubmittedTeam" :bgDark="'bg-dark-green-900'" :bgLight="'bg-green-100'">
+      <template #icon>
+          <Icon name="i-material-symbols-data-check"/>
+      </template>
+      <template #body>
+          Project Submitted! Congratulations on completing your submission. You can no longer make changes to your project details.
       </template>
   </NotificationBanner>
   </UForm>

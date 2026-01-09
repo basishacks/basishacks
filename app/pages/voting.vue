@@ -167,6 +167,9 @@
             </section>
 
             <section class="actions">
+
+
+
                 <button class="btn-save" @click="submitVerdict">Submit Verdict <span v-if="isSubmitting" class="spinner"></span></button>
             </section>
         </main>

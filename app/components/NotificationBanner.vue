@@ -55,7 +55,7 @@ const emit = defineEmits(['close'])
   padding: .6rem .8rem;
   border-radius: 8px;
   border: 1px solid transparent;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   box-shadow: var(--panel-shadow);
   background: var(--notif-bg);
 }
