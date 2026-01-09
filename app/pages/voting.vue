@@ -12,7 +12,7 @@
         </div>
     </div>
 
-    <div v-else class="voting-page" :class="{ 'is-dark': isDark }">
+    <div v-else class="voting-page">
 
         <aside class="left-pane">
 
