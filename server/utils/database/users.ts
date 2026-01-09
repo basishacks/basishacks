@@ -1,22 +1,44 @@
 import type { H3Event } from 'h3'
 
+function parseFlags(raw: any): string[] {
+  if (!raw) return []
+  if (Array.isArray(raw)) return raw.map((s: string) => String(s).trim()).filter(Boolean)
+  if (typeof raw === 'string') return raw.split('\n').map((s: string) => s.trim()).filter((s: string) => s.length > 0)
+  return []
+}
+
+function stringifyFlags(flags: any): string {
+  if (!flags) return ''
+  if (Array.isArray(flags)) return flags.map((s: string) => String(s).trim()).filter(Boolean).join('\n')
+  return String(flags)
+}
+
 export async function getUser(
   event: H3Event,
   userID: number
 ): Promise<User | null> {
-  return await event.context.cloudflare.env.DB.prepare(
+  const row = await event.context.cloudflare.env.DB.prepare(
     'SELECT * FROM users WHERE id = ?'
   )
     .bind(userID)
-    .first<User>()
+    .first<any>()
+
+  if (!row) return null
+
+  if (row.flags) row.flags = parseFlags(row.flags)
+  return row as User
 }
 
 export async function getUserByEmail(event: H3Event, email: string) {
-  return await event.context.cloudflare.env.DB.prepare(
+  const row = await event.context.cloudflare.env.DB.prepare(
     'SELECT * FROM users WHERE email = ?'
   )
     .bind(email)
-    .first<User>()
+    .first<any>()
+
+  if (!row) return null
+  if (row.flags) row.flags = parseFlags(row.flags)
+  return row as User
 }
 
 export async function addCodeToUser(event: H3Event, email: string) {
@@ -39,9 +61,10 @@ export async function addCodeToUser(event: H3Event, email: string) {
     'INSERT INTO users(email, login_code, login_expiry) VALUES(?, ?, ?) ON CONFLICT(email) DO UPDATE SET login_code = EXCLUDED.login_code, login_expiry = EXCLUDED.login_expiry RETURNING *'
   )
     .bind(email, code, expiry)
-    .first<User>())!
+    .first<any>())!
 
-  return user
+  if (user.flags) user.flags = parseFlags(user.flags)
+  return user as User
 }
 
 export async function getUserByCode(

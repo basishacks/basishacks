@@ -54,7 +54,7 @@ async function onSubmit(event: FormSubmitEvent<CreateTeamRequest>) {
       @submit="onSubmit"
     >
       <UFormField name="name" label="Team name">
-        <UInput v-model="state.name" />
+        <LimitedInput v-model="state.name" :maxlength="30" />
       </UFormField>
 
       <UFormField>

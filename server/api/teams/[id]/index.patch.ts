@@ -43,17 +43,10 @@ export default defineEventHandler(async (event) => {
   }
 
   // Prevent Judges from accidently changing the name
-  if (team?.name.startsWith("Hackathon Judges") ){
+  if (team?.flags.includes("team.disable.editTeamName")) {
     throw createError({
-      status: 400,
-      message: 'Cannot edit this team.',
-    })
-  }
-
-  if (payload.name?.startsWith("Hackathon Judges") ){
-    throw createError({
-      status: 400,
-      message: 'Team name cannot be changed to this name.',
+      status: 403,
+      message: 'No permission to edit team name',
     })
   }
 

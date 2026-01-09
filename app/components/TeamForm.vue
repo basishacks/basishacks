@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
+import type { User } from '~~/shared/database';
+import LimitedInput from '~/components/LimitedInput.vue'
 import { AddTeamMemberRequest, UpdateTeamRequest } from '~~/shared/schemas'
 
 const { team } = defineProps<{
@@ -125,10 +127,21 @@ async function onSubmit(
     close()
   }
 }
+
+const disableEditTeamName = computed(() => {
+  return team.flags.includes('team.disable.editTeamName')
+})
+
+const disableAddTeamMember = computed(() => {
+  return team.flags.includes('team.disable.addTeammate')
+})
+
+
 </script>
 
 <template>
   <div>
+
     <h2 class="text-3xl bold mb-4 flex gap-4">
       <span>
         Your team: <span class="glow">{{ team.name }}</span>
@@ -138,6 +151,7 @@ async function onSubmit(
         <UButton
           variant="soft"
           icon="i-material-symbols-drive-file-rename-outline"
+          :disabled=disableEditTeamName
         />
 
         <template #body="{ close }">
@@ -148,7 +162,7 @@ async function onSubmit(
             @submit="onNameSubmit($event, close)"
           >
             <UFormField name="name" label="New name">
-              <UInput v-model="nameState.name" class="w-full" />
+              <LimitedInput v-model="nameState.name" :maxlength="30" class="w-full" />
             </UFormField>
 
             <UFormField>
@@ -159,8 +173,9 @@ async function onSubmit(
       </UModal>
 
       <UModal title="Add team member">
-        <UButton variant="soft" icon="i-material-symbols-person-add" />
-
+        <UButton variant="soft" icon="i-material-symbols-person-add" 
+        :disabled=disableAddTeamMember
+        />
         <template #body="{ close }">
           <UForm
             :state="state"
@@ -180,6 +195,8 @@ async function onSubmit(
       </UModal>
     </h2>
 
+    
+
     <ul class="grid lg:grid-cols-2 gap-4 mb-4">
       <li v-for="user in users" :key="user.id">
         <UCard variant="subtle">
@@ -198,4 +215,6 @@ async function onSubmit(
       </li>
     </ul>
   </div>
+
+
 </template>

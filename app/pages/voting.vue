@@ -215,12 +215,13 @@ const apiMessage = ref('')
 async function checkVoting() {
     try {
         const res = await fetch('/api/voting/grade')
+        const json = await res.json()
         if (!res.ok) {
             votingOpen.value = false
-            apiMessage.value = 'Unable to check voting status'
+            apiMessage.value = json.message || 'Unable to check voting status'
             return
         }
-        const json = await res.json()
+        
         if (json.status === 'closed') {
             votingOpen.value = false
             apiMessage.value = json.message || 'Voting is not open yet'

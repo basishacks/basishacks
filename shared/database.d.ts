@@ -5,6 +5,12 @@ type HackathonStatus =
   | 'finished' // event completed
   | 'paused' // event paused for maintenance, etc.
 
+export const FlagDescriptions: Record<string, string> = {
+  'disable.editTeamName': 'Unable to edit the team name.',
+  'disable.addTeammate': 'Unable to add new team members.',
+  "disable.editProject": "Unable to edit, save, or submit project.",
+}
+
 interface Hackathon {
   id: 1 // lol
   status: HackathonStatus

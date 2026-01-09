@@ -115,6 +115,25 @@ body.u-color-mode--dark {
   --input-disabled-text: #c0c6ce;
 }
 
+/* Disabled button variables (theme-aware) */
+:root {
+  --btn-disabled-bg: #e6e7ea;
+  --btn-disabled-text: #6b7280;
+  --btn-disabled-border: #d1d5db;
+}
+
+html.dark,
+html[data-color-mode="dark"],
+html[data-theme="dark"],
+html.nuxt-color-mode--dark,
+body.nuxt-color-mode--dark,
+html.u-color-mode--dark,
+body.u-color-mode--dark {
+  --btn-disabled-bg: #14232b;
+  --btn-disabled-text: #9aa6b0;
+  --btn-disabled-border: rgba(255,255,255,0.04);
+}
+
 /* Apply to native inputs and common component wrappers used by Nuxt UI */
 input[disabled],
 textarea[disabled],
@@ -136,6 +155,28 @@ select[disabled],
   background-color: var(--input-disabled-bg) !important;
   color: var(--input-disabled-text) !important;
 }
+
+/* Disabled button styling for native and component buttons (Nuxt UI / UButton)
+   Applies theme-aware gray background and muted text, keeps full opacity and
+   shows not-allowed cursor. Use several selectors to cover different button
+   implementations and aria-disabled patterns. */
+button[disabled],
+.u-button[disabled],
+.u-button:disabled,
+.u-button[aria-disabled="true"],
+.btn-save[disabled],
+.flag-btn[disabled],
+button[aria-disabled="true"] {
+  background-color: var(--btn-disabled-bg) !important;
+  color: var(--btn-disabled-text) !important;
+  border-color: var(--btn-disabled-border) !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important; /* override UA reduced opacity */
+  box-shadow: none !important;
+}
+
+/* ensure icon/text inside disabled buttons inherits muted color */
+button[disabled] * , .u-button[disabled] * { color: var(--btn-disabled-text) !important; }
 
 /* @theme {
   --font-mono: "Monaspace Neon";

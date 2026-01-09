@@ -93,8 +93,10 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
 }
 
 const isSpecialTeam = computed(() => {
-  return state.name.startsWith("Hackathon Judges")
+  return defaultTeam.flags.includes("project.disable.editProject")
 })
+
+
 </script>
 
 <template>
@@ -157,10 +159,8 @@ const isSpecialTeam = computed(() => {
           <Icon name="i-material-symbols-edit-off"/>
       </template>
       <template #body>
-          You cannot edit this project.
+          Unable to edit, save, or submit this project
       </template>
   </NotificationBanner>
   </UForm>
-
-  <p>{{ team.flags }}</p>
 </template>

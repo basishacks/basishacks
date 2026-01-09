@@ -4,6 +4,7 @@ export function convertUserToPublic(user: User): APIUser {
     email: user.email,
     name: user.name,
     team_id: user.team_id,
+    flags: (user as any).flags || [],
   }
 }
 

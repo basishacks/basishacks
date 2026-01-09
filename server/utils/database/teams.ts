@@ -1,4 +1,20 @@
 import type { H3Event } from 'h3'
+import { Team } from '~~/shared/database'
+
+function parseFlags(raw: any): string[] {
+  if (!raw) return []
+  if (Array.isArray(raw)) return raw.map((s: string) => String(s).trim()).filter(Boolean)
+  if (typeof raw === 'string') {
+    return raw.split('\n').map((s: string) => s.trim()).filter((s: string) => s.length > 0)
+  }
+  return []
+}
+
+function stringifyFlags(flags: any): string {
+  if (!flags) return ''
+  if (Array.isArray(flags)) return flags.map((s: string) => String(s).trim()).filter(Boolean).join('\n')
+  return String(flags)
+}
 
 export async function getTeam(event: H3Event, teamID: number) {
   const row = await event.context.cloudflare.env.DB.prepare(
@@ -10,12 +26,7 @@ export async function getTeam(event: H3Event, teamID: number) {
   if (!row) return null
 
   // flags stored in DB as newline-separated text; convert to string[]
-  if (typeof row.flags === 'string') {
-    row.flags = row.flags
-      .split('\n')
-      .map((s: string) => s.trim())
-      .filter((s: string) => s.length > 0)
-  }
+  row.flags = parseFlags(row.flags)
 
   return row as Team
 }
@@ -27,11 +38,8 @@ export async function createTeam(event: H3Event, teamName: string) {
     .bind(teamName)
     .first<any>())!
 
-  // convert flags to string[] if needed
-  if (typeof team.flags === 'string') {
-    team.flags = team.flags.split('\n').map((s: string) => s.trim()).filter((s: string) => s.length > 0)
-  }
-
+  // return team object with parsed flags array
+  team.flags = parseFlags(team.flags)
   return team as Team
 }
 
@@ -46,8 +54,8 @@ export async function updateTeam(event: H3Event, team: Team) {
       team.project_demo_url,
       team.project_repo_url,
       team.project_submitted,
-      // flags should be stored as newline-separated string in DB
-      Array.isArray(team.flags) ? team.flags.join('\n') : team.flags,
+  // flags should be stored as newline-separated string in DB
+  stringifyFlags(team.flags),
       team.id
     )
     .run()

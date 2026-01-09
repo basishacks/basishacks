@@ -5,10 +5,10 @@ export default defineEventHandler(async (event) => {
 
   const team = await getTeam(event, teamID)
 
-  if (team?.name.startsWith("Hackathon Judges") ){
+  if (team?.flags.includes("team.disable.addTeammate")){
     throw createError({
       status: 403,
-      message: 'Unable to add members to this team: No permission',
+      message: 'No permission to add team members to this team',
     })
   }
 

@@ -3,6 +3,7 @@ interface APIUser {
   email: string
   name: string | null
   team_id: number | null
+  flags: Array<string>
 }
 
 interface APITeam {
