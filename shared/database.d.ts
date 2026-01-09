@@ -25,6 +25,7 @@ interface Team {
   project_demo_url: string | null
   project_repo_url: string | null
   project_submitted: number
+  flags: Array<string> // New field: flags seperated in newlines
 }
 
 interface User {

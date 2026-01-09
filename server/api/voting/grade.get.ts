@@ -40,14 +40,21 @@ export default defineEventHandler(async (event) => {
   // For demo, return a random project when open
   const randomProject = dummyProjects[Math.floor(Math.random() * dummyProjects.length)]
 
-  const hackathon = await getHackathon(event)
-  if (hackathon?.status != 'voting') {
-    return {
-      status: 'closed',
-      message: 'Voting has not started yet',
-    }
-  }
+  // const hackathon = await getHackathon(event)
+  // if (hackathon?.status != 'voting') {
+  //   return {
+  //     status: 'closed',
+  //     message: 'Voting has not started yet! Check schedule on homepage.',
+  //   }
+  // }
 
+
+  
+  
+  // if (!team.name.startsWith('Hackathon Judges')) {
+  //   setResponseStatus(event, 403)
+  //   return { status: 'error', message: 'Forbidden' }
+  // }
 
   // fetch the full user row and their team (if any) to return public versions
   const user = await getUser(event, userID)
@@ -55,11 +62,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ status: 401, message: 'Logged in user not found' })
   }
   const team = user.team_id ? await getTeam(event, user.team_id) : null
-  
-  if (!team.name.startsWith('Hackathon Judges')) {
-    setResponseStatus(event, 403)
-    return { status: 'error', message: 'Forbidden' }
-  }
 
   return {
     status: 'open',

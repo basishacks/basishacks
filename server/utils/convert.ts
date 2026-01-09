@@ -18,5 +18,6 @@ export function convertTeamToPublic(team: Team): APITeam {
       repo_url: team.project_repo_url,
       submitted: team.project_submitted ? true : false,
     },
+    flags: team.flags,
   }
 }

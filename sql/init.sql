@@ -9,16 +9,31 @@ CREATE TABLE IF NOT EXISTS hackathon (
     theme_name TEXT,
     theme_description TEXT
 );
-
-CREATE TABLE IF NOT EXISTS teams (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    project_name TEXT NOT NULL DEFAULT '',
-    project_description TEXT NOT NULL DEFAULT '',
-    project_demo_url TEXT,
-    project_repo_url TEXT,
-    project_submitted INTEGER NOT NULL DEFAULT 0
+z
+-- CREATE TABLE IF NOT EXISTS teams (
+--     id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     name TEXT NOT NULL,
+--     project_name TEXT NOT NULL DEFAULT '',
+--     project_description TEXT NOT NULL DEFAULT '',
+--     project_demo_url TEXT,
+--     project_repo_url TEXT,
+--     project_submitted INTEGER NOT NULL DEFAULT 0
+    
+-- );
+CREATE TABLE "teams" (
+	"id"	INTEGER,
+	"name"	TEXT NOT NULL,
+	"project_name"	TEXT NOT NULL DEFAULT '',
+	"project_description"	TEXT NOT NULL DEFAULT '',
+	"project_demo_url"	TEXT,
+	"project_repo_url"	TEXT,
+	"project_submitted"	INTEGER NOT NULL DEFAULT 0,
+	"flags"	TEXT NOT NULL DEFAULT 'participant', -- New field: flags seperated in newlines
+	PRIMARY KEY("id" AUTOINCREMENT)
 );
+
+least significant bit
+0 
 
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

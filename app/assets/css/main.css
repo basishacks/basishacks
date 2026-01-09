@@ -16,7 +16,7 @@
   --media-end: #f8fafc;
   --panel-shadow: 0 2px 8px rgba(16,24,40,0.05);
 
-  --notif-bg: var(--color-blue-300);
+  --notif-bg: var(--color-blue-100);
 
   --para-gap: 1rem; /* Responsible for judging the gap between paragraphs */
 
@@ -97,6 +97,46 @@ body.u-color-mode--dark {
   border-radius: 6px;
 }
 
+/* Disabled input styling: ensure disabled inputs look visually disabled (gray) in both light and dark themes */
+:root {
+  --input-disabled-bg: #f3f4f6; /* light gray for disabled inputs in light mode */
+  --input-disabled-text: #6b7280; /* muted text color */
+}
+
+html.dark,
+html[data-color-mode="dark"],
+html[data-theme="dark"],
+html.nuxt-color-mode--dark,
+body.nuxt-color-mode--dark,
+html.u-color-mode--dark,
+body.u-color-mode--dark {
+  /* slightly lighter than the regular dark input background so disabled state is visible */
+  --input-disabled-bg: #12202b;
+  --input-disabled-text: #c0c6ce;
+}
+
+/* Apply to native inputs and common component wrappers used by Nuxt UI */
+input[disabled],
+textarea[disabled],
+select[disabled],
+.u-input[disabled],
+.u-textarea[disabled],
+.u-field[disabled],
+.u-input :is(input, textarea)[disabled] {
+  background-color: var(--input-disabled-bg) !important;
+  color: var(--input-disabled-text) !important;
+  border-color: var(--border) !important;
+  opacity: 1 !important; /* some UA styles lower opacity, we want full control */
+  cursor: not-allowed !important;
+}
+
+/* Ensure inner input inside component wrappers also styled */
+.u-input input[disabled],
+.u-textarea textarea[disabled] {
+  background-color: var(--input-disabled-bg) !important;
+  color: var(--input-disabled-text) !important;
+}
+
 /* @theme {
   --font-mono: "Monaspace Neon";
   --font-mono--font-variation-settings: "wdth" 100;
@@ -139,3 +179,42 @@ code {
 a.link-underlined {
   text-decoration: underline;
 }
+
+/* Tooltip for inputs (used by ProjectForm demo URL help) */
+.tooltip-trigger {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.06);
+  color: var(--muted);
+  line-height: 1;
+}
+
+.hover-tooltip {
+  position: absolute;
+  right: 0.5rem;
+  top: calc(100% + 0.5rem);
+  transform-origin: top right;
+  background: var(--panel-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: var(--panel-shadow);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  z-index: 50;
+  min-width: 220px;
+  max-width: 360px;
+  font-size: 0.875rem;
+  white-space: normal;
+}
+
+/* Slight visual tweak in dark mode so tooltip contrasts against dark background */
+html.dark .hover-tooltip,
+html[data-theme="dark"] .hover-tooltip {
+  background: #071226;
+  color: var(--text);
+  border-color: rgba(255,255,255,0.06);
+}
+
+/* simple show/hide transition for the tooltip */
+.hover-tooltip[v-cloak] { display: none; }
+.hover-tooltip { transition: opacity .12s ease, transform .12s ease; opacity: 1; }
+.hover-tooltip[style*="display: none"] { opacity: 0; transform: translateY(-4px); }

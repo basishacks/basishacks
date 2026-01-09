@@ -9,7 +9,7 @@
         <div>
             <Icon name="i-material-symbols-how-to-vote" style="font-size:3rem;margin-bottom:1rem;color:var(--muted-2)"/>
             <div style="font-weight:600;margin-bottom:.5rem">Voting is not open</div>
-            <div style="color:var(--muted-2)">Please wait while we verify contest status.</div>
+            <div style="color:var(--muted-2)">{{ apiMessage }}</div>
             <br>
             <a href="/" class="link-underlined">Return to Home</a>
         </div>
@@ -63,20 +63,17 @@
         <main class="right-pane">
 
 
-            <div class="notification" v-if="publicVote">
-                <div class="notif-icon" aria-hidden="true">
-                    <span class="notif-default-icon">😊</span>
-                </div>
-                <div class="notif-body">
-                    <div class="notif-title">Public Vote</div>
-                    <div class="notif-desc">
-                        <p>As a public participant, your vote is counted seperately from judge votes. As a result, the project that is picked most by the public will recieve
-                            an alternative recognition 🏅
-                        </p>
-                        <a href="/rules" class="link-underlined">Learn more about Public Vote</a>
-                    </div>
-                </div>
-            </div>
+                        <NotificationBanner v-if="publicVote" :visible="true" :bgLight="'#eefcf6'" :bgDark="'#062023'">
+                            <template #icon>
+                                <span>😊</span>
+                            </template>
+                            <template #title>
+                                <strong>Public Vote</strong>
+                            </template>
+                            <template #body>
+                                <div v-html="publicVoteBody"></div>
+                            </template>
+                        </NotificationBanner>
 
             <!-- <h2 class="text-3xl bold">Step 1: Project Description</h2>
             <p>The team should include an insightful GitHub README.md file to describe their project and its basic functionality.
@@ -87,24 +84,17 @@
 
 
             <!-- Notification container (customizable) -->
-            <div class="notification" v-if="!publicVote">
-                <div class="notif-icon" aria-hidden="true">
-                    <span v-if="notification.iconHtml" v-html="notification.iconHtml"></span>
-                    <span v-else class="notif-default-icon">ℹ️</span>
-                </div>
-                <div class="notif-body">
-                    <div class="notif-title">Heads Up!</div>
-                    <div class="notif-desc">
-                        <p>Participants should not include any form of Personally Identifiable Information (PII) or inappropriate materials in any components of their project, including
-                        video demonstration, code, documentation, and other materials. </p>
-                        <p>Examples of PII include full names, email addresses, phone numbers, their voice, and any other information 
-                        that can be used to identify an individual.</p>
-                        <p>Inappropriate content includes offensive language, hate speech, discriminatory remarks, or any content that violates the event's code of conduct.</p>
-                        <p>Projects are subject to disqualification by including PIIs and inappropriate content. If you located any PII or inappropriate language, please <strong>FLAG</strong> this project by clicking the 
-                            <span class="text-red-400">Flag Button</span> at the bottom of this page.</p>
-                    </div>
-                </div>
-            </div>
+                        <NotificationBanner v-if="!publicVote" :visible="true" :closable="false">
+                            <template #icon>
+                                <span v-html="notification.iconHtml || 'ℹ️'"></span>
+                            </template>
+                            <template #title>
+                                <strong>Heads Up!</strong>
+                            </template>
+                            <template #body>
+                                <div v-html="headsUpBody"></div>
+                            </template>
+                        </NotificationBanner>
             
             <!-- <br></br>
             <h2 class="text-3xl bold">Step 2: Demonstration</h2>
@@ -187,6 +177,7 @@
 <script setup>
 
 import { ref, reactive, computed, watch, onMounted } from 'vue'
+import NotificationBanner from '~/components/NotificationBanner.vue'
 
 // Auth/session stub — mirrors `profile.vue` usage of `useUserSession()`.
 // This lets you access `userRef`, `userId`, `userEmail`, and `isLoggedIn` in this page.
@@ -315,6 +306,11 @@ const kindDefaults = {
     warning: { bg: '#fff8e6', border: '#ffe4a8', color: '#5a4200', icon: '⚠️' },
     danger: { bg: '#ffecec', border: '#ffc6c6', color: '#6a0000', icon: '⛔' }
 }
+
+// HTML bodies for the notification banners (kept in script to avoid template literal parsing issues)
+const publicVoteBody = `As a public participant, your vote is counted separately from judge votes. As a result, the project that is picked most by the public will receive an alternative recognition 🏅</p><a href="/rules" class="link-underlined">Learn more about Public Vote</a>`
+
+const headsUpBody = `Participants should not include any form of Personally Identifiable Information (PII) or inappropriate materials in any components of their project, including video demonstration, code, documentation, and other materials.<br><br>Examples of PII include full names, email addresses, phone numbers, their voice, and any other information that can be used to identify an individual.<br><br>Inappropriate content includes offensive language, hate speech, discriminatory remarks, or any content that violates the event's code of conduct.<br><br>Projects are subject to disqualification by including PIIs and inappropriate content. If you locate any PII or inappropriate language, please <strong>FLAG</strong> this project by clicking the <span class="text-red-400">Flag Button</span> at the bottom of this page.</p>`
 
 
 

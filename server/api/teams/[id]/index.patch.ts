@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
   if (team?.name.startsWith("Hackathon Judges") ){
     throw createError({
       status: 400,
-      message: 'Team name cannot be changed for this team.',
+      message: 'Cannot edit this team.',
     })
   }
 

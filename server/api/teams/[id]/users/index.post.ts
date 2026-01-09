@@ -3,6 +3,15 @@ import { AddTeamMemberRequest } from '~~/shared/schemas'
 export default defineEventHandler(async (event) => {
   const teamID = parseInt(getRouterParam(event, 'id')!)
 
+  const team = await getTeam(event, teamID)
+
+  if (team?.name.startsWith("Hackathon Judges") ){
+    throw createError({
+      status: 403,
+      message: 'Unable to add members to this team: No permission',
+    })
+  }
+
   // prefer a non-redirecting session check for API endpoints
   const session = await getUserSession(event)
   if (!session?.user?.id) {

@@ -15,6 +15,7 @@ interface APITeam {
     repo_url: string | null
     submitted: boolean
   }
+  flags: Array<string>
 }
 
 interface GetUserResponse extends APIUser {
