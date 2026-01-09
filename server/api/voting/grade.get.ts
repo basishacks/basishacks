@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
 
   const team = user.team_id ? await getTeam(event, user.team_id) : null
   
-  if (!team?.flags.includes('voting.view')) {
+  if (!user?.flags.includes('voting.view')) {
     setResponseStatus(event, 403)
     return { status: 'error', message: 'No permission to view projects' }
   }
