@@ -5,10 +5,13 @@
     </div>
 
         <!-- closed state: show only closed message (no left pane or rubric) -->
-    <div v-else-if="votingOpen === false" class="closed-full" style="padding:1rem; display:flex;align-items:center;justify-content:center;min-height:60vh;">
+    <div v-else-if="votingOpen === false" class="closed-full" style="padding:1rem; display:flex;align-items:center;justify-content:center;min-height:60vh;text-align: center;">
         <div>
+            <Icon name="i-material-symbols-how-to-vote" style="font-size:3rem;margin-bottom:1rem;color:var(--muted-2)"/>
             <div style="font-weight:600;margin-bottom:.5rem">Voting is not open</div>
             <div style="color:var(--muted-2)">Please wait while we verify contest status.</div>
+            <br>
+            <a href="/" class="link-underlined">Return to Home</a>
         </div>
     </div>
 

@@ -13,6 +13,11 @@ const navItems = computed<NavigationMenuItem[]>(() => {
       to: '/dashboard',
       icon: 'i-material-symbols-space-dashboard',
     },
+    {
+      label: "Voting",
+      to: "/voting",
+      icon: "i-material-symbols-how-to-vote",
+    }
   ]
   return links
 })

@@ -40,15 +40,14 @@ export default defineEventHandler(async (event) => {
   // For demo, return a random project when open
   const randomProject = dummyProjects[Math.floor(Math.random() * dummyProjects.length)]
 
-
-  const isOpen = true
-
-  if (!isOpen) {
+  const hackathon = await getHackathon(event)
+  if (hackathon?.status != 'voting') {
     return {
       status: 'closed',
-      message: 'Voting is not open yet',
+      message: 'Voting has not started yet',
     }
   }
+
 
   // fetch the full user row and their team (if any) to return public versions
   const user = await getUser(event, userID)
