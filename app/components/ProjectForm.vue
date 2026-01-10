@@ -172,7 +172,7 @@ const isSubmittedTeam = computed(() => {
 
   <NotificationBanner v-if="isSubmittedTeam" :bgDark="'bg-dark-green-900'" :bgLight="'bg-green-100'">
       <template #icon>
-          <Icon name="i-material-symbols-data-check"/>
+          <Icon name="i-material-symbols-rocket-launch"/>
       </template>
       <template #body>
           Project Submitted! Congratulations on completing your submission. You can no longer make changes to your project details.
