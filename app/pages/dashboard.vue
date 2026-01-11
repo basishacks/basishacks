@@ -16,18 +16,18 @@ if (hackathonError.value) {
   throw hackathonError.value
 }
 
-const { data, error, refresh } = await useFetch<GetUserResponse>(
-  () => `/api/users/${user.value.id}`
-)
-if (error.value) {
-  throw error.value
-}
+// Resuable API request from default.vue
+// No need to fetch again if we already have the data
+const data = useState<GetUserResponse | null>('currentUser')
 
 const isDirty = ref(false)
 
 async function refreshData() {
   await withLoadingIndicator(async () => {
-    await refresh()
+    // refresh from the API and update the global state
+    const res = await $fetch<GetUserResponse>(`/api/users/${user.value.id}`)
+    const currentUser = useState<GetUserResponse | null>('currentUser')
+    currentUser.value = res
   })
   isDirty.value = false
 }

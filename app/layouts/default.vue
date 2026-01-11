@@ -1,6 +1,37 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 
+const voting = {
+  label: "Voting",
+  to: "/voting",
+  icon: "i-material-symbols-how-to-vote",
+}
+
+import { watch } from 'vue'
+const { user: userRef } = useUserSession()
+const user = computed(() => userRef.value!)
+
+const currentUser = useState<GetUserResponse | null>('currentUser', () => null)
+
+watch(
+  () => userRef.value?.id,
+  async (id) => {
+    if (!id) {
+      currentUser.value = null
+      return
+    }
+    try {
+      const { data, error } = await useFetch<GetUserResponse>(() => `/api/users/${id}`)
+      if (!error.value) currentUser.value = data.value ?? null
+    } catch (e) {
+      // ignore — pages can handle missing user state
+      console.error('Failed to fetch current user', e)
+      currentUser.value = null
+    }
+  },
+  { immediate: true }
+)
+
 const navItems = computed<NavigationMenuItem[]>(() => {
   const links = [
     {
@@ -13,11 +44,7 @@ const navItems = computed<NavigationMenuItem[]>(() => {
       to: '/dashboard',
       icon: 'i-material-symbols-space-dashboard',
     },
-    {
-      label: "Voting",
-      to: "/voting",
-      icon: "i-material-symbols-how-to-vote",
-    }
+    ...(currentUser.value?.flags.includes("voting.view") ? [voting] : []),
   ]
   return links
 })
