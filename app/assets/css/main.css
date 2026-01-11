@@ -191,7 +191,7 @@ button[disabled] * , .u-button[disabled] * { color: var(--btn-disabled-text) !im
   font-display: swap;
 }
 
-body {
+body { /* Legacy Compatibility. This will not make requests to google (as my VPN is not working properly) */
   font-family: "Monaspace Neon", monospace;
 }
 

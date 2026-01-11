@@ -30,12 +30,12 @@ export const CreateTeamQuery = z.object({
 export type CreateTeamQuery = z.infer<typeof CreateTeamQuery>
 
 export const CreateTeamRequest = z.object({
-  name: TeamName,
+  name: TeamName.max(30, 'Team name cannot exceed 30 characters'),
 })
 export type CreateTeamRequest = z.infer<typeof CreateTeamRequest>
 
 export const UpdateTeamRequest = z.object({
-  name: z.optional(TeamName),
+  name: z.optional(TeamName.max(30, 'Team name cannot exceed 30 characters')),
   final: z.optional(z.boolean()),
   project: z.optional(
     z.object({

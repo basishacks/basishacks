@@ -24,13 +24,6 @@ export default defineEventHandler(async (event) => {
   const { add = false } = await getValidatedQuery(event, CreateTeamQuery.parse)
   const { name } = await readValidatedBody(event, CreateTeamRequest.parse)
 
-  if (name.length > 30) {
-    throw createError({
-      status: 400,
-      message: 'Team name cannot exceed 50 characters',
-    })
-  }
-
   const team = await createTeam(event, name)
   if (add) {
     await addTeamMember(event, team.id, userID)
