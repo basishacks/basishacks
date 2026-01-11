@@ -1,17 +1,18 @@
 <template>
 
-    <div v-if="votingOpen === null" class="loading-full" style="display:flex;align-items:center;justify-content:center;min-height:60vh;padding:2rem;">
+    <div v-if="votingOpen === null" class="flex items-center justify-center min-h-[60vh] p-8">
 
     </div>
 
         <!-- closed state: show only closed message (no left pane or rubric) -->
-    <div v-else-if="votingOpen === false" class="closed-full" style="padding:1rem; display:flex;align-items:center;justify-content:center;min-height:60vh;text-align: center;">
+    <div v-else-if="votingOpen === false" class="p-4 flex items-center justify-center min-h-[60vh] text-center">
         <div>
-            <Icon name="i-material-symbols-how-to-vote" style="font-size:3rem;margin-bottom:1rem;color:var(--muted-2)"/>
-            <div style="font-weight:600;margin-bottom:.5rem">Voting is not open</div>
-            <div style="color:var(--muted-2)">{{ apiMessage }}</div>
-            <br>
-            <ULink href="/">Return to Home</ULink>
+            <Icon name="i-material-symbols-how-to-vote" class="text-3xl mb-4 text-(--muted-2)" />
+            <div class="font-semibold mb-2">Voting is not open</div>
+            <div class="text-(--muted-2)">{{ apiMessage }}</div>
+            <div class="mt-4">
+              <ULink href="/">Return to Home</ULink>
+            </div>
         </div>
     </div>
 
@@ -21,16 +22,16 @@
 
             <section class="project-info">
 
-                <h3 class="readme-header">Project Info</h3>
-                <div class="meta"><strong>Team:</strong> {{ currentProject?.team }}</div>
-                <div class="meta"><strong>Category:</strong> {{ currentProject?.category }}</div>
+                <h3 class="text-sm text-(--muted-2) mb-2">Project Info</h3>
+                <div class="text-(--muted-2) text-sm"><strong>Team:</strong> {{ currentProject?.team }}</div>
+                <div class="text-(--muted-2) text-sm"><strong>Category:</strong> {{ currentProject?.category }}</div>
 
             </section>
 
-            <br>
+            <div class="my-4" />
 
             <section class="readme-only">
-                <h3 class="readme-header">README</h3>
+                <h3 class="text-sm text-(--muted-2) mb-2">README</h3>
                 <div class="readme-container">
                     <template v-if="readmeLoading">Loading README…</template>
                     <template v-else-if="readmeError">{{ readmeError }}</template>
@@ -40,7 +41,7 @@
                             v-if="readmeHtml"
                             v-html="readmeHtml"
                         ></article>
-                        <pre class="readme" v-else v-text="readmeContent || 'No README.md submitted for this project.'"></pre><br>
+                    <pre class="readme" v-else v-text="readmeContent || 'No README.md submitted for this project.'"></pre>
 
                         <div class="notification" v-if="!readmeHtml">
                             <div class="notif-icon" aria-hidden="true">
@@ -112,7 +113,7 @@
 
 
             <section class="rubrics">
-                <div class="score-summary" style="margin-bottom:.5rem;">
+                <div class="score-summary mb-2 text-right">
                     <div>Total points: <strong>{{ totalPoints }}/16</strong></div>
                 </div>
                 <table class="rubric-table">
