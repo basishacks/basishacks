@@ -4,10 +4,6 @@ import { UpdateUserRequest } from '~~/shared/schemas'
 
 const toast = useToast()
 
-definePageMeta({
-  middleware: 'auth',
-})
-
 const { user: userRef, clear } = useUserSession()
 const userID = computed(() => userRef.value?.id ?? 0)
 

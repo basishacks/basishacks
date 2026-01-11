@@ -2,9 +2,6 @@
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { CreateTeamRequest } from '~~/shared/schemas'
 
-definePageMeta({
-  middleware: 'auth',
-})
 useHead({
   title: `New Team | ${WEBSITE_NAME}`,
 })
