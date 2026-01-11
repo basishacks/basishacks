@@ -1,11 +1,8 @@
 export default defineEventHandler(async (event) => {
   // Prefer a non-redirecting session check for API endpoints
-  const session = await getUserSession(event)
-  if (!session?.user?.id) {
-    setResponseStatus(event, 401)
-    return { status: 'error', message: 'Not authenticated' }
-  }
-  const userID = session.user.id
+  const {
+    user: { id: userID },
+  } = await requireUserSession(event)
 
   const dummyProjects = [
     {

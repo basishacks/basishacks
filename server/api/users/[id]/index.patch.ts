@@ -3,13 +3,9 @@ import { UpdateUserRequest } from '~~/shared/schemas'
 export default defineEventHandler(async (event) => {
   const id = parseInt(getRouterParam(event, 'id')!)
 
-  // prefer a non-redirecting session check for API endpoints
-  const session = await getUserSession(event)
-  if (!session?.user?.id) {
-    setResponseStatus(event, 401)
-    return { status: 'error', message: 'Not authenticated' }
-  }
-  const userID = session.user.id
+  const {
+    user: { id: userID },
+  } = await requireUserSession(event)
 
   if (id !== userID) {
     throw createError({
