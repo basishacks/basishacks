@@ -2,14 +2,9 @@ import { CreateTeamQuery, CreateTeamRequest } from '~~/shared/schemas'
 
 export default defineEventHandler(async (event) => {
   // prefer a non-redirecting session check for API endpoints
-  const session = await getUserSession(event)
-  if (!session?.user?.id) {
-    throw createError({
-      status: 401,
-      message: 'Logged in user not found',
-    })
-  }
-  const userID = session.user.id
+  const {
+    user: { id: userID },
+  } = await requireUserSession(event)
 
   const user = await getUser(event, userID)
   if (!user) {
