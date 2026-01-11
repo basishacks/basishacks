@@ -63,3 +63,16 @@ export const UpdateUserRequest = z.object({
   name: z.optional(z.string()),
 })
 export type UpdateUserRequest = z.infer<typeof UpdateUserRequest>
+
+const JudgeRubric = z.object({
+  id: z.number(),
+  score: z.number().min(0).max(4),
+})
+
+export const SubmitVerdictRequest = z.object({
+  judge: z.number(),
+  comments: z.string().max(5000, 'Comments cannot exceed 5000 characters'),
+  rubrics: z.array(JudgeRubric).length(4, "There must be exactly 4 rubric scores"),
+  timestamp: z.number()
+})
+export type SubmitVerdictRequest = z.infer<typeof SubmitVerdictRequest>

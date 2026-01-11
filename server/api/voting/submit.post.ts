@@ -1,6 +1,8 @@
+import { SubmitVerdictRequest } from "~~/shared/schemas"
+
 export default defineEventHandler(async (event) => {
   // Get the request body
-  const body = await readBody(event)
+  const body = await readValidatedBody(event, SubmitVerdictRequest.parse)
 
   // Log the submitted verdict for demo purposes
   console.log('Received voting submission:', body)
@@ -10,7 +12,6 @@ export default defineEventHandler(async (event) => {
 
   return {
     success: true,
-    message: 'Verdict submitted successfully',
-    projectId: body.projectId || 'unknown'
+    message: 'Verdict submitted successfully'
   }
 })

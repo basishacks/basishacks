@@ -188,6 +188,16 @@ const currentProject = ref(null)
 const votingOpen = ref(null) // null = loading/unknown, false = closed, true = open
 const apiMessage = ref('')
 
+const { user: userRef } = useUserSession()
+const user2 = computed(() => userRef.value)
+const { data, error, refresh } = await useFetch(
+  () => `/api/users/${user2.value.id}`
+)
+if (error.value) {
+  throw error.value
+}
+
+const user = data.value
 
 
 async function checkVoting() {
@@ -249,7 +259,6 @@ const defaultRubrics = [
 
 const rubrics = reactive(defaultRubrics.map(r => ({ ...r })))
 
-const judgeName = ref('')
 const comments = ref('')
 
 const isSubmitting = ref(false)
@@ -313,10 +322,10 @@ async function submitVerdict() {
     isSubmitting.value = true
 
     const payload = {
-        judge: judgeName.value,
+        judge: user.id,
         comments: comments.value,
         rubrics: rubrics.map(r => ({ id: r.id, score: r.score })),
-        timestamp: new Date().toISOString(),
+        timestamp: Date.now(),
     }
 
     // Dummy API call
@@ -413,10 +422,6 @@ function loadForProject(projectId) {
         const def = defaultRubrics.find(d => d.id === r.id)
         r.score = def && typeof def.score !== 'undefined' ? def.score : 0
     })
-
-    // Do not auto-restore prior saved rubrics/comments here — the UI should start fresh per project.
-    // Keep judge name cleared so judges re-enter their name for each review (optional behavior).
-    judgeName.value = ''
 
     // load README for the selected project (non-blocking)
     fetchReadme(currentProject.value.readmeRawUrl)
