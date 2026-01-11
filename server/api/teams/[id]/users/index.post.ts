@@ -3,22 +3,9 @@ import { AddTeamMemberRequest } from '~~/shared/schemas'
 export default defineEventHandler(async (event) => {
   const teamID = parseInt(getRouterParam(event, 'id')!)
 
-  const team = await getTeam(event, teamID)
-
-  if (team?.flags.includes("team.disable.addTeammate")){
-    throw createError({
-      status: 403,
-      message: 'No permission to add team members to this team',
-    })
-  }
-
-  // prefer a non-redirecting session check for API endpoints
-  const session = await getUserSession(event)
-  if (!session?.user?.id) {
-    setResponseStatus(event, 401)
-    return { status: 'error', message: 'Not authenticated' }
-  }
-  const currentUserID = session.user.id
+  const {
+    user: { id: currentUserID },
+  } = await requireUserSession(event)
 
   const currentUser = await getUser(event, currentUserID)
   if (currentUser?.team_id !== teamID) {
