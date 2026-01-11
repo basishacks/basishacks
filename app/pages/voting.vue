@@ -27,7 +27,7 @@
 
             </section>
 
-            <br></br>
+            <br>
 
             <section class="readme-only">
                 <h3 class="readme-header">README</h3>
@@ -154,7 +154,7 @@
             </section>
 
             <section class="actions">
-                <button class="flag-btn" @click="reportAbuse" v-if="!publicVote">
+                <button class="flag-btn" v-if="!publicVote">
                     Flag Project for Inappropriate Content
                     
                 </button>
@@ -196,17 +196,6 @@ const userEmail = computed(() => userRef?.value?.email ?? '')
 const isLoggedIn = computed(() => !!(userRef && userRef.value && userRef.value.id))
 
 console.log("userId:", userId.value, "isLoggedIn:", isLoggedIn.value)
-try {
-    const res = await fetch(`/api/users/${userId.value}`)
-    
-    const json = await res.json()
-
-    console.log(json)
-} catch (e) {
-    console.error(e)
-}
-
-
 const publicVote = computed(() => false) // set to true to enable public vote notification
 
 const currentProject = ref(null)
