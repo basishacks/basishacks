@@ -21,7 +21,7 @@ export async function getUser(
     'SELECT * FROM users WHERE id = ?'
   )
     .bind(userID)
-    .first<any>()
+    .first<User>()
 
   if (!row) return null
 
@@ -34,7 +34,7 @@ export async function getUserByEmail(event: H3Event, email: string) {
     'SELECT * FROM users WHERE email = ?'
   )
     .bind(email)
-    .first<any>()
+    .first<User>()
 
   if (!row) return null
   if (row.flags) row.flags = parseFlags(row.flags)
