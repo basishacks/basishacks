@@ -64,17 +64,17 @@
         <main class="right-pane">
 
 
-                        <NotificationBanner v-if="publicVote" :visible="true" :bgLight="'#eefcf6'" :bgDark="'#062023'">
-                            <template #icon>
-                                <span>😊</span>
-                            </template>
-                            <template #title>
-                                <strong>Public Vote</strong>
-                            </template>
-                            <template #body>
-                                <div v-html="publicVoteBody"></div>
-                            </template>
-                        </NotificationBanner>
+            <NotificationBanner v-if="publicVote" :visible="true" :bgLight="'#eefcf6'" :bgDark="'#062023'">
+                <template #icon>
+                    <span>😊</span>
+                </template>
+                <template #title>
+                    <strong>Public Vote</strong>
+                </template>
+                <template #body>
+                    <div v-html="publicVoteBody"></div>
+                </template>
+            </NotificationBanner>
 
             <!-- <h2 class="text-3xl bold">Step 1: Project Description</h2>
             <p>The team should include an insightful GitHub README.md file to describe their project and its basic functionality.
@@ -85,17 +85,17 @@
 
 
             <!-- Notification container (customizable) -->
-                        <NotificationBanner v-if="!publicVote" :visible="true" :closable="false">
-                            <template #icon>
-                                <span v-html="notification.iconHtml || 'ℹ️'"></span>
-                            </template>
-                            <template #title>
-                                <strong>Heads Up!</strong>
-                            </template>
-                            <template #body>
-                                <div v-html="headsUpBody"></div>
-                            </template>
-                        </NotificationBanner>
+            <NotificationBanner v-if="!publicVote" :visible="true" :closable="false">
+                <template #icon>
+                    <span v-html="notification.iconHtml || 'ℹ️'"></span>
+                </template>
+                <template #title>
+                    <strong>Heads Up!</strong>
+                </template>
+                <template #body>
+                    <div v-html="headsUpBody"></div>
+                </template>
+            </NotificationBanner>
             
             <!-- <br></br>
             <h2 class="text-3xl bold">Step 2: Demonstration</h2>
@@ -161,18 +161,16 @@
                 </button>
                 <span class="help-icon-container" tabindex="0" aria-label="Show description">
                     <span class="help-icon" aria-hidden="true">?</span>
-                    <div class="tooltip" role="tooltip">
+                    <div class="tooltip" role="tooltip">    
                         <div class="tooltip-desc"><strong>Inappropriate content includes but is not limited to having PII (<ULink href="https://en.wikipedia.org/wiki/Personal_data">Personally Identifiable Information</ULink>).</strong> If you believe there exists any form of inappropriate content in this project, please click this button to flag it. <strong>See Step 1 of Judging Instructions for more.</strong></div>
                     </div>
                 </span>
             </section>
 
             <section class="actions">
-
-
-
                 <button class="btn-save" @click="submitVerdict">Submit Verdict <span v-if="isSubmitting" class="spinner"></span></button>
             </section>
+
         </main>
 
     </div>
@@ -183,21 +181,8 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import NotificationBanner from '~/components/NotificationBanner.vue'
 
-// Auth/session stub — mirrors `profile.vue` usage of `useUserSession()`.
-// This lets you access `userRef`, `userId`, `userEmail`, and `isLoggedIn` in this page.
-let userRef = ref(null)
-try {
-    const sess = useUserSession()
-    if (sess && sess.user) userRef = sess.user
-} catch (e) {
-    // useUserSession may not be available in all contexts; leave userRef null
-}
-const userId = computed(() => userRef?.value?.id ?? null)
-const userEmail = computed(() => userRef?.value?.email ?? '')
-const isLoggedIn = computed(() => !!(userRef && userRef.value && userRef.value.id))
-
-console.log("userId:", userId.value, "isLoggedIn:", isLoggedIn.value)
-const publicVote = computed(() => false) // set to true to enable public vote notification
+// Public vote flag (set to true to enable public vote notification)
+const publicVote = computed(() => false)
 
 const currentProject = ref(null)
 const votingOpen = ref(null) // null = loading/unknown, false = closed, true = open
@@ -305,20 +290,12 @@ const headsUpBody = `Participants should not include any form of Personally Iden
 
 
 
-// Compute weighted score per rubric and totals
-function weighted(r) {
-    return (r.score / RUBRIC_MAX) * r.weight
-}
+// Compute totals
 
 // Totals: simple integer sum of rubric points and normalized percent
 const totalPoints = computed(() => rubrics.reduce((s, r) => s + (Number(r.score) || 0), 0))
 const maxPoints = computed(() => rubrics.length * RUBRIC_MAX)
-const normalizedPercent = computed(() => {
-    const pct = maxPoints.value > 0 ? (totalPoints.value / maxPoints.value) * 100 : 0
-    return Math.round(pct)
-})
-
-const twoDecimals = (n) => (Math.round(n * 100) / 100).toFixed(2)
+// normalizedPercent and twoDecimals were unused; totals are available via totalPoints/maxPoints when needed
 
 // In-memory store used instead of localStorage
 const memoryStore = new Map()
@@ -462,9 +439,6 @@ watch(currentProject, () => {
 // initial project loading handled by checkVoting() on mount earlier
 
 // dynamic theme support: detect global color mode changes (Nuxt UI toggles)
-
-let _mo = null
-let _mq = null
 
 
 </script>
