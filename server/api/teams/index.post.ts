@@ -4,15 +4,19 @@ export default defineEventHandler(async (event) => {
   // prefer a non-redirecting session check for API endpoints
   const session = await getUserSession(event)
   if (!session?.user?.id) {
-    setResponseStatus(event, 401)
-    return { status: 'error', message: 'Not authenticated' }
+    throw createError({
+      status: 401,
+      message: 'Logged in user not found',
+    })
   }
   const userID = session.user.id
 
   const user = await getUser(event, userID)
   if (!user) {
-    setResponseStatus(event, 401)
-    return { status: 'error', message: 'Logged in user not found' }
+    throw createError({
+      status: 401,
+      message: 'Logged in user not found',
+    })
   }
   if (user?.team_id) {
     throw createError({
