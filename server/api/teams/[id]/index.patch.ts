@@ -8,11 +8,6 @@ const config: ProfanityCheckerConfig = {
   replaceWith: '***'
 };
 
-function updateIfTrue(init: boolean, yon: boolean) {
-  if (init) return true;
-  return yon;
-}
-
 export default defineEventHandler(async (event) => {
   const id = parseInt(getRouterParam(event, 'id')!)
 
@@ -60,16 +55,16 @@ export default defineEventHandler(async (event) => {
   // Feel free to remove if unncessecary
   let result = false;
   if (payload.name !== undefined) 
-    result = updateIfTrue(result, checkProfanity(payload.name, config).containsProfanity);
+    result = checkProfanity(payload.name, config).containsProfanity;
   if (payload.project?.name !== undefined) {
-    result = updateIfTrue(result, checkProfanity(payload.project?.name, config).containsProfanity);
+    result = result, checkProfanity(payload.project?.name, config).containsProfanity;
   }
   if (payload.project?.description !== undefined) 
-    result = updateIfTrue(result, checkProfanity(payload.project?.description, config).containsProfanity);
+    result = result, checkProfanity(payload.project?.description, config).containsProfanity;
   if (payload.project?.demo_url !== undefined && payload.project?.demo_url !== null) 
-    result = updateIfTrue(result, checkProfanity(payload.project?.demo_url, config).containsProfanity);
+    result = result, checkProfanity(payload.project?.demo_url, config).containsProfanity;
   if (payload.project?.repo_url !== undefined && payload.project?.repo_url !== null) 
-    result = updateIfTrue(result, checkProfanity(payload.project?.repo_url, config).containsProfanity);
+    result = result, checkProfanity(payload.project?.repo_url, config).containsProfanity;
 
   
 
