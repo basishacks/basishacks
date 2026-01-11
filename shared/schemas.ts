@@ -7,7 +7,7 @@ const BasisEmail = z
     'Please use a @basischina.com email'
   )
 
-const TeamName = z.string().min(2, 'Team name must be at least 2 characters')
+const TeamName = z.string().min(2, 'Team name must be at least 2 characters').max(30, 'Team name cannot exceed 30 characters')
 
 const BooleanString = z
   .literal(['true', 'false'])
@@ -30,12 +30,12 @@ export const CreateTeamQuery = z.object({
 export type CreateTeamQuery = z.infer<typeof CreateTeamQuery>
 
 export const CreateTeamRequest = z.object({
-  name: TeamName.max(30, 'Team name cannot exceed 30 characters'),
+  name: TeamName,
 })
 export type CreateTeamRequest = z.infer<typeof CreateTeamRequest>
 
 export const UpdateTeamRequest = z.object({
-  name: z.optional(TeamName.max(30, 'Team name cannot exceed 30 characters')),
+  name: z.optional(TeamName),
   final: z.optional(z.boolean()),
   project: z.optional(
     z.object({
@@ -65,7 +65,7 @@ export const UpdateUserRequest = z.object({
 export type UpdateUserRequest = z.infer<typeof UpdateUserRequest>
 
 const JudgeRubric = z.object({
-  id: z.number(),
+  id: z.string(),
   score: z.number().min(0).max(4),
 })
 

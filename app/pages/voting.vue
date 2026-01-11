@@ -151,7 +151,8 @@
 
             <section class="comments">
                 <h3>Add Commentary for Verdict</h3>
-                <textarea v-model="comments" rows="5" placeholder="Strengths, weaknesses, suggestions..."></textarea>
+                <LimitedTextArea v-model="comments" :rows="5" placeholder="Strengths, weaknesses, suggestions..." :maxlength="5000" class="w-full" />
+
             </section>
 
             <section class="actions">
@@ -180,6 +181,7 @@
 
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import NotificationBanner from '~/components/NotificationBanner.vue'
+import LimitedTextArea from '~/components/LimitedTextArea.vue'
 
 // Public vote flag (set to true to enable public vote notification)
 const publicVote = computed(() => false)
@@ -198,6 +200,8 @@ if (error.value) {
 }
 
 const user = data.value
+
+const votingDisplayed = ref(false)
 
 
 async function checkVoting() {
@@ -219,6 +223,7 @@ async function checkVoting() {
         const proj = json.project || (json.projects && json.projects[0]) || json
         currentProject.value = proj
         if (currentProject.value && currentProject.value.id) loadForProject(currentProject.value.id)
+        votingDisplayed.value = true
     } catch (e) {
         votingOpen.value = false
         apiMessage.value = 'Error checking voting status'
@@ -244,6 +249,14 @@ async function nextProject() {
         console.error('Error fetching next project:', e)
     }
 }
+
+onBeforeRouteLeave(() => {
+  if (
+    votingDisplayed.value && !confirm('Any unsaved changes will be lost. Are you sure you want to leave?')
+  ) {
+    return abortNavigation()
+  }
+})
 
 onMounted(() => {
     checkVoting()
@@ -334,26 +347,37 @@ async function submitVerdict() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
+        }).then(res => {
+
+            return res.json()
+        }).then(data => {
+
+            if (data.error) {
+
+                toast.add({
+                    color: 'error',
+                    title: `Unable to submit verdict for ${currentProject.value.title}`,
+                    description: data.message || 'An error occurred during submission.'
+                })
+
+                throw new Error(data.message)
+            }
+           
+            toast.add({
+                color: 'success',
+                title: `Verdict submitted for ${currentProject.value.title}!`,
+                description: 'Moving on to the next project...'
+            })
+
+            memoryStore.set(storageKeyFor(currentProject.value.id), payload)
+
+            nextProject()
+
         })
     } catch (e) {
         console.error('API submit failed:', e)
     }
 
-    //alert("Verdict submitted for " + currentProject.value.title + "! Moving to next project.")
-    toast.add({
-        color: 'success',
-        title: `Verdict submitted for ${currentProject.value.title}!`,
-        description: 'Loading next project...'
-    })
-
-    
-    
-
-    
-
-    memoryStore.set(storageKeyFor(currentProject.value.id), payload)
-    // After submitting, load the next project
-    nextProject()
     setTimeout(() => isSubmitting.value = false, 1000)
 }
 
@@ -414,8 +438,7 @@ async function fetchReadme(url) {
 }
 
 function loadForProject(projectId) {
-    // Always reset rubric scores and comments when loading a new project.
-    // This ensures judges start fresh for each project.
+
     comments.value = ''
     // Reset each rubric to its default score defined in defaultRubrics (fall back to 0)
     rubrics.forEach(r => {
@@ -633,16 +656,6 @@ p {
     color: inherit;
 }
 .weighted { font-size: .85rem; color: var(--muted-2) }
-
-.comments textarea {
-    width: 100%;
-    padding: .6rem;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    resize: vertical;
-    background: var(--input-bg);
-    color: inherit;
-}
 
 /* Notification styles */
 .notification {

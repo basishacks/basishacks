@@ -19,6 +19,13 @@ if (error.value) {
 }
 
 const user = computed(() => data.value!)
+const userRole = computed(() => {
+  if (user.value.flags.includes('admin')) return 'admin'
+  if (user.value.flags.includes('voting.view')) return 'judge'
+  return 'participant'
+})
+
+const isJudge = computed(() => userRole.value === 'judge')
 
 async function doLogout() {
   await clear()
@@ -52,13 +59,36 @@ async function onSubmitName(event: FormSubmitEvent<UpdateUserRequest>) {
     })
   }
 }
+
+
+</script>
+
+<script lang="ts">
+const { data, error } = await useFetch('/api/hackathon')
+if (error.value) {
+  throw error.value
+}
+const hackathon = computed(() => data.value!)
+
+const status = computed(() => hackathon.value.status)
 </script>
 
 <template>
   <div>
     <h1 class="text-4xl bold mb-4">Hi, {{ user.name || user.email }}!</h1>
 
-    <p class="mb-4">You are a {{ WEBSITE_NAME }} participant.</p>
+    <p class="mb-4">You are a {{ WEBSITE_NAME }} {{ userRole }}.</p>
+
+    <ULink href="/dashboard">
+      <UAlert v-if="status == 'voting' && isJudge" variant="soft" class="mb-4">
+        <template #title>
+          <span class="bold">
+            The hackathon is now in the voting phase!
+          </span>
+          Click here to vote, or click on the "Voting" tab in the navigation bar.
+        </template>
+      </UAlert>
+    </ULink>
 
     <UForm
       :state="state"
