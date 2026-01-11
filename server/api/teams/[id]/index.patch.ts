@@ -1,12 +1,4 @@
 import { UpdateTeamRequest } from '~~/shared/schemas'
-import { checkProfanity, ProfanityCheckerConfig } from 'glin-profanity';
-
-const config: ProfanityCheckerConfig = {
-  languages: ['english', 'spanish', "chinese"],
-  severityLevels: true,
-  autoReplace: true,
-  replaceWith: '***'
-};
 
 export default defineEventHandler(async (event) => {
   const id = parseInt(getRouterParam(event, 'id')!)
@@ -50,31 +42,6 @@ export default defineEventHandler(async (event) => {
       message: 'No permission to edit project',
     })
   }
-
-  // Judging update 1: We dont want kids uhh doing these.
-  // Feel free to remove if unncessecary
-  let result = false;
-  if (payload.name !== undefined) 
-    result = checkProfanity(payload.name, config).containsProfanity;
-  if (payload.project?.name !== undefined) {
-    result = result, checkProfanity(payload.project?.name, config).containsProfanity;
-  }
-  if (payload.project?.description !== undefined) 
-    result = result, checkProfanity(payload.project?.description, config).containsProfanity;
-  if (payload.project?.demo_url !== undefined && payload.project?.demo_url !== null) 
-    result = result, checkProfanity(payload.project?.demo_url, config).containsProfanity;
-  if (payload.project?.repo_url !== undefined && payload.project?.repo_url !== null) 
-    result = result, checkProfanity(payload.project?.repo_url, config).containsProfanity;
-
-  
-
-  if (result) {
-    throw createError({
-      status: 400,
-      message: 'Inappropriate words found in one or more of your content. Please do not attempt to use inappropriate words.',
-    })
-  }
-
 
   if (payload.name !== undefined) team.name = payload.name
   if (payload.project?.name !== undefined)
