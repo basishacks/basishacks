@@ -27,7 +27,7 @@
 
             </section>
 
-            <br></br>
+            <br>
 
             <section class="readme-only">
                 <h3 class="readme-header">README</h3>
