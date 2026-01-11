@@ -51,10 +51,12 @@ const navItems = computed<NavigationMenuItem[]>(() => {
 
 
 
-setTimeout(() => {
-  console.log("%c" + "HEY, IMPORTANT STUFF", "color: var(--ui-primary); -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;");
-console.log("%c" + "You probably shouldn't paste anything here unless you know what you're doing.", "font-size: 32px;");
+onMounted(() => {
+  setTimeout(() => {
+    console.log("%c" + "HEY, IMPORTANT STUFF", "color: var(--ui-primary); -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;");
+    console.log("%c" + "You probably shouldn't paste anything here unless you know what you're doing.", "font-size: 32px;");
 }, 1000)
+})
 </script>
 
 

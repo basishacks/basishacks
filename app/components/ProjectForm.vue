@@ -33,16 +33,6 @@ const state = reactive({
   },
 })
 
-// Tooltip text and visibility for the demo URL field
-const demoUrlHelp = `Provide a publicly accessible demo URL (https://...). This field is read-only for submitted teams.`
-const showDemoHelp = ref(false)
-function showHelp() {
-  showDemoHelp.value = true
-}
-function hideHelp() {
-  showDemoHelp.value = false
-}
-
 watch(
   () => defaultTeam,
   (value) => {

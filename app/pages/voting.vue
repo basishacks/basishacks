@@ -480,21 +480,9 @@ let _mq = null
 </script>
 
 <style scoped>
+
 .voting-page {
-    /* color tokens (light defaults) */
-    /* --bg: #f5f7fa;
-    --panel-bg: #ffffff;
-    --text: #1f2937;
-    --muted: #6b7280;
-    --muted-2: #374151;
-    --input-bg: #ffffff;
-    --border: var(--border);
-    --media-start: #eef2ff;
-    --media-end: #f8fafc;
-    --panel-shadow: 0 2px 8px rgba(16,24,40,0.05); */
-
-
-
+    
     display: grid;
     /* left has a min and a capped percentage, right gets the rest (wider right pane) */
     grid-template-columns: minmax(260px, 34%) minmax(560px, 1fr);
@@ -509,24 +497,7 @@ let _mq = null
 
     background: var(--bg);
     color: var(--text);
-    transition: background .25s ease, color .25s ease;
 }
-
-/* dark mode overrides */
-/* @media (prefers-color-scheme: dark) {
-    .voting-page {
-        --bg: #071026;
-        --panel-bg: #071226;
-        --text: #e6eef8;
-        --muted: #9ca3af;
-        --muted-2: #cbd5e1;
-        --input-bg: #0b1522;
-        --border: rgba(255,255,255,0.06);
-        --media-start: #031022;
-        --media-end: #071520;
-        --panel-shadow: none;
-    }
-} */
 
 p {
   margin: 0 0 var(--para-gap);
