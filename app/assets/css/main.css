@@ -217,10 +217,6 @@ code {
   background: var(--background-color-accented);
 }
 
-a.link-underlined {
-  text-decoration: underline;
-}
-
 /* Tooltip for inputs (used by ProjectForm demo URL help) */
 .tooltip-trigger {
   background: transparent;
