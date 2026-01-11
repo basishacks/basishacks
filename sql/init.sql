@@ -9,31 +9,17 @@ CREATE TABLE IF NOT EXISTS hackathon (
     theme_name TEXT,
     theme_description TEXT
 );
-z
--- CREATE TABLE IF NOT EXISTS teams (
---     id INTEGER PRIMARY KEY AUTOINCREMENT,
---     name TEXT NOT NULL,
---     project_name TEXT NOT NULL DEFAULT '',
---     project_description TEXT NOT NULL DEFAULT '',
---     project_demo_url TEXT,
---     project_repo_url TEXT,
---     project_submitted INTEGER NOT NULL DEFAULT 0
-    
--- );
-CREATE TABLE "teams" (
-	"id"	INTEGER,
-	"name"	TEXT NOT NULL,
-	"project_name"	TEXT NOT NULL DEFAULT '',
-	"project_description"	TEXT NOT NULL DEFAULT '',
-	"project_demo_url"	TEXT,
-	"project_repo_url"	TEXT,
-	"project_submitted"	INTEGER NOT NULL DEFAULT 0,
-	"flags"	TEXT NOT NULL DEFAULT 'participant', -- New field: flags seperated in newlines
-	PRIMARY KEY("id" AUTOINCREMENT)
-);
 
-least significant bit
-0 
+CREATE TABLE IF NOT EXISTS teams (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    project_name TEXT NOT NULL DEFAULT '',
+    project_description TEXT NOT NULL DEFAULT '',
+    project_demo_url TEXT,
+    project_repo_url TEXT,
+    project_submitted INTEGER NOT NULL DEFAULT 0,
+    flags TEXT NOT NULL DEFAULT 'participant'
+);
 
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,7 +28,8 @@ CREATE TABLE IF NOT EXISTS users (
     team_id INTEGER,
     login_code TEXT,
     login_expiry INTEGER,
-    FOREIGN KEY (team_id) REFERENCES teams(id)
+    FOREIGN KEY (team_id) REFERENCES teams(id),
+    flags TEXT NOT NULL DEFAULT 'member'
 );
 CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
 CREATE INDEX IF NOT EXISTS idx_users_team_id ON users (team_id);

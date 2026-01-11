@@ -39,7 +39,7 @@ export const UpdateTeamRequest = z.object({
   final: z.optional(z.boolean()),
   project: z.optional(
     z.object({
-      name: z.optional(z.string()),
+      name: z.optional(z.string().max(50, 'Project name cannot exceed 50 characters')),
       description: z.optional(z.string()),
       demo_url: z
         .union([z.url(), z.literal('')])

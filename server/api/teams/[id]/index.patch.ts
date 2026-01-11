@@ -65,12 +65,6 @@ export default defineEventHandler(async (event) => {
   if (payload.name !== undefined) 
     result = updateIfTrue(result, checkProfanity(payload.name, config).containsProfanity);
   if (payload.project?.name !== undefined) {
-    if (payload.project?.name?.length > 50) {
-      throw createError({
-        status: 400,
-        message: "Project name cannot exceed 50 characters"
-      })
-    }
     result = updateIfTrue(result, checkProfanity(payload.project?.name, config).containsProfanity);
   }
   if (payload.project?.description !== undefined) 

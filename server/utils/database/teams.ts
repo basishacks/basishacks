@@ -1,5 +1,4 @@
 import type { H3Event } from 'h3'
-import { Team } from '~~/shared/database'
 
 function parseFlags(raw: any): string[] {
   if (!raw) return []

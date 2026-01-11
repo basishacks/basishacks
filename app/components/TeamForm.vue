@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
-import type { User } from '~~/shared/database';
 import LimitedInput from '~/components/LimitedInput.vue'
 import { AddTeamMemberRequest, UpdateTeamRequest } from '~~/shared/schemas'
 
