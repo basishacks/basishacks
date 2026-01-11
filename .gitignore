@@ -24,3 +24,6 @@ logs
 .env
 .env.*
 !.env.example
+ 
+# Local developer-only CSS for dev @font-face (do not commit)
+app/assets/css/dev-fonts.css

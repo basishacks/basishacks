@@ -173,28 +173,6 @@ button[aria-disabled="true"] {
 /* ensure icon/text inside disabled buttons inherits muted color */
 button[disabled] * , .u-button[disabled] * { color: var(--btn-disabled-text) !important; }
 
-/* @theme {
-  --font-mono: "Monaspace Neon";
-  --font-mono--font-variation-settings: "wdth" 100;
-  --font-mono--font-feature-settings: "cv01" 1;
-
-  --font-sans: var(--font-mono);
-  --font-sans--font-variation-settings: "wdth" 100;
-  --font-sans--font-feature-settings: "cv01" 1;
-} */
-
-@font-face {
-  font-family: "Monaspace Neon";
-  src: url("/fonts/monaspace-neon.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-body {
-  font-family: "Monaspace Neon", monospace;
-}
-
 
 .bold {
   font-variation-settings: "wdth" 100, "wght" var(--font-weight-bold);

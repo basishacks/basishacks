@@ -1,0 +1,11 @@
+@import "@nuxt/fonts";
+
+@theme {
+  --font-mono: "Monaspace Neon";
+  --font-mono--font-variation-settings: "wdth" 100;
+  --font-mono--font-feature-settings: "cv01" 1;
+
+  --font-sans: var(--font-mono);
+  --font-sans--font-variation-settings: "wdth" 100;
+  --font-sans--font-feature-settings: "cv01" 1;
+}

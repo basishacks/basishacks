@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const isDev = process.env.NODE_ENV === 'development' || process.env.NUXT_DEV === 'true'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -6,9 +8,15 @@ export default defineNuxtConfig({
     'nitro-cloudflare-dev',
     '@nuxt/eslint',
     '@nuxt/ui',
-    'nuxt-auth-utils'
+    'nuxt-auth-utils',
+    // only enable @nuxt/fonts in non-development (remote/prod) builds
+    ...(isDev ? [] : ['@nuxt/fonts']),
   ],
-  css: ['~/assets/css/main.css'],
+  // include main.css always; include a local dev-only font CSS only in development
+  css: [
+    '~/assets/css/main.css',
+    ...(isDev ? ['~/assets/css/dev-fonts.css'] : ["~/assets/css/production-fonts.css"]),
+  ],
   runtimeConfig: {
     sendCodeURL: '',
     session: {
