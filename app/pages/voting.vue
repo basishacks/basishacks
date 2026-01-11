@@ -11,7 +11,7 @@
             <div style="font-weight:600;margin-bottom:.5rem">Voting is not open</div>
             <div style="color:var(--muted-2)">{{ apiMessage }}</div>
             <br>
-            <a href="/" class="link-underlined">Return to Home</a>
+            <ULink href="/">Return to Home</ULink>
         </div>
     </div>
 
@@ -161,7 +161,7 @@
                 <span class="help-icon-container" tabindex="0" aria-label="Show description">
                     <span class="help-icon" aria-hidden="true">?</span>
                     <div class="tooltip" role="tooltip">
-                        <div class="tooltip-desc"><strong>Inappropriate content includes but is not limited to having PII (<a class="underline" href="https://en.wikipedia.org/wiki/Personal_data">Personally Identifiable Information</a>).</strong> If you believe there exists any form of inappropriate content in this project, please click this button to flag it. <strong>See Step 1 of Judging Instructions for more.</strong></div>
+                        <div class="tooltip-desc"><strong>Inappropriate content includes but is not limited to having PII (<ULink href="https://en.wikipedia.org/wiki/Personal_data">Personally Identifiable Information</ULink>).</strong> If you believe there exists any form of inappropriate content in this project, please click this button to flag it. <strong>See Step 1 of Judging Instructions for more.</strong></div>
                     </div>
                 </span>
             </section>
@@ -310,9 +310,6 @@ const kindDefaults = {
     warning: { bg: '#fff8e6', border: '#ffe4a8', color: '#5a4200', icon: '⚠️' },
     danger: { bg: '#ffecec', border: '#ffc6c6', color: '#6a0000', icon: '⛔' }
 }
-
-// HTML bodies for the notification banners (kept in script to avoid template literal parsing issues)
-const publicVoteBody = `As a public participant, your vote is counted separately from judge votes. As a result, the project that is picked most by the public will receive an alternative recognition 🏅</p><a href="/rules" class="link-underlined">Learn more about Public Vote</a>`
 
 const headsUpBody = `Participants should not include any form of Personally Identifiable Information (PII) or inappropriate materials in any components of their project, including video demonstration, code, documentation, and other materials.<br><br>Examples of PII include full names, email addresses, phone numbers, their voice, and any other information that can be used to identify an individual.<br><br>Inappropriate content includes offensive language, hate speech, discriminatory remarks, or any content that violates the event's code of conduct.<br><br>Projects are subject to disqualification by including PIIs and inappropriate content. If you locate any PII or inappropriate language, please <strong>FLAG</strong> this project by clicking the <span class="text-red-400">Flag Button</span> at the bottom of this page.</p>`
 

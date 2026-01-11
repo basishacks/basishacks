@@ -24,11 +24,6 @@
 
 }
 
-a .underline {
-  text-decoration: underline;
-  color: inherit;
-}
-
 a {
   cursor: pointer;
 }
