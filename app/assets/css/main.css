@@ -183,7 +183,7 @@ button[disabled] * , .u-button[disabled] * { color: var(--btn-disabled-text) !im
   --font-sans--font-feature-settings: "cv01" 1;
 } */
 
-@font-face { /* Legacy Compatibility. This will not make requests to google (as my VPN is not working properly) */
+@font-face {
   font-family: "Monaspace Neon";
   src: url("/fonts/monaspace-neon.woff") format("woff");
   font-weight: 400;
@@ -191,7 +191,7 @@ button[disabled] * , .u-button[disabled] * { color: var(--btn-disabled-text) !im
   font-display: swap;
 }
 
-body { /* Legacy Compatibility. This will not make requests to google (as my VPN is not working properly) */
+body {
   font-family: "Monaspace Neon", monospace;
 }
 
@@ -210,32 +210,6 @@ body { /* Legacy Compatibility. This will not make requests to google (as my VPN
 
 code {
   background: var(--background-color-accented);
-}
-
-/* Tooltip for inputs (used by ProjectForm demo URL help) */
-.tooltip-trigger {
-  background: transparent;
-  border: 1px solid rgba(0,0,0,0.06);
-  color: var(--muted);
-  line-height: 1;
-}
-
-.hover-tooltip {
-  position: absolute;
-  right: 0.5rem;
-  top: calc(100% + 0.5rem);
-  transform-origin: top right;
-  background: var(--panel-bg);
-  color: var(--text);
-  border: 1px solid var(--border);
-  box-shadow: var(--panel-shadow);
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  z-index: 50;
-  min-width: 220px;
-  max-width: 360px;
-  font-size: 0.875rem;
-  white-space: normal;
 }
 
 /* Slight visual tweak in dark mode so tooltip contrasts against dark background */

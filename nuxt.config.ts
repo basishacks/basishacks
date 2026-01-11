@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     'nitro-cloudflare-dev',
     '@nuxt/eslint',
     '@nuxt/ui',
-    'nuxt-auth-utils',
+    'nuxt-auth-utils'
   ],
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
