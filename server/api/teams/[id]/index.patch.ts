@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
 
   // Judging update 1: We dont want kids uhh doing these.
   // Feel free to remove if unncessecary
-  var result = false;
+  let result = false;
   if (payload.name !== undefined) 
     result = updateIfTrue(result, checkProfanity(payload.name, config).containsProfanity);
   if (payload.project?.name !== undefined) {
