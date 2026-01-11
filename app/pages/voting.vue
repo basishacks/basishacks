@@ -154,7 +154,7 @@
             </section>
 
             <section class="actions">
-                <button class="flag-btn" @click="reportAbuse" v-if="!publicVote">
+                <button class="flag-btn" v-if="!publicVote">
                     Flag Project for Inappropriate Content
                     
                 </button>
