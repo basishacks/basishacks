@@ -9,6 +9,8 @@ type HackathonStatus =
 
 type UserRole = 'participant' | 'judge' | 'admin'
 
+type TeamPathway = 'junior' | 'senior'
+
 interface Hackathon {
   id: 1 // lol
   status: HackathonStatus
@@ -24,6 +26,7 @@ interface Hackathon {
 interface Team {
   id: number
   name: string
+  pathway: TeamPathway | null
   project_name: string
   project_description: string
   project_demo_url: string | null

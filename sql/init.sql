@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS hackathon (
 CREATE TABLE IF NOT EXISTS teams (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
+    pathway TEXT CHECK (pathway IN (NULL, 'junior', 'senior')),
     project_name TEXT NOT NULL DEFAULT '',
     project_description TEXT NOT NULL DEFAULT '',
     project_demo_url TEXT,
