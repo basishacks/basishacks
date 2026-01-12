@@ -34,6 +34,13 @@ interface Team {
   project_submitted: number
 }
 
+interface TeamScores {
+  id: number
+  team_id: number
+  judge_user_id: number
+  scores: string
+}
+
 interface User {
   id: number
   email: string
