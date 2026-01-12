@@ -84,6 +84,7 @@ export type CreateTeamScoresRequest = z.infer<typeof CreateTeamScoresRequest>
 export const SubmitVoteRequest = z
   .object({
     scores: z.array(z.literal([1, 2, 3, 4, 5])),
+    reasoning: z.string().min(30, 'Please write a bit more'),
   })
   .refine(
     ({ scores }) => scores.reduce((a, b) => a + b, 0) === 12,

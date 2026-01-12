@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS ballots (
     user_id INTEGER NOT NULL,
     projects TEXT NOT NULL,  -- JSON array of integers
     scores TEXT,  -- JSON array of integers (0-5)
+    reasoning TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 -- users can only have one ballot

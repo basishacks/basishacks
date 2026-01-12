@@ -62,5 +62,6 @@ export default defineEventHandler(async (event) => {
       id: p.id,
     })),
     scores: ballot.scores ? JSON.parse(ballot.scores) : null,
+    reasoning: ballot.reasoning,
   } satisfies GetBallotResponse
 })

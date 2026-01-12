@@ -16,7 +16,8 @@ if (error.value) {
 }
 
 const state = reactive<SubmitVoteRequest>({
-  scores: [3, 3, 3, 3],
+  scores: data.value?.scores ?? [3, 3, 3, 3],
+  reasoning: data.value?.reasoning ?? '',
 })
 
 const totalStars = computed(() => state.scores.reduce((a, b) => a + b, 0))
@@ -63,9 +64,11 @@ async function onSubmit(event: FormSubmitEvent<SubmitVoteRequest>) {
   <div>
     <h1 class="text-4xl text-primary bold glow mb-4">Peer voting</h1>
 
-    <p>
+    <p class="mb-4">
       You will see four projects below. Please distribute 12 stars among them.
-      Each project must receive 1-5 stars, and you must use all of them.
+      Each project must receive 1-5 stars, and you must use all of them. Please
+      also write a short paragraph justifying your vote. Make sure you include
+      details about ALL four projects!
     </p>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -132,8 +135,17 @@ async function onSubmit(event: FormSubmitEvent<SubmitVoteRequest>) {
           </div>
         </UFormField>
 
+        <UFormField name="reasoning" label="Your reasoning" class="mb-4">
+          <UTextarea
+            v-model="state.reasoning"
+            placeholder="Please explain your reasoning, making sure to include details about every project!"
+            class="w-full"
+            :rows="5"
+          />
+        </UFormField>
+
         <UFormField v-if="!data?.scores">
-          <UButton type="submit">Submit</UButton>
+          <UButton :disabled="totalStars !== 12" type="submit">Submit</UButton>
         </UFormField>
       </UCard>
     </UForm>

@@ -20,10 +20,13 @@ export async function getBallotByUser(event: H3Event, userID: number) {
     .first<Ballot>()
 }
 
-export async function updateBallotScores(event: H3Event, ballot: Ballot) {
+export async function updateBallotScoresAndReasoning(
+  event: H3Event,
+  ballot: Ballot
+) {
   await event.context.cloudflare.env.DB.prepare(
-    'UPDATE ballots SET scores = ? WHERE id = ?'
+    'UPDATE ballots SET scores = ?, reasoning = ? WHERE id = ?'
   )
-    .bind(ballot.scores, ballot.id)
+    .bind(ballot.scores, ballot.reasoning, ballot.id)
     .run()
 }

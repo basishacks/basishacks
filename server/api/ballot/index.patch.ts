@@ -1,4 +1,4 @@
-import { updateBallotScores } from '~~/server/utils/database/ballots'
+import { updateBallotScoresAndReasoning } from '~~/server/utils/database/ballots'
 import { SubmitVoteRequest } from '~~/shared/schemas'
 
 export default defineEventHandler(async (event) => {
@@ -20,10 +20,18 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (ballot.scores) {
+    throw createError({
+      status: 403,
+      message: 'Cannot edit vote after submission',
+    })
+  }
+
   const payload = await readValidatedBody(event, SubmitVoteRequest.parse)
 
   ballot.scores = JSON.stringify(payload.scores)
-  await updateBallotScores(event, ballot)
+  ballot.reasoning = payload.reasoning
+  await updateBallotScoresAndReasoning(event, ballot)
 
   return { message: 'Successfully submitted vote!' }
 })
