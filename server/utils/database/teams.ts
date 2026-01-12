@@ -8,6 +8,14 @@ export async function getTeam(event: H3Event, teamID: number) {
     .first<Team>()
 }
 
+export async function getSubmittedTeams(event: H3Event) {
+  return (
+    await event.context.cloudflare.env.DB.prepare(
+      'SELECT * FROM teams WHERE project_submitted = 1'
+    ).all<Team>()
+  ).results
+}
+
 export async function createTeam(event: H3Event, teamName: string) {
   const team = (await event.context.cloudflare.env.DB.prepare(
     'INSERT INTO teams(name) VALUES(?) RETURNING *'

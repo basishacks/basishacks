@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 
+const { user: userRef } = useUserSession()
+// this is honestly ugly asf but i can't think of a clean solution
+const { data: user } = await useFetch<GetUserResponse>(
+  () => `/api/users/${userRef.value?.id}`
+)
+
 const navItems = computed<NavigationMenuItem[]>(() => {
   const links = [
     {
@@ -14,6 +20,13 @@ const navItems = computed<NavigationMenuItem[]>(() => {
       icon: 'i-material-symbols-space-dashboard',
     },
   ]
+  if (user.value?.role === 'judge' || user.value?.role === 'admin') {
+    links.push({
+      label: 'Judging',
+      to: '/judging',
+      icon: 'i-material-symbols-gavel',
+    })
+  }
   return links
 })
 </script>

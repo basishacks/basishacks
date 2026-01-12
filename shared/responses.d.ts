@@ -1,7 +1,7 @@
 interface APIUser {
   id: number
   email: string
-  role: string
+  role: UserRole
   name: string | null
   team_id: number | null
 }
