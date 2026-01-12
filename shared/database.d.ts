@@ -1,9 +1,13 @@
+// this file should contain the types exactly as defined in the database.
+
 type HackathonStatus =
   | 'not_started' // before the event
   | 'in_progress' // during the event
   | 'voting' // after the event, peer voting
   | 'finished' // event completed
   | 'paused' // event paused for maintenance, etc.
+
+type UserRole = 'participant' | 'judge' | 'admin'
 
 interface Hackathon {
   id: 1 // lol
@@ -30,6 +34,7 @@ interface Team {
 interface User {
   id: number
   email: string
+  role: UserRole
   name: string | null
   team_id: number | null
   login_code: string | null

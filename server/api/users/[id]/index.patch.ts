@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
   if (name !== undefined) user.name = name
 
-  await updateUser(event, user)
+  await updateUserName(event, user)
 
   return { message: 'Your profile is updated' }
 })
