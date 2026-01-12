@@ -8,7 +8,10 @@ const BasisEmail = z
     'Please use a @basischina.com email'
   )
 
-const TeamName = z.string().min(2, 'Team name must be at least 2 characters')
+const TeamName = z
+  .string()
+  .min(2, 'Team name must be at least 2 characters')
+  .max(30, 'Team name cannot be longer than 30 characters')
 
 const BooleanString = z
   .literal(['true', 'false'])
@@ -32,7 +35,7 @@ export type SendCodeRequest = z.infer<typeof SendCodeRequest>
 
 export const LoginRequest = z.object({
   email: BasisEmail,
-  code: z.string(),
+  code: z.string().max(10),
 })
 export type LoginRequest = z.infer<typeof LoginRequest>
 
@@ -50,8 +53,8 @@ export const UpdateTeamRequest = z.object({
   name: z.optional(TeamName),
   project: z.optional(
     z.object({
-      name: z.optional(z.string()),
-      description: z.optional(z.string()),
+      name: z.optional(z.string().max(50)),
+      description: z.optional(z.string().max(2000)),
       demo_url: z
         .union([z.url(), z.literal('')])
         .nullish()
@@ -71,12 +74,12 @@ export const AddTeamMemberRequest = z.object({
 export type AddTeamMemberRequest = z.infer<typeof AddTeamMemberRequest>
 
 export const UpdateUserRequest = z.object({
-  name: z.optional(z.string()),
+  name: z.optional(z.string().max(30)),
 })
 export type UpdateUserRequest = z.infer<typeof UpdateUserRequest>
 
 export const CreateTeamScoresRequest = z.object({
-  reasoning: z.string().min(10, 'Please write more'),
+  reasoning: z.string().min(10, 'Please write more').max(2000),
   scores: ScoreValues,
 })
 export type CreateTeamScoresRequest = z.infer<typeof CreateTeamScoresRequest>
@@ -84,7 +87,7 @@ export type CreateTeamScoresRequest = z.infer<typeof CreateTeamScoresRequest>
 export const SubmitVoteRequest = z
   .object({
     scores: z.array(z.literal([1, 2, 3, 4, 5])),
-    reasoning: z.string().min(30, 'Please write a bit more'),
+    reasoning: z.string().min(30, 'Please write a bit more').max(2000),
   })
   .refine(
     ({ scores }) => scores.reduce((a, b) => a + b, 0) === 12,
