@@ -1,4 +1,5 @@
 import z from 'zod'
+import rubrics from './rubric'
 
 const BasisEmail = z
   .email()
@@ -12,6 +13,17 @@ const TeamName = z.string().min(2, 'Team name must be at least 2 characters')
 const BooleanString = z
   .literal(['true', 'false'])
   .transform((s) => s === 'true')
+
+const ZeroToFive = z.literal([0, 1, 2, 3, 4, 5])
+const ScoreValues = z.object(
+  Object.keys(rubrics['junior']).reduce(
+    (obj, key) => ({
+      ...obj,
+      [key]: ZeroToFive,
+    }),
+    {} as Record<keyof (typeof rubrics)['junior'], typeof ZeroToFive>
+  )
+)
 
 export const SendCodeRequest = z.object({
   email: BasisEmail,
@@ -62,3 +74,9 @@ export const UpdateUserRequest = z.object({
   name: z.optional(z.string()),
 })
 export type UpdateUserRequest = z.infer<typeof UpdateUserRequest>
+
+export const CreateTeamScoresRequest = z.object({
+  reasoning: z.string().min(10, 'Please write more'),
+  scores: ScoreValues,
+})
+export type CreateTeamScoresRequest = z.infer<typeof CreateTeamScoresRequest>
