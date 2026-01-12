@@ -43,3 +43,13 @@ CREATE TABLE IF NOT EXISTS users (
 );
 CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
 CREATE INDEX IF NOT EXISTS idx_users_team_id ON users (team_id);
+
+CREATE TABLE IF NOT EXISTS ballots (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    projects TEXT NOT NULL,  -- JSON array of integers
+    scores TEXT,  -- JSON array of integers (0-5)
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+-- users can only have one ballot
+CREATE UNIQUE INDEX IF NOT EXISTS idx_ballots_user_id ON ballots (user_id);

@@ -50,3 +50,11 @@ interface User {
   login_code: string | null
   login_expiry: number | null
 }
+
+interface Ballot {
+  id: number
+  user_id: number
+  projects: string
+  scores: string
+  submitted: number
+}
