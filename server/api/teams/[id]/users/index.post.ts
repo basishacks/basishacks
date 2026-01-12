@@ -15,6 +15,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const hackathon = await getHackathon(event)
+  if (
+    hackathon?.status !== 'not_started' &&
+    hackathon?.status !== 'in_progress'
+  ) {
+    throw createError({
+      status: 403,
+      message: 'Cannot add members after hackathon has finished',
+    })
+  }
+
   const { email } = await readValidatedBody(event, AddTeamMemberRequest.parse)
 
   const user = await getUserByEmail(event, email)

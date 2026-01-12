@@ -19,6 +19,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const hackathon = await getHackathon(event)
+  if (
+    hackathon?.status !== 'not_started' &&
+    hackathon?.status !== 'in_progress'
+  ) {
+    throw createError({
+      status: 403,
+      message: 'Cannot create team after hackathon has finished',
+    })
+  }
+
   const { add = false } = await getValidatedQuery(event, CreateTeamQuery.parse)
   const { name } = await readValidatedBody(event, CreateTeamRequest.parse)
 

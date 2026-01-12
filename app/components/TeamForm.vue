@@ -2,8 +2,9 @@
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { AddTeamMemberRequest, UpdateTeamRequest } from '~~/shared/schemas'
 
-const { team } = defineProps<{
+const { team, disabled } = defineProps<{
   team: APITeam
+  disabled: boolean
 }>()
 const emit = defineEmits<{
   refresh: []
@@ -136,6 +137,7 @@ async function onSubmit(
 
       <UModal title="Rename team">
         <UButton
+          :disabled="disabled"
           variant="soft"
           icon="i-material-symbols-drive-file-rename-outline"
         />
@@ -159,7 +161,11 @@ async function onSubmit(
       </UModal>
 
       <UModal title="Add team member">
-        <UButton variant="soft" icon="i-material-symbols-person-add" />
+        <UButton
+          :disabled="disabled"
+          variant="soft"
+          icon="i-material-symbols-person-add"
+        />
 
         <template #body="{ close }">
           <UForm
@@ -187,6 +193,7 @@ async function onSubmit(
             <span class="bold">{{ user.name || user.email }}</span>
             <div class="flex-1" />
             <UButton
+              :disabled="disabled"
               icon="i-material-symbols-delete"
               color="warning"
               variant="soft"

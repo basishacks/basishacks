@@ -14,6 +14,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const hackathon = await getHackathon(event)
+  if (
+    hackathon?.status !== 'not_started' &&
+    hackathon?.status !== 'in_progress'
+  ) {
+    throw createError({
+      status: 403,
+      message: 'Cannot remove members after hackathon has finished',
+    })
+  }
+
   await removeTeamMember(event, teamID, userID)
 
   return { message: 'Removed user from the team' }

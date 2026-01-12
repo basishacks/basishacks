@@ -15,6 +15,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const hackathon = await getHackathon(event)
+  if (
+    hackathon?.status !== 'not_started' &&
+    hackathon?.status !== 'in_progress'
+  ) {
+    throw createError({
+      status: 403,
+      message: 'Cannot edit team and project after hackathon has finished',
+    })
+  }
+
   const payload = await readValidatedBody(event, UpdateTeamRequest.parse)
 
   const team = await getTeam(event, id)

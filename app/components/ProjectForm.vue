@@ -101,7 +101,11 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
     </UFormField>
 
     <UFormField name="project.description" label="Project description">
-      <UTextarea v-model="state.project.description" :rows="10" class="w-full" />
+      <UTextarea
+        v-model="state.project.description"
+        :rows="10"
+        class="w-full"
+      />
 
       <template #help>
         <p>Please include:</p>
@@ -133,8 +137,16 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
     </UFormField>
 
     <div class="flex gap-4">
-      <UButton id="project-save" variant="subtle" type="submit">Save</UButton>
-      <UButton id="project-submit" type="submit">Submit</UButton>
+      <UButton
+        id="project-save"
+        :disabled="disabled"
+        variant="subtle"
+        type="submit"
+        >Save</UButton
+      >
+      <UButton id="project-submit" :disabled="disabled" type="submit"
+        >Submit</UButton
+      >
     </div>
   </UForm>
 </template>

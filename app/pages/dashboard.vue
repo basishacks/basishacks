@@ -94,7 +94,7 @@ onUnmounted(() => {
           The hackathon is in progress - <span class="glow">HACK AWAY!</span>
         </template>
         <template v-else-if="hackathon?.status === 'voting'">
-          The hackathon is completed, and peer voting is underway!
+          The hackathon is completed, and judging and peer voting is underway!
         </template>
         <template v-else-if="hackathon?.status === 'finished'">
           The hackathon is completed, and the scores are released!
@@ -110,7 +110,11 @@ onUnmounted(() => {
       </p>
 
       <div class="mb-4">
-        <TeamForm :team="data.team" @refresh="refreshData" />
+        <TeamForm
+          :team="data.team"
+          :disabled="hackathon?.status !== 'in_progress'"
+          @refresh="refreshData"
+        />
       </div>
 
       <template v-if="hackathon?.status !== 'not_started'">
