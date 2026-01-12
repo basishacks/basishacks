@@ -8,11 +8,16 @@ export async function getTeam(event: H3Event, teamID: number) {
     .first<Team>()
 }
 
-export async function getSubmittedTeams(event: H3Event) {
+export async function getSubmittedUnjudgedTeams(
+  event: H3Event,
+  judgeUserID: number
+) {
   return (
     await event.context.cloudflare.env.DB.prepare(
-      'SELECT * FROM teams WHERE project_submitted = 1'
-    ).all<Team>()
+      'SELECT * FROM teams t WHERE project_submitted = 1 AND NOT EXISTS (SELECT 1 FROM team_scores ts WHERE ts.team_id = t.id AND ts.judge_user_id = ?)'
+    )
+      .bind(judgeUserID)
+      .all<Team>()
   ).results
 }
 

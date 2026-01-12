@@ -6,6 +6,9 @@ import { CreateTeamScoresRequest } from '~~/shared/schemas'
 const { team } = defineProps<{
   team: APITeam
 }>()
+const emit = defineEmits<{
+  scored: []
+}>()
 
 const toast = useToast()
 
@@ -36,6 +39,7 @@ async function onSubmit(event: FormSubmitEvent<CreateTeamScoresRequest>) {
         title: res.message,
       })
     })
+    emit('scored')
   } catch (e) {
     toast.add({
       color: 'error',

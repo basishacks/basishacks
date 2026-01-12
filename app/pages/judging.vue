@@ -16,16 +16,30 @@ if (userData.value?.role !== 'admin' && userData.value?.role !== 'judge') {
   throw await navigateTo('/')
 }
 
-const { data, error } = await useFetch<APITeam[]>('/api/teams')
+const { data, error, refresh } = await useFetch<APITeam[]>('/api/teams')
 if (error.value) {
   throw error.value
+}
+
+async function onScored() {
+  await withLoadingIndicator(async () => {
+    await refresh()
+  })
 }
 </script>
 
 <template>
   <div>
     <h1 class="text-4xl text-primary bold glow mb-4">Judging</h1>
-    <!-- <pre>{{ data }}</pre> -->
-    <JudgingCard v-for="team in data" :key="team.id" :team="team" />
+    <p v-if="!data">Loading projects...</p>
+    <div v-else>
+      <JudgingCard
+        v-for="team in data"
+        :key="team.id"
+        :team="team"
+        @scored="onScored"
+      />
+      <p v-if="!data?.length">No projects left to judge. Take a break!</p>
+    </div>
   </div>
 </template>
