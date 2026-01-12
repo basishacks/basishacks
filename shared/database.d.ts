@@ -55,6 +55,6 @@ interface Ballot {
   id: number
   user_id: number
   projects: string
-  scores: string
+  scores: string | null
   submitted: number
 }

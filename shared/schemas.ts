@@ -80,3 +80,13 @@ export const CreateTeamScoresRequest = z.object({
   scores: ScoreValues,
 })
 export type CreateTeamScoresRequest = z.infer<typeof CreateTeamScoresRequest>
+
+export const SubmitVoteRequest = z
+  .object({
+    scores: z.array(z.literal([1, 2, 3, 4, 5])),
+  })
+  .refine(
+    ({ scores }) => scores.reduce((a, b) => a + b, 0) === 12,
+    'Stars must sum to 12'
+  )
+export type SubmitVoteRequest = z.infer<typeof SubmitVoteRequest>

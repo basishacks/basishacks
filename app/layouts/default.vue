@@ -6,6 +6,7 @@ const { user: userRef } = useUserSession()
 const { data: user } = await useFetch<GetUserResponse>(
   () => `/api/users/${userRef.value?.id}`
 )
+const { data: hackathon } = await useFetch('/api/hackathon')
 
 const navItems = computed<NavigationMenuItem[]>(() => {
   const links = [
@@ -25,6 +26,13 @@ const navItems = computed<NavigationMenuItem[]>(() => {
       label: 'Judging',
       to: '/judging',
       icon: 'i-material-symbols-gavel',
+    })
+  }
+  if (user.value?.role === 'participant' && user.value.team_id && hackathon.value?.status === 'voting') {
+    links.push({
+      label: 'Voting',
+      to: '/voting',
+      icon: 'i-material-symbols-ballot'
     })
   }
   return links

@@ -35,3 +35,9 @@ type GetTeamMembersResponse = {
 interface UpdateUserResponse {
   message: string
 }
+
+interface GetBallotResponse {
+  id: number
+  projects: (APITeam['project'] & { id: number })[]
+  scores: (1 | 2 | 3 | 4 | 5)[] | null
+}

@@ -19,3 +19,11 @@ export async function getBallotByUser(event: H3Event, userID: number) {
     .bind(userID)
     .first<Ballot>()
 }
+
+export async function updateBallotScores(event: H3Event, ballot: Ballot) {
+  await event.context.cloudflare.env.DB.prepare(
+    'UPDATE ballots SET scores = ? WHERE id = ?'
+  )
+    .bind(ballot.scores, ballot.id)
+    .run()
+}
