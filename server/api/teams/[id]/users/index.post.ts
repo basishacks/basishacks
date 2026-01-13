@@ -28,6 +28,14 @@ export default defineEventHandler(async (event) => {
 
   const { email } = await readValidatedBody(event, AddTeamMemberRequest.parse)
 
+  const team = (await getTeam(event, teamID))!
+  if (team.project_submitted) {
+    throw createError({
+      status: 403,
+      message: 'Cannot add members after project is submitted',
+    })
+  }
+
   const user = await getUserByEmail(event, email)
   if (!user) {
     throw createError({

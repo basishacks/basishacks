@@ -25,6 +25,14 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const team = (await getTeam(event, teamID))!
+  if (team.project_submitted) {
+    throw createError({
+      status: 403,
+      message: 'Cannot remove members after project is submitted',
+    })
+  }
+
   await removeTeamMember(event, teamID, userID)
 
   return { message: 'Removed user from the team' }

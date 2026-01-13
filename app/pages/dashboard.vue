@@ -112,7 +112,9 @@ onUnmounted(() => {
       <div class="mb-4">
         <TeamForm
           :team="data.team"
-          :disabled="hackathon?.status !== 'in_progress'"
+          :disabled="
+            hackathon?.status !== 'in_progress' || data.team.project.submitted
+          "
           @refresh="refreshData"
         />
       </div>
