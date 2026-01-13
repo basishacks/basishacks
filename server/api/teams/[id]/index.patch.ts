@@ -28,13 +28,7 @@ export default defineEventHandler(async (event) => {
 
   const payload = await readValidatedBody(event, UpdateTeamRequest.parse)
 
-  const team = await getTeam(event, id)
-  if (!team) {
-    throw createError({
-      status: 404,
-      message: 'Team not found',
-    })
-  }
+  const team = (await getTeam(event, id))!
   if (team.project_submitted) {
     throw createError({
       status: 403,
@@ -51,7 +45,6 @@ export default defineEventHandler(async (event) => {
     team.project_demo_url = payload.project.demo_url
   if (payload.project?.repo_url !== undefined)
     team.project_repo_url = payload.project.repo_url
-  if (payload.project?.submitted) team.project_submitted = 1
 
   await updateTeam(event, team)
 

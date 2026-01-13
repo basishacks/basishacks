@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
-import { UpdateTeamRequest } from '~~/shared/schemas'
+import { SubmitTeamRequest, UpdateTeamRequest } from '~~/shared/schemas'
 
 const { team: defaultTeam, disabled = false } = defineProps<{
   team: APITeam
@@ -22,6 +22,8 @@ watch(
   },
   { deep: true }
 )
+
+const intent = ref<'save' | 'submit'>('save')
 
 const state = reactive({
   name: '',
@@ -45,8 +47,17 @@ watch(
   { deep: true, immediate: true }
 )
 
-async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
+async function onSubmit(
+  event: FormSubmitEvent<UpdateTeamRequest | SubmitTeamRequest>
+) {
   const isSubmit = event.submitter?.id === 'project-submit'
+  if (
+    isSubmit &&
+    !confirm(
+      "Are you sure you want to submit your team's project? You cannot make edits afterwards."
+    )
+  )
+    return
 
   const payload = {
     ...event.data,
@@ -55,18 +66,22 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
       demo_url: event.data.project?.demo_url || null,
       repo_url: event.data.project?.repo_url || null,
     },
-  } satisfies UpdateTeamRequest
-
-  if (isSubmit) {
-    payload.project.submitted = true
   }
 
   try {
     await withLoadingIndicator(async () => {
-      const res = await $fetch(`/api/teams/${defaultTeam.id}`, {
-        method: 'PATCH',
-        body: payload,
-      })
+      let res: { message: string }
+      if (!isSubmit) {
+        res = await $fetch(`/api/teams/${defaultTeam.id}`, {
+          method: 'PATCH',
+          body: payload,
+        })
+      } else {
+        res = await $fetch(`/api/teams/${defaultTeam.id}/submit`, {
+          method: 'POST',
+          body: payload,
+        })
+      }
       toast.add({
         color: 'success',
         title: res.message,
@@ -87,7 +102,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
   <UForm
     ref="formRef"
     :state="state"
-    :schema="UpdateTeamRequest"
+    :schema="intent === 'save' ? UpdateTeamRequest : SubmitTeamRequest"
     :disabled="disabled"
     class="max-w-[600px] space-y-4 mb-4"
     @submit="onSubmit"
@@ -142,9 +157,14 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
         :disabled="disabled"
         variant="subtle"
         type="submit"
+        @click="intent = 'save'"
         >Save</UButton
       >
-      <UButton id="project-submit" :disabled="disabled" type="submit"
+      <UButton
+        id="project-submit"
+        :disabled="disabled"
+        type="submit"
+        @click="intent = 'submit'"
         >Submit</UButton
       >
     </div>

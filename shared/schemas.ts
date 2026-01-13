@@ -63,11 +63,20 @@ export const UpdateTeamRequest = z.object({
         .union([z.url(), z.literal('')])
         .nullish()
         .transform((v) => (v === '' ? null : v)),
-      submitted: z.optional(z.literal(true)),
     })
   ),
 })
 export type UpdateTeamRequest = z.infer<typeof UpdateTeamRequest>
+
+export const SubmitTeamRequest = z.object({
+  project: z.object({
+    name: z.string().nonempty(),
+    description: z.string().min(30, 'Please provide more details in the description'),
+    demo_url: z.url(),
+    repo_url: z.url(),
+  }),
+})
+export type SubmitTeamRequest = z.infer<typeof SubmitTeamRequest>
 
 export const AddTeamMemberRequest = z.object({
   email: BasisEmail,
