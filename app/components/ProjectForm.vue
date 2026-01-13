@@ -47,10 +47,6 @@ watch(
 
 async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
   const isSubmit = event.submitter?.id === 'project-submit'
-  if (isSubmit) {
-    alert('Not implemented yet!')
-    return
-  }
 
   const payload = {
     ...event.data,
@@ -59,6 +55,10 @@ async function onSubmit(event: FormSubmitEvent<UpdateTeamRequest>) {
       demo_url: event.data.project?.demo_url || null,
       repo_url: event.data.project?.repo_url || null,
     },
+  } satisfies UpdateTeamRequest
+
+  if (isSubmit) {
+    payload.project.submitted = true
   }
 
   try {

@@ -63,6 +63,7 @@ export const UpdateTeamRequest = z.object({
         .union([z.url(), z.literal('')])
         .nullish()
         .transform((v) => (v === '' ? null : v)),
+      submitted: z.optional(z.literal(true)),
     })
   ),
 })

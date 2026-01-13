@@ -35,6 +35,12 @@ export default defineEventHandler(async (event) => {
       message: 'Team not found',
     })
   }
+  if (team.project_submitted) {
+    throw createError({
+      status: 403,
+      message: 'Project is already submitted',
+    })
+  }
 
   if (payload.name !== undefined) team.name = payload.name
   if (payload.project?.name !== undefined)
@@ -45,6 +51,7 @@ export default defineEventHandler(async (event) => {
     team.project_demo_url = payload.project.demo_url
   if (payload.project?.repo_url !== undefined)
     team.project_repo_url = payload.project.repo_url
+  if (payload.project?.submitted) team.project_submitted = 1
 
   await updateTeam(event, team)
 

@@ -119,9 +119,14 @@ onUnmounted(() => {
 
       <template v-if="hackathon?.status !== 'not_started'">
         <h2 class="text-3xl bold mb-4">Your project</h2>
+        <p v-if="data.team.project.submitted" class="mb-4 glow">
+          You have submitted your project. Congratulations! 🎉
+        </p>
         <ProjectForm
           :team="data.team"
-          :disabled="hackathon?.status !== 'in_progress'"
+          :disabled="
+            hackathon?.status !== 'in_progress' || data.team.project.submitted
+          "
           @dirty="dateUpdated"
           @refresh="refreshData"
         />
