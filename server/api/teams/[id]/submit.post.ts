@@ -25,6 +25,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  team.pathway = payload.pathway
   team.project_name = payload.project.name
   team.project_description = payload.project.description
   team.project_demo_url = payload.project.demo_url

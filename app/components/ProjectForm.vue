@@ -27,6 +27,7 @@ const intent = ref<'save' | 'submit'>('save')
 
 const state = reactive({
   name: '',
+  pathway: 'junior' as TeamPathway,
   project: {
     name: '',
     description: '',
@@ -39,6 +40,7 @@ watch(
   () => defaultTeam,
   (value) => {
     state.name = value.name
+    state.pathway = value.pathway || 'junior'
     state.project.name = value.project.name
     state.project.description = value.project.description
     state.project.repo_url = value.project.repo_url || ''
@@ -148,6 +150,22 @@ async function onSubmit(
         <ULink href="https://github.com" target="_blank">GitHub</ULink>
         (preferred) or
         <ULink href="https://gitee.com" target="_blank">Gitee</ULink>.
+      </template>
+    </UFormField>
+
+    <UFormField name="pathway" label="Pathway">
+      <URadioGroup
+        v-model="state.pathway"
+        :items="[
+          { label: 'Junior', value: 'junior' },
+          { label: 'Senior', value: 'senior' },
+        ]"
+      />
+
+      <template #help>
+        The junior pathway puts more emphasis on originality and creativity,
+        while the senior pathway more on problem-solving and impact. You may
+        choose any pathway, regardless of grade level.
       </template>
     </UFormField>
 

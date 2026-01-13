@@ -37,6 +37,7 @@ export default defineEventHandler(async (event) => {
   }
 
   if (payload.name !== undefined) team.name = payload.name
+  if (payload.pathway !== undefined) team.pathway = payload.pathway
   if (payload.project?.name !== undefined)
     team.project_name = payload.project.name
   if (payload.project?.description !== undefined)

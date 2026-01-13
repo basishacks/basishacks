@@ -13,6 +13,8 @@ const TeamName = z
   .min(2, 'Team name must be at least 2 characters')
   .max(30, 'Team name cannot be longer than 30 characters')
 
+const TeamPathway = z.literal(['junior', 'senior'])
+
 const BooleanString = z
   .literal(['true', 'false'])
   .transform((s) => s === 'true')
@@ -51,6 +53,7 @@ export type CreateTeamRequest = z.infer<typeof CreateTeamRequest>
 
 export const UpdateTeamRequest = z.object({
   name: z.optional(TeamName),
+  pathway: z.optional(TeamPathway),
   project: z.optional(
     z.object({
       name: z.optional(z.string().max(50)),
@@ -69,9 +72,12 @@ export const UpdateTeamRequest = z.object({
 export type UpdateTeamRequest = z.infer<typeof UpdateTeamRequest>
 
 export const SubmitTeamRequest = z.object({
+  pathway: TeamPathway,
   project: z.object({
     name: z.string().nonempty(),
-    description: z.string().min(30, 'Please provide more details in the description'),
+    description: z
+      .string()
+      .min(30, 'Please provide more details in the description'),
     demo_url: z.url(),
     repo_url: z.url(),
   }),
