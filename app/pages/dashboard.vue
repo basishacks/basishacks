@@ -113,7 +113,9 @@ onUnmounted(() => {
         <TeamForm
           :team="data.team"
           :disabled="
-            hackathon?.status !== 'in_progress' || data.team.project.submitted
+            (hackathon?.status !== 'in_progress' &&
+              hackathon?.status !== 'not_started') ||
+            data.team.project.submitted
           "
           @refresh="refreshData"
         />
