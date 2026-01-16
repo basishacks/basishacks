@@ -13,9 +13,9 @@ export async function getUser(
 
 export async function getUserByEmail(event: H3Event, email: string) {
   return await event.context.cloudflare.env.DB.prepare(
-    'SELECT * FROM users WHERE email = ?'
+    'SELECT * FROM users WHERE lower(email) = ?'
   )
-    .bind(email)
+    .bind(email.toLowerCase())
     .first<User>()
 }
 
@@ -38,7 +38,7 @@ export async function addCodeToUser(event: H3Event, email: string) {
   const user = (await event.context.cloudflare.env.DB.prepare(
     'INSERT INTO users(email, login_code, login_expiry) VALUES(?, ?, ?) ON CONFLICT(email) DO UPDATE SET login_code = EXCLUDED.login_code, login_expiry = EXCLUDED.login_expiry RETURNING *'
   )
-    .bind(email, code, expiry)
+    .bind(email.toLowerCase(), code, expiry)
     .first<User>())!
 
   return user
@@ -50,9 +50,9 @@ export async function getUserByCode(
   code: string
 ) {
   return await event.context.cloudflare.env.DB.prepare(
-    'UPDATE users SET login_code = NULL WHERE email = ? AND login_code = ? RETURNING id'
+    'UPDATE users SET login_code = NULL WHERE lower(email) = ? AND login_code = ? RETURNING id'
   )
-    .bind(email, code)
+    .bind(email.toLowerCase(), code)
     .first<Pick<User, 'id'>>()
 }
 

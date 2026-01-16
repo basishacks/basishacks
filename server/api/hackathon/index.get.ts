@@ -8,7 +8,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const showTheme = hackathon.status !== 'not_started'
+  const showTheme =
+    hackathon.status !== 'not_started' && hackathon.status !== 'paused'
 
   return {
     status: hackathon.status,
