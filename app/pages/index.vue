@@ -106,10 +106,18 @@ const resultsOpenDate = computed(
 
     <!-- theme -->
     <h2 class="text-3xl bold mb-4 glow-sm">Theme</h2>
-    <p class="mb-4">
+    <p v-if="!hackathon.theme_name" class="mb-4">
       The theme of the hackathon will be revealed on
       <DateTime class="bold" :date="startDate" />.
     </p>
+    <template v-else>
+      <p class="mb-2">
+        The theme of the hackathon is:
+        <span class="bold glow text-primary">{{ hackathon.theme_name }}</span
+        >!
+      </p>
+      <p class="mb-4" v-html="hackathon.theme_description" />
+    </template>
 
     <h2 class="text-3xl bold mb-4 glow-sm">Resources</h2>
     <p class="mb-2">Here are some resources to help you get started:</p>
