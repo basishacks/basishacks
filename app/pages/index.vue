@@ -108,7 +108,7 @@ const resultsOpenDate = computed(
     <h2 class="text-3xl bold mb-4 glow-sm">Theme</h2>
     <p class="mb-4">
       The theme of the hackathon will be revealed on
-      <DateTime class="bold" :date="startDate" />, at the opening ceremony.
+      <DateTime class="bold" :date="startDate" />.
     </p>
 
     <h2 class="text-3xl bold mb-4 glow-sm">Resources</h2>
