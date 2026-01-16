@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS users (
     FOREIGN KEY (team_id) REFERENCES teams(id)
 );
 CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
-CREATE INDEX IF NOT EXISTS idx_users_lower_email ON users (lower(email));
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_lower_email ON users (lower(email));
 CREATE INDEX IF NOT EXISTS idx_users_team_id ON users (team_id);
 
 CREATE TABLE IF NOT EXISTS ballots (
