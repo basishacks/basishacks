@@ -15,6 +15,14 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const hackathon = await getHackathon(event)
+  if (hackathon?.status !== 'in_progress') {
+    throw createError({
+      status: 403,
+      message: 'Cannot submit project when hackathon is finished',
+    })
+  }
+
   const payload = await readValidatedBody(event, SubmitTeamRequest.parse)
 
   const team = (await getTeam(event, id))!

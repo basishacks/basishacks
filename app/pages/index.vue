@@ -51,7 +51,7 @@ const resultsOpenDate = computed(
     <h2 v-if="status !== 'finished'" class="text-3xl bold mb-4 glow-sm">
       Schedule
     </h2>
-    <p v-if="status === 'paused'">
+    <p v-if="status === 'paused'" class="mb-4">
       The website is currently under maintenance. Please check back later.
     </p>
     <ul
