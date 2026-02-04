@@ -6,8 +6,8 @@ const { project } = defineProps<{
 
 <template>
   <UCard variant="subtle">
-    <h2 class="bold text-2xl mb-2">{{ project.name }}</h2>
-    <pre class="my-4 mx-[2ch]">{{ project.description }}</pre>
+    <h2 class="bold text-2xl mb-2 text-wrap">{{ project.name }}</h2>
+    <pre class="my-4 mx-[2ch] text-wrap">{{ project.description }}</pre>
     <div class="flex flex-wrap gap-2">
       <UTooltip :text="project.repo_url!">
         <UButton
