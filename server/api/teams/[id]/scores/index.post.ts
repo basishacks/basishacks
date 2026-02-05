@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
       team_id: teamID,
       judge_user_id: userID,
       scores: JSON.stringify(payload.scores),
+      reasoning: payload.reasoning,
     })
   } catch {
     throw createError({

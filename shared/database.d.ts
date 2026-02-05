@@ -39,6 +39,7 @@ interface TeamScores {
   team_id: number
   judge_user_id: number
   scores: string
+  reasoning: string
 }
 
 interface User {
