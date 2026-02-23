@@ -61,7 +61,9 @@ CREATE TABLE IF NOT EXISTS ballot_scores (
     ballot_id INTEGER NOT NULL,
     project_id INTEGER NOT NULL,
     score INTEGER CHECK (score IN (NULL, 1, 2, 3, 4, 5)), -- 1-5
-    FOREIGN KEY (ballot_id) REFERENCES ballots(id) ON DELETE CASCADE
+    FOREIGN KEY (ballot_id) REFERENCES ballots(id) ON DELETE CASCADE,
+    FOREIGN KEY (project_id) REFERENCES teams(id)
 );
 CREATE INDEX IF NOT EXISTS idx_ballot_scores_project_id ON ballot_scores (project_id);
 CREATE INDEX IF NOT EXISTS idx_ballot_scores_ballot_id ON ballot_scores (ballot_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_ballot_project ON ballot_scores (ballot_id, project_id);
