@@ -25,6 +25,9 @@ export default defineNuxtConfig({
   devServer: {
     port: 24598,
   },
+  fonts: {
+    provider: 'local',
+  },
   vite: {
     server: {
       allowedHosts: true,
