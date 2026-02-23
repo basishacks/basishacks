@@ -55,7 +55,13 @@ interface User {
 interface Ballot {
   id: number
   user_id: number
-  projects: string
-  scores: string | null
   reasoning: string | null
+  submitted: number
+}
+
+interface BallotScore {
+  id: number
+  ballot_id: number
+  project_id: number
+  score: 1 | 2 | 3 | 4 | 5 | null
 }

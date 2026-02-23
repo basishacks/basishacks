@@ -49,10 +49,19 @@ CREATE INDEX IF NOT EXISTS idx_users_team_id ON users (team_id);
 CREATE TABLE IF NOT EXISTS ballots (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
-    projects TEXT NOT NULL,  -- JSON array of integers
-    scores TEXT,  -- JSON array of integers (0-5)
     reasoning TEXT,
+    submitted INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 -- users can only have one ballot
 CREATE UNIQUE INDEX IF NOT EXISTS idx_ballots_user_id ON ballots (user_id);
+
+CREATE TABLE IF NOT EXISTS ballot_scores (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ballot_id INTEGER NOT NULL,
+    project_id INTEGER NOT NULL,
+    score INTEGER CHECK (score IN (NULL, 1, 2, 3, 4, 5)), -- 1-5
+    FOREIGN KEY (ballot_id) REFERENCES ballots(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_ballot_scores_project_id ON ballot_scores (project_id);
+CREATE INDEX IF NOT EXISTS idx_ballot_scores_ballot_id ON ballot_scores (ballot_id);

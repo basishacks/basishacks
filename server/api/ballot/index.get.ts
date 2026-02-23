@@ -23,12 +23,12 @@ export default defineEventHandler(async (event) => {
   }
 
   let ballot = await getBallotByUser(event, user.id)
-  let ballotProjects: Team[] = []
+  let ballotScores: (BallotScore & { team: Team })[] = []
   if (!ballot) {
     // create one
     const projects = await getSubmittedTeams(event)
     const eligibleProjects = projects.filter(
-      (p) => p.id !== user.team_id && p.pathway === userTeam.pathway
+      (p) => p.id !== user.team_id && p.pathway === userTeam.pathway,
     )
 
     if (eligibleProjects.length < 4) {
@@ -38,30 +38,39 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    const ballotProjects: Team[] = []
+
     for (let i = 0; i < 4; i++) {
       const index = Math.floor(Math.random() * eligibleProjects.length)
       const project = eligibleProjects.splice(index, 1)[0]
       ballotProjects.push(project)
     }
 
-    ballot = await createBallot(
-      event,
-      user.id,
-      ballotProjects.map((p) => p.id)
-    )
+    ballot = await createBallot(event, user.id)
+    for (const team of ballotProjects) {
+      const score = await createBallotScore(event, ballot.id, team.id)
+      ballotScores.push({ ...score, team: team })
+    }
   } else {
-    ballotProjects = await Promise.all(
-      JSON.parse(ballot.projects).map((p: number) => getTeam(event, p))
+    const scores = await getBallotScores(event, ballot.id)
+    ballotScores = await Promise.all(
+      scores.map(async (s) => ({
+        ...s,
+        team: (await getTeam(event, s.project_id))!,
+      })),
     )
   }
 
   return {
     id: ballot.id,
-    projects: ballotProjects.map((p) => ({
-      ...convertTeamToPublic(p).project,
-      id: p.id,
+    projects: ballotScores.map((s) => ({
+      ...convertTeamToPublic(s.team).project,
+      id: s.project_id,
     })),
-    scores: ballot.scores ? JSON.parse(ballot.scores) : null,
+    scores:
+      ballotScores[0]!.score === null
+        ? null
+        : ballotScores.map((s) => s.score!),
     reasoning: ballot.reasoning,
   } satisfies GetBallotResponse
 })
