@@ -13,6 +13,7 @@ export function convertTeamToPublic(team: Team): APITeam {
     id: team.id,
     name: team.name,
     pathway: team.pathway,
+    rank: team.rank,
     project: {
       name: team.project_name,
       description: team.project_description,

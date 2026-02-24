@@ -10,6 +10,7 @@ interface APITeam {
   id: number
   name: string
   pathway: TeamPathway | null
+  rank: number | null
   project: {
     name: string
     description: string

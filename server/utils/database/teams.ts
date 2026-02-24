@@ -40,11 +40,12 @@ export async function createTeam(event: H3Event, teamName: string) {
 
 export async function updateTeam(event: H3Event, team: Team) {
   const result = await event.context.cloudflare.env.DB.prepare(
-    'UPDATE teams SET name = ?, pathway = ?, project_name = ?, project_description = ?, project_demo_url = ?, project_repo_url = ?, project_submitted = ? WHERE id = ?'
+    'UPDATE teams SET name = ?, pathway = ?, rank = ?, project_name = ?, project_description = ?, project_demo_url = ?, project_repo_url = ?, project_submitted = ? WHERE id = ?'
   )
     .bind(
       team.name,
       team.pathway,
+      team.rank,
       team.project_name,
       team.project_description,
       team.project_demo_url,
