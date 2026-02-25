@@ -9,15 +9,14 @@ useHead({
 const { user: userRef } = useUserSession()
 const user = computed(() => userRef.value!)
 
-const { data: hackathon, error: hackathonError } = await useFetch(
-  '/api/hackathon'
-)
+const { data: hackathon, error: hackathonError } =
+  await useFetch('/api/hackathon')
 if (hackathonError.value) {
   throw hackathonError.value
 }
 
 const { data, error, refresh } = await useFetch<GetUserResponse>(
-  () => `/api/users/${user.value.id}`
+  () => `/api/users/${user.value.id}`,
 )
 if (error.value) {
   throw error.value
@@ -123,8 +122,17 @@ onUnmounted(() => {
 
       <template v-if="hackathon?.status !== 'not_started'">
         <h2 class="text-3xl bold mb-4">Your project</h2>
-        <p v-if="data.team.project.submitted" class="mb-4 glow">
+        <p v-if="data.team.rank" class="mb-4">
+          You ranked <span class="bold">#{{ data.team.rank }}</span> in
+          <span class="text-primary glow">{{ WEBSITE_NAME }}</span
+          >, scoring {{ data.team.score }} points out of 1000. Thank you for participating!
+        </p>
+        <p v-else-if="data.team.project.submitted" class="mb-4 glow">
           You have submitted your project. Congratulations! 🎉
+        </p>
+        <p v-else-if="hackathon?.status !== 'in_progress'" class="mb-4">
+          The submission period is over, and you can no longer submit your
+          project.
         </p>
         <ProjectForm
           :team="data.team"

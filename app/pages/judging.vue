@@ -6,8 +6,13 @@ definePageMeta({
 const { user: userRef } = useUserSession()
 const userID = computed(() => userRef.value?.id ?? 0)
 
+const { data: hackathon } = await useFetch('/api/hackathon')
+if (hackathon.value?.status !== 'voting') {
+  throw await navigateTo('/')
+}
+
 const { data: userData, error: userError } = await useFetch<GetUserResponse>(
-  () => `/api/users/${userID.value}`
+  () => `/api/users/${userID.value}`,
 )
 if (userError.value) {
   throw userError.value
@@ -16,7 +21,9 @@ if (userData.value?.role !== 'admin' && userData.value?.role !== 'judge') {
   throw await navigateTo('/')
 }
 
-const { data, error, refresh } = await useFetch<APITeam[]>('/api/teams')
+const { data, error, refresh } = await useFetch<APITeam[]>(
+  '/api/teams?judging=1',
+)
 if (error.value) {
   throw error.value
 }

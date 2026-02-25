@@ -46,6 +46,16 @@ export async function getBallotScores(event: H3Event, ballotID: number) {
   ).results
 }
 
+export async function getBallotScoresByTeamID(event: H3Event, teamID: number) {
+  return (
+    await event.context.cloudflare.env.DB.prepare(
+      'SELECT * FROM ballot_scores WHERE project_id = ?',
+    )
+      .bind(teamID)
+      .all<BallotScore>()
+  ).results
+}
+
 export async function updateBallotScore(event: H3Event, score: BallotScore) {
   await event.context.cloudflare.env.DB.prepare(
     'UPDATE ballot_scores SET score = ? WHERE id = ?',

@@ -1,7 +1,17 @@
+import { getAllTeams } from '~~/server/utils/database/teams'
+
 export default defineEventHandler(async (event) => {
-  const { id: userID } = await requireJudge(event)
+  const query = getQuery(event)
 
-  const teams = await getSubmittedUnjudgedTeams(event, userID)
+  if (query.judging) {
+    const { id: userID } = await requireJudge(event)
 
-  return teams.map(convertTeamToPublic)
+    const teams = await getSubmittedUnjudgedTeams(event, userID)
+
+    return teams.map((t) => convertTeamToPublic(t))
+  } else {
+    const teams = await getAllTeams(event)
+
+    return teams.map((t) => convertTeamToPublic(t))
+  }
 })

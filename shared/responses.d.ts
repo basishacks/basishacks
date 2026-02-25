@@ -11,6 +11,7 @@ interface APITeam {
   name: string
   pathway: TeamPathway | null
   rank: number | null
+  score: number | null
   project: {
     name: string
     description: string

@@ -8,12 +8,16 @@ export function convertUserToPublic(user: User): APIUser {
   }
 }
 
-export function convertTeamToPublic(team: Team): APITeam {
+export function convertTeamToPublic(
+  team: Team,
+  withScore: boolean = false,
+): APITeam {
   return {
     id: team.id,
     name: team.name,
     pathway: team.pathway,
     rank: team.rank,
+    score: withScore ? team.score : null,
     project: {
       name: team.project_name,
       description: team.project_description,

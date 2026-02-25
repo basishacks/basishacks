@@ -27,6 +27,7 @@ interface Team {
   id: number
   name: string
   pathway: TeamPathway | null
+  score: number | null
   rank: number | null
   project_name: string
   project_description: string

@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS teams (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     pathway TEXT CHECK (pathway IN (NULL, 'junior', 'senior')),
+    score INTEGER, -- out of 100
     rank INTEGER, -- 1-based ranking
     project_name TEXT NOT NULL DEFAULT '',
     project_description TEXT NOT NULL DEFAULT '',
@@ -21,6 +22,8 @@ CREATE TABLE IF NOT EXISTS teams (
     project_repo_url TEXT,
     project_submitted INTEGER NOT NULL DEFAULT 0
 );
+CREATE INDEX IF NOT EXISTS teams_score ON teams (score);
+CREATE INDEX IF NOT EXISTS teams_rank ON teams (rank);
 
 CREATE TABLE IF NOT EXISTS team_scores (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

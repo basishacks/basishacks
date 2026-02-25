@@ -1,4 +1,6 @@
 export default defineEventHandler(async (event) => {
+  const currentUser = await getUserSession(event)
+
   const id = parseInt(getRouterParam(event, 'id')!)
 
   const user = await getUser(event, id)
@@ -12,6 +14,6 @@ export default defineEventHandler(async (event) => {
 
   return {
     ...convertUserToPublic(user),
-    team: team && convertTeamToPublic(team),
+    team: team && convertTeamToPublic(team, currentUser.user?.id === id),
   } satisfies GetUserResponse
 })

@@ -4,7 +4,7 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const { user: userRef } = useUserSession()
 // this is honestly ugly asf but i can't think of a clean solution
 const { data: user } = await useFetch<GetUserResponse>(
-  () => `/api/users/${userRef.value?.id}`
+  () => `/api/users/${userRef.value?.id}`,
 )
 const { data: hackathon } = await useFetch('/api/hackathon')
 
@@ -21,18 +21,32 @@ const navItems = computed<NavigationMenuItem[]>(() => {
       icon: 'i-material-symbols-space-dashboard',
     },
   ]
-  if (user.value?.role === 'judge' || user.value?.role === 'admin') {
+  if (
+    (user.value?.role === 'judge' || user.value?.role === 'admin') &&
+    hackathon.value?.status === 'voting'
+  ) {
     links.push({
       label: 'Judging',
       to: '/judging',
       icon: 'i-material-symbols-gavel',
     })
   }
-  if (user.value?.role === 'participant' && user.value.team_id && hackathon.value?.status === 'voting') {
+  if (
+    user.value?.role === 'participant' &&
+    user.value.team_id &&
+    hackathon.value?.status === 'voting'
+  ) {
     links.push({
       label: 'Voting',
       to: '/voting',
-      icon: 'i-material-symbols-ballot'
+      icon: 'i-material-symbols-ballot',
+    })
+  }
+  if (hackathon.value?.status === 'finished') {
+    links.push({
+      label: 'Results',
+      to: '/results',
+      icon: 'i-material-symbols-flag',
     })
   }
   return links
