@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS users (
     team_id INTEGER,
     login_code TEXT,
     login_expiry INTEGER,
+    age INTEGER,
     FOREIGN KEY (team_id) REFERENCES teams(id)
 );
 CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);

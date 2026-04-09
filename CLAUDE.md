@@ -34,7 +34,7 @@ bunx eslint .
 - `app/` — Nuxt frontend (pages, components, middleware, utils)
 - `server/` — Nitro API handlers (`server/api/`) and server-side utilities (`server/utils/`)
 - `shared/` — Code used by both client and server: Zod schemas (`schemas.ts`), DB types (`database.d.ts`), API response types (`responses.d.ts`), scoring rubrics (`rubric.ts`)
-- `sql/` — `init.sql` (initial schema) + numbered migration files
+- `sql/` — `init.sql` (up-to-date, complete schema) + numbered migration files
 
 ### Authentication
 
@@ -79,3 +79,5 @@ Schema changes go in `sql/migration-<N>.sql`. Run against D1 with:
 ```bash
 bunx wrangler d1 execute DB --file sql/migration-<N>.sql
 ```
+
+Whenever you add a migration file, update `init.sql` to keep it up-to-date with the latest schema. Note that this is different from most migration systems.
