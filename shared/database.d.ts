@@ -49,6 +49,7 @@ interface User {
   email: string
   role: UserRole
   name: string | null
+  age: number | null
   team_id: number | null
   login_code: string | null
   login_expiry: number | null

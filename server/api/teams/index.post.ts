@@ -18,6 +18,12 @@ export default defineEventHandler(async (event) => {
       message: 'Cannot create a team while in a team',
     })
   }
+  if (!user.age) {
+    throw createError({
+      status: 403,
+      message: 'You must set your age on your profile before joining a team',
+    })
+  }
 
   const hackathon = await getHackathon(event)
   if (

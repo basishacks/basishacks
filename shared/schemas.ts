@@ -19,7 +19,7 @@ const BooleanString = z
   .literal(['true', 'false'])
   .transform((s) => s === 'true')
 
-const ZeroToFive = z.literal([0, 1, 2, 3, 4, 5])
+const ZeroToFive = z.literal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 const ScoreValues = z.object(
   Object.keys(rubrics['junior']).reduce(
     (obj, key) => ({
@@ -91,6 +91,7 @@ export type AddTeamMemberRequest = z.infer<typeof AddTeamMemberRequest>
 
 export const UpdateUserRequest = z.object({
   name: z.optional(z.string().max(30)),
+  age: z.optional(z.int().min(1).max(120)),
 })
 export type UpdateUserRequest = z.infer<typeof UpdateUserRequest>
 

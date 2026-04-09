@@ -67,6 +67,13 @@
         demonstrate the main features of your project. It however does NOT waive
         the demo URL requirement.
       </li>
+      <li class="mb-2">
+        * <span class="bold">AI use must be under 30%.</span> You may use AI
+        tools (e.g. GitHub Copilot, ChatGPT) to assist development, but the
+        majority of the work must be your own. Projects where AI wrote more than
+        30% of the code will be disqualified. Be prepared to explain your
+        implementation decisions during judging.
+      </li>
       <li>
         * The project must follow the theme. It must have at least some kind of
         connection with the theme. This won't be very strict, but you will lose

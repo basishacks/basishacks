@@ -29,6 +29,7 @@ async function doLogout() {
 
 const state = reactive({
   name: user.value.name || '',
+  age: user.value.age ?? undefined,
 })
 
 async function onSubmitName(event: FormSubmitEvent<UpdateUserRequest>) {
@@ -68,6 +69,10 @@ async function onSubmitName(event: FormSubmitEvent<UpdateUserRequest>) {
     >
       <UFormField name="name" label="Edit your name">
         <UInput v-model="state.name" class="w-full" />
+      </UFormField>
+
+      <UFormField name="age" label="Your age">
+        <UInput v-model.number="state.age" type="number" min="1" max="120" class="w-full" />
       </UFormField>
 
       <div class="flex gap-4">

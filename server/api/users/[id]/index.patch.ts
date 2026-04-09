@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const { name } = await readValidatedBody(event, UpdateUserRequest.parse)
+  const { name, age } = await readValidatedBody(event, UpdateUserRequest.parse)
 
   const user = await getUser(event, id)
   if (!user) {
@@ -26,6 +26,7 @@ export default defineEventHandler(async (event) => {
   }
 
   if (name !== undefined) user.name = name
+  if (age !== undefined) user.age = age
 
   await updateUserName(event, user)
 

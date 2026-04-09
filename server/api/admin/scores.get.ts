@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
       for (const score of judgeScores) {
         const scores = JSON.parse(score.scores)
         for (const [category, { weight }] of Object.entries(rubrics[pathway])) {
-          judgeTotal += (scores[category] * weight) / 5
+          judgeTotal += (scores[category] * weight) / 10
         }
       }
       const judgeScore = (judgeTotal / judgeScores.length) * 0.75

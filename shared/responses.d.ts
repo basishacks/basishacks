@@ -3,6 +3,7 @@ interface APIUser {
   email: string
   role: UserRole
   name: string | null
+  age: number | null
   team_id: number | null
 }
 
@@ -31,6 +32,7 @@ type GetTeamMembersResponse = {
   id: number
   email: string
   name: string | null
+  age: number | null
   team_id: number | null
 }[]
 

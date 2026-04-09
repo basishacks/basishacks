@@ -58,9 +58,9 @@ export async function getUserByCode(
 
 export async function updateUserName(event: H3Event, user: User) {
   const result = await event.context.cloudflare.env.DB.prepare(
-    'UPDATE users SET name = ? WHERE id = ?'
+    'UPDATE users SET name = ?, age = ? WHERE id = ?'
   )
-    .bind(user.name, user.id)
+    .bind(user.name, user.age, user.id)
     .run()
 
   if (!result.meta.changed_db) {

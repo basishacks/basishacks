@@ -43,6 +43,12 @@ export default defineEventHandler(async (event) => {
       message: 'User not found',
     })
   }
+  if (!user.age) {
+    throw createError({
+      status: 403,
+      message: 'That user must set their age on their profile before joining a team',
+    })
+  }
 
   await addTeamMember(event, teamID, user.id)
 

@@ -12,11 +12,15 @@ const emit = defineEmits<{
 
 const toast = useToast()
 
+const { data: members } = await useFetch<GetTeamMembersResponse>(
+  () => `/api/teams/${team.id}/users`
+)
+
 const state = reactive<CreateTeamScoresRequest>({
   reasoning: '',
   scores: Object.keys(rubrics[team.pathway!]).reduce(
     (obj, key) => ({ ...obj, [key]: 0 }),
-    {} as Record<keyof (typeof rubrics)['junior'], 0 | 1 | 2 | 3 | 4 | 5>
+    {} as Record<keyof (typeof rubrics)['junior'], 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10>
   ),
 })
 
@@ -54,7 +58,13 @@ async function onSubmit(event: FormSubmitEvent<CreateTeamScoresRequest>) {
   <UCard variant="subtle" class="mb-4">
     <h2 class="bold text-2xl mb-2">{{ team.project.name }}</h2>
     <p class="mb-2">Team: {{ team.name }} ({{ team.id }})</p>
-    <p>Pathway: {{ team.pathway }}</p>
+    <p class="mb-2">Pathway: {{ team.pathway }}</p>
+    <div v-if="members?.length" class="mb-2">
+      <span class="bold">Members: </span>
+      <span v-for="(member, i) in members" :key="member.id">
+        {{ member.name || member.email }}<template v-if="member.age"> (age {{ member.age }})</template><template v-if="i < members.length - 1">, </template>
+      </span>
+    </div>
     <pre class="my-4 mx-[2ch] text-wrap">{{ team.project.description }}</pre>
     <div class="flex flex-wrap gap-2">
       <UTooltip :text="team.project.repo_url!">
@@ -96,7 +106,7 @@ async function onSubmit(event: FormSubmitEvent<CreateTeamScoresRequest>) {
           </UTooltip>
           <URadioGroup
             v-model="state.scores[key as keyof typeof state.scores]"
-            :items="[0, 1, 2, 3, 4, 5].map((v) => ({ label: `${v}`, value: v as 0|1|2|3|4|5 }))"
+            :items="[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => ({ label: `${v}`, value: v as 0|1|2|3|4|5|6|7|8|9|10 }))"
             variant="table"
             orientation="horizontal"
           />
