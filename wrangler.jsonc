@@ -2,7 +2,7 @@
 // actual bindings are defined on dash.cloudflare.com
 {
     "$schema": "node_modules/wrangler/config-schema.json",
-    "name": "basishacks2025",
+    "name": "basishacks2026-2",
     "pages_build_output_dir": "dist",
     "compatibility_date": "2025-11-01",
     "compatibility_flags": [
@@ -11,8 +11,8 @@
     "d1_databases": [
         {
             "binding": "DB",
-            "database_name": "basishacks",
-            "database_id": "51a5b1b9-880c-452f-b961-39adbe067bfa"
+            "database_name": "basishacks-2026-2",
+            "database_id": "87ac1c11-60ab-4ca8-9dad-118543f456f3"
         }
     ]
 }
